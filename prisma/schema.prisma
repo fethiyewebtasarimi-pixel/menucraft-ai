@@ -1,0 +1,483 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== USER & AUTH ====================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  name          String
+  phone         String?
+  avatar        String?
+  role          UserRole  @default(OWNER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts     Account[]
+  restaurants  Restaurant[]
+  subscription Subscription?
+}
+
+enum UserRole {
+  OWNER
+  MANAGER
+  STAFF
+  ADMIN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+  @@index([email])
+}
+
+// ==================== RESTAURANT & MENU ====================
+
+model Restaurant {
+  id          String  @id @default(cuid())
+  userId      String
+  name        String
+  slug        String  @unique
+  description String?
+  logo        String?
+  coverImage  String?
+  phone       String?
+  email       String?
+  website     String?
+  address     String?
+  city        String?
+  country     String?
+  latitude    Float?
+  longitude   Float?
+  currency    String  @default("TRY")
+  timezone    String  @default("Europe/Istanbul")
+  isActive    Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id])
+  menus        Menu[]
+  categories   Category[]
+  menuItems    MenuItem[]
+  qrCodes      QRCode[]
+  orders       Order[]
+  tables       Table[]
+  reviews      Review[]
+  analytics    Analytics[]
+  branding     Branding?
+  workingHours WorkingHour[]
+  socialLinks  SocialLink[]
+
+  @@index([userId])
+}
+
+model Branding {
+  id             String      @id @default(cuid())
+  restaurantId   String      @unique
+  primaryColor   String      @default("#000000")
+  secondaryColor String      @default("#ffffff")
+  accentColor    String      @default("#f59e0b")
+  fontFamily     String      @default("Inter")
+  menuLayout     MenuLayout  @default(GRID)
+  headerStyle    HeaderStyle @default(MODERN)
+  showLogo       Boolean     @default(true)
+  showCover      Boolean     @default(true)
+  customCSS      String?
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+enum MenuLayout {
+  GRID
+  LIST
+  COMPACT
+  MAGAZINE
+}
+
+enum HeaderStyle {
+  MODERN
+  CLASSIC
+  MINIMAL
+  HERO
+}
+
+model Menu {
+  id            String    @id @default(cuid())
+  restaurantId  String
+  name          String
+  description   String?
+  type          MenuType  @default(DINE_IN)
+  isActive      Boolean   @default(true)
+  isDefault     Boolean   @default(false)
+  sortOrder     Int       @default(0)
+  availableFrom DateTime?
+  availableTo   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  restaurant Restaurant     @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  categories MenuCategory[]
+
+  @@index([restaurantId])
+}
+
+enum MenuType {
+  DINE_IN
+  TAKEAWAY
+  DELIVERY
+  BREAKFAST
+  LUNCH
+  DINNER
+  DRINKS
+  DESSERT
+  SEASONAL
+}
+
+model Category {
+  id               String  @id @default(cuid())
+  restaurantId     String
+  name             String
+  nameTranslations Json?
+  description      String?
+  image            String?
+  sortOrder        Int     @default(0)
+  isActive         Boolean @default(true)
+
+  restaurant     Restaurant     @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  menuItems      MenuItem[]
+  menuCategories MenuCategory[]
+
+  @@index([restaurantId])
+}
+
+model MenuCategory {
+  menuId     String
+  categoryId String
+  sortOrder  Int @default(0)
+
+  menu     Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([menuId, categoryId])
+}
+
+model MenuItem {
+  id                      String   @id @default(cuid())
+  restaurantId            String
+  categoryId              String
+  name                    String
+  nameTranslations        Json?
+  description             String?
+  descriptionTranslations Json?
+  price                   Decimal  @db.Decimal(10, 2)
+  discountPrice           Decimal? @db.Decimal(10, 2)
+  image                   String?
+  aiGeneratedImage        String?
+  calories                Int?
+  prepTime                Int?
+  isVegan                 Boolean  @default(false)
+  isVegetarian            Boolean  @default(false)
+  isGlutenFree            Boolean  @default(false)
+  isSpicy                 Boolean  @default(false)
+  isPopular               Boolean  @default(false)
+  isNew                   Boolean  @default(false)
+  isChefRecommended       Boolean  @default(false)
+  allergens               String[]
+  tags                    String[]
+  sortOrder               Int      @default(0)
+  isActive                Boolean  @default(true)
+  isAvailable             Boolean  @default(true)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  restaurant Restaurant        @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  category   Category          @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  variants   MenuItemVariant[]
+  modifiers  MenuItemModifier[]
+  orderItems OrderItem[]
+
+  @@index([restaurantId])
+  @@index([categoryId])
+}
+
+model MenuItemVariant {
+  id         String  @id @default(cuid())
+  menuItemId String
+  name       String
+  price      Decimal @db.Decimal(10, 2)
+  sortOrder  Int     @default(0)
+
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+
+  @@index([menuItemId])
+}
+
+model MenuItemModifier {
+  id         String  @id @default(cuid())
+  menuItemId String
+  name       String
+  options    Json
+  isRequired Boolean @default(false)
+  maxSelect  Int     @default(1)
+
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+
+  @@index([menuItemId])
+}
+
+// ==================== QR CODE & TABLE ====================
+
+model QRCode {
+  id              String  @id @default(cuid())
+  restaurantId    String
+  tableId         String?
+  menuId          String?
+  code            String  @unique
+  style           QRStyle @default(MODERN)
+  foregroundColor String  @default("#000000")
+  backgroundColor String  @default("#ffffff")
+  logoUrl         String?
+  scans           Int     @default(0)
+  isActive        Boolean @default(true)
+  createdAt       DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  table      Table?     @relation(fields: [tableId], references: [id])
+
+  @@index([restaurantId])
+}
+
+enum QRStyle {
+  CLASSIC
+  MODERN
+  ROUNDED
+  DOTS
+  BRANDED
+}
+
+model Table {
+  id           String  @id @default(cuid())
+  restaurantId String
+  number       Int
+  name         String?
+  capacity     Int     @default(4)
+  isActive     Boolean @default(true)
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  qrCodes    QRCode[]
+  orders     Order[]
+
+  @@index([restaurantId])
+}
+
+// ==================== ORDER SYSTEM ====================
+
+model Order {
+  id              String        @id @default(cuid())
+  restaurantId    String
+  tableId         String?
+  orderNumber     String        @unique
+  type            OrderType     @default(DINE_IN)
+  status          OrderStatus   @default(PENDING)
+  customerName    String?
+  customerPhone   String?
+  customerEmail   String?
+  customerAddress String?
+  customerNote    String?
+  subtotal        Decimal       @db.Decimal(10, 2)
+  taxAmount       Decimal       @db.Decimal(10, 2) @default(0)
+  discountAmount  Decimal       @db.Decimal(10, 2) @default(0)
+  totalAmount     Decimal       @db.Decimal(10, 2)
+  paymentMethod   PaymentMethod?
+  paymentStatus   PaymentStatus @default(UNPAID)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  restaurant Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  table      Table?      @relation(fields: [tableId], references: [id])
+  items      OrderItem[]
+
+  @@index([restaurantId])
+  @@index([tableId])
+}
+
+enum OrderType {
+  DINE_IN
+  TAKEAWAY
+  DELIVERY
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  SERVED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  ONLINE
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+model OrderItem {
+  id         String  @id @default(cuid())
+  orderId    String
+  menuItemId String
+  quantity   Int
+  unitPrice  Decimal @db.Decimal(10, 2)
+  totalPrice Decimal @db.Decimal(10, 2)
+  notes      String?
+  modifiers  Json?
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+
+  @@index([orderId])
+  @@index([menuItemId])
+}
+
+// ==================== REVIEW & ANALYTICS ====================
+
+model Review {
+  id            String   @id @default(cuid())
+  restaurantId  String
+  customerName  String?
+  customerEmail String?
+  rating        Int
+  comment       String?
+  isPublished   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
+
+model Analytics {
+  id             String   @id @default(cuid())
+  restaurantId   String
+  date           DateTime
+  menuViews      Int      @default(0)
+  qrScans        Int      @default(0)
+  uniqueVisitors Int      @default(0)
+  totalOrders    Int      @default(0)
+  totalRevenue   Decimal  @db.Decimal(10, 2) @default(0)
+  topItems       Json?
+  deviceStats    Json?
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, date])
+  @@index([restaurantId])
+}
+
+// ==================== SUBSCRIPTION ====================
+
+model Subscription {
+  id                 String    @id @default(cuid())
+  userId             String    @unique
+  plan               PlanType  @default(FREE)
+  status             SubStatus @default(ACTIVE)
+  paytrMerchantOid   String?
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean   @default(false)
+  aiCredits          Int       @default(25)
+  aiCreditsUsed      Int       @default(0)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+enum PlanType {
+  FREE
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum SubStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  TRIALING
+}
+
+// ==================== EXTRAS ====================
+
+model WorkingHour {
+  id           String  @id @default(cuid())
+  restaurantId String
+  dayOfWeek    Int
+  openTime     String
+  closeTime    String
+  isClosed     Boolean @default(false)
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
+
+model SocialLink {
+  id           String @id @default(cuid())
+  restaurantId String
+  platform     String
+  url          String
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
