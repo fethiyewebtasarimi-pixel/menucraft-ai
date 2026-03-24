@@ -72,5 +72,7 @@ export function formatDateTime(date: Date | string): string {
 }
 
 export function absoluteUrl(path: string): string {
-  return `${process.env.NEXT_PUBLIC_APP_URL}${path}`;
+  const base = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const url = base.startsWith('http') ? base : `https://${base}`;
+  return `${url}${path}`;
 }

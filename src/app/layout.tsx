@@ -11,7 +11,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://menucraft-ai-production.up.railway.app'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL?.startsWith('http')
+      ? process.env.NEXT_PUBLIC_APP_URL
+      : `https://${process.env.NEXT_PUBLIC_APP_URL || 'menucraft-ai-production.up.railway.app'}`
+  ),
   title: 'MenuCraft AI - AI Destekli Dijital Menü Platformu',
   description:
     'MenuCraft AI ile restoranınız için AI destekli dijital menü oluşturun, QR kod ile müşterilerinize sunun ve sipariş yönetimi yapın.',
