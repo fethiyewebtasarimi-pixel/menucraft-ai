@@ -3,6 +3,7 @@
 import { SessionProvider } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ThemeProvider } from 'next-themes';
 import { useState, type ReactNode } from 'react';
 
 interface ProvidersProps {
@@ -34,15 +35,22 @@ export function Providers({ children }: ProvidersProps) {
       refetchInterval={5 * 60} // Refetch session every 5 minutes
       refetchOnWindowFocus={true}
     >
-      <QueryClientProvider client={queryClient}>
-        {children}
-        {process.env.NODE_ENV === 'development' && (
-          <ReactQueryDevtools
-            initialIsOpen={false}
-            buttonPosition="bottom-right"
-          />
-        )}
-      </QueryClientProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <QueryClientProvider client={queryClient}>
+          {children}
+          {process.env.NODE_ENV === 'development' && (
+            <ReactQueryDevtools
+              initialIsOpen={false}
+              buttonPosition="bottom-right"
+            />
+          )}
+        </QueryClientProvider>
+      </ThemeProvider>
     </SessionProvider>
   );
 }
