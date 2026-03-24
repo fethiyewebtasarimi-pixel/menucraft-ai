@@ -14,11 +14,11 @@ import {
   Palette,
   Settings,
   CreditCard,
-  ChefHat,
-  ChevronLeft,
-  ChevronRight,
   ShieldCheck,
   FileDown,
+  ChevronLeft,
+  ChevronRight,
+  Store,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,8 +27,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Separator } from '@/components/ui/separator';
 import { useUIStore } from '@/stores/uiStore';
+import { useRestaurants } from '@/hooks/useRestaurant';
 import { cn } from '@/lib/utils';
 
 interface NavItem {
@@ -45,6 +45,9 @@ const mainNavItems: NavItem[] = [
   { label: 'Masalar', href: '/dashboard/tables', icon: Grid3X3 },
   { label: 'Yorumlar', href: '/dashboard/reviews', icon: MessageSquare },
   { label: 'Analitik', href: '/dashboard/analytics', icon: BarChart3 },
+];
+
+const toolNavItems: NavItem[] = [
   { label: 'Marka & Tasarım', href: '/dashboard/branding', icon: Palette },
   { label: 'Alerjen Uyumluluk', href: '/dashboard/compliance', icon: ShieldCheck },
   { label: 'PDF Menü', href: '/dashboard/menu/print', icon: FileDown },
@@ -58,11 +61,11 @@ const bottomNavItems: NavItem[] = [
 export function Sidebar() {
   const pathname = usePathname();
   const { sidebarOpen, toggleSidebar } = useUIStore();
+  const { data: restaurants } = useRestaurants();
+  const restaurant = restaurants?.[0];
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return pathname === '/dashboard';
-    }
+    if (href === '/dashboard') return pathname === '/dashboard';
     return pathname?.startsWith(href);
   };
 
@@ -72,21 +75,26 @@ export function Sidebar() {
 
     const content = (
       <Link href={item.href}>
-        <motion.div
+        <div
           className={cn(
-            'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors cursor-pointer',
-            'hover:bg-accent/50',
-            active && 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600',
-            !active && 'text-muted-foreground hover:text-foreground'
+            'group flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 relative',
+            active
+              ? 'bg-primary/10 text-primary font-medium'
+              : 'text-muted-foreground hover:text-foreground hover:bg-accent'
           )}
-          whileHover={{ x: 2 }}
-          whileTap={{ scale: 0.98 }}
         >
-          <Icon className={cn('h-5 w-5 flex-shrink-0', active && 'text-white')} />
-          {sidebarOpen && (
-            <span className="font-medium text-sm truncate">{item.label}</span>
+          {active && (
+            <motion.div
+              layoutId="activeIndicator"
+              className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full"
+              transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+            />
           )}
-        </motion.div>
+          <Icon className={cn('h-[18px] w-[18px] flex-shrink-0', active && 'text-primary')} />
+          {sidebarOpen && (
+            <span className="text-sm truncate">{item.label}</span>
+          )}
+        </div>
       </Link>
     );
 
@@ -94,8 +102,8 @@ export function Sidebar() {
       return (
         <Tooltip delayDuration={0}>
           <TooltipTrigger asChild>{content}</TooltipTrigger>
-          <TooltipContent side="right">
-            <p>{item.label}</p>
+          <TooltipContent side="right" className="font-medium">
+            {item.label}
           </TooltipContent>
         </Tooltip>
       );
@@ -107,65 +115,87 @@ export function Sidebar() {
   return (
     <TooltipProvider>
       <motion.aside
-        className="fixed left-0 top-0 z-40 h-screen border-r bg-background"
+        className="fixed left-0 top-0 z-40 h-screen border-r bg-card flex flex-col"
         initial={false}
-        animate={{
-          width: sidebarOpen ? 256 : 64,
-        }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        animate={{ width: sidebarOpen ? 240 : 64 }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
       >
-        <div className="flex h-full flex-col">
-          {/* Logo */}
-          <div className="flex h-16 items-center justify-center border-b px-3">
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <motion.div
-                className="flex items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 p-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <ChefHat className="h-6 w-6 text-white" />
-              </motion.div>
-              {sidebarOpen && (
-                <motion.span
-                  className="text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  MenuCraft AI
-                </motion.span>
+        {/* Logo & Restaurant */}
+        <div className="flex items-center gap-3 h-16 px-3 border-b flex-shrink-0">
+          <Link href="/dashboard" className="flex items-center gap-3 min-w-0">
+            <div className="flex items-center justify-center rounded-lg bg-primary p-2 flex-shrink-0">
+              {restaurant?.logo ? (
+                <img src={restaurant.logo} alt="" className="h-5 w-5 rounded" />
+              ) : (
+                <Store className="h-5 w-5 text-primary-foreground" />
               )}
-            </Link>
-          </div>
+            </div>
+            {sidebarOpen && (
+              <div className="min-w-0">
+                <p className="text-sm font-semibold truncate">
+                  {restaurant?.name || 'MenuCraft AI'}
+                </p>
+                <p className="text-[11px] text-muted-foreground truncate">
+                  Restoran Paneli
+                </p>
+              </div>
+            )}
+          </Link>
+        </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-5">
+          {/* Main */}
+          <div className="space-y-0.5">
+            {sidebarOpen && (
+              <p className="px-3 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                Genel
+              </p>
+            )}
             {mainNavItems.map((item) => (
               <NavItemComponent key={item.href} item={item} />
             ))}
+          </div>
 
-            <Separator className="my-4" />
+          {/* Tools */}
+          <div className="space-y-0.5">
+            {sidebarOpen && (
+              <p className="px-3 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                Araçlar
+              </p>
+            )}
+            {toolNavItems.map((item) => (
+              <NavItemComponent key={item.href} item={item} />
+            ))}
+          </div>
 
+          {/* Bottom */}
+          <div className="space-y-0.5">
+            {sidebarOpen && (
+              <p className="px-3 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                Hesap
+              </p>
+            )}
             {bottomNavItems.map((item) => (
               <NavItemComponent key={item.href} item={item} />
             ))}
-          </nav>
-
-          {/* Toggle Button */}
-          <div className="border-t p-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleSidebar}
-              className="w-full justify-center"
-            >
-              {sidebarOpen ? (
-                <ChevronLeft className="h-5 w-5" />
-              ) : (
-                <ChevronRight className="h-5 w-5" />
-              )}
-            </Button>
           </div>
+        </nav>
+
+        {/* Toggle */}
+        <div className="border-t p-2 flex-shrink-0">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleSidebar}
+            className="w-full justify-center h-8 text-muted-foreground hover:text-foreground"
+          >
+            {sidebarOpen ? (
+              <ChevronLeft className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       </motion.aside>
     </TooltipProvider>

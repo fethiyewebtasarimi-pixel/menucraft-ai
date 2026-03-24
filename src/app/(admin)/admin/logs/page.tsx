@@ -46,7 +46,7 @@ const ACTION_COLORS: Record<string, string> = {
   abonelik_iptal: 'bg-red-100 text-red-800',
   abonelik_aktif: 'bg-green-100 text-green-800',
   kredi_sifirla: 'bg-purple-100 text-purple-800',
-  sure_uzat: 'bg-amber-100 text-amber-800',
+  sure_uzat: 'bg-primary/10 text-primary',
   plan_guncelle: 'bg-indigo-100 text-indigo-800',
   kupon_olustur: 'bg-green-100 text-green-800',
   kupon_guncelle: 'bg-blue-100 text-blue-800',
@@ -140,7 +140,7 @@ export default function AdminLogsPage() {
         <div className="space-y-2">
           {data?.logs?.map((log: Record<string, unknown>, index: number) => {
             const TargetIcon = TARGET_ICONS[log.target as string] || Shield;
-            const actionColor = ACTION_COLORS[log.action as string] || 'bg-gray-100 text-gray-800';
+            const actionColor = ACTION_COLORS[log.action as string] || 'bg-muted/50 text-foreground';
             const actionLabel = ACTION_LABELS[log.action as string] || (log.action as string);
 
             return (

@@ -4,76 +4,74 @@
 
 @layer base {
   :root {
-    /* Background colors */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Background - clean subtle gray */
+    --background: 210 20% 98%;
+    --foreground: 224 71% 4%;
 
-    /* Card colors */
+    /* Card - pure white */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 224 71% 4%;
 
-    /* Primary colors - Amber/Orange theme */
-    --primary: 32 98% 53%;
-    --primary-foreground: 26 83% 14%;
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
 
-    /* Secondary colors */
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Primary - Indigo/Violet */
+    --primary: 262 83% 58%;
+    --primary-foreground: 210 20% 98%;
 
-    /* Muted colors */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Secondary */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 221 39% 11%;
 
-    /* Accent colors */
-    --accent: 32 98% 53%;
-    --accent-foreground: 26 83% 14%;
+    /* Muted */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    /* Destructive colors */
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Accent */
+    --accent: 220 14% 96%;
+    --accent-foreground: 221 39% 11%;
 
-    /* Border and input colors */
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 32 98% 53%;
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
 
-    /* Border radius */
-    --radius: 0.5rem;
+    /* Border and input */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262 83% 58%;
+
+    --radius: 0.75rem;
   }
 
   .dark {
-    /* Background colors - Dark slate theme */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
 
-    /* Card colors */
-    --card: 217.2 32.6% 17.5%;
-    --card-foreground: 210 40% 98%;
+    --card: 215 28% 17%;
+    --card-foreground: 210 20% 98%;
 
-    /* Primary colors - Amber/Orange theme */
-    --primary: 32 98% 53%;
-    --primary-foreground: 26 83% 14%;
+    --popover: 215 28% 17%;
+    --popover-foreground: 210 20% 98%;
 
-    /* Secondary colors */
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --primary: 263 70% 50%;
+    --primary-foreground: 210 20% 98%;
 
-    /* Muted colors */
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 20% 98%;
 
-    /* Accent colors */
-    --accent: 32 98% 53%;
-    --accent-foreground: 26 83% 14%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 218 11% 65%;
 
-    /* Destructive colors */
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 215 28% 17%;
+    --accent-foreground: 210 20% 98%;
 
-    /* Border and input colors */
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 32 98% 53%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 263 70% 50%;
   }
 }
 
@@ -85,45 +83,48 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   html {
     @apply scroll-smooth antialiased;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
 }
 
 @layer base {
-  /* Custom scrollbar styling */
   ::-webkit-scrollbar {
-    @apply w-2 h-2;
+    @apply w-1.5 h-1.5;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-muted/20;
+    @apply bg-transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
+    @apply bg-muted-foreground/20 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
+    @apply bg-muted-foreground/40;
   }
 
-  /* Firefox scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.3) hsl(var(--muted) / 0.2);
+    scrollbar-color: hsl(var(--muted-foreground) / 0.2) transparent;
   }
 }
 
 @layer utilities {
-  /* Text balance for better typography */
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Animation utilities */
   .animate-in {
     animation: animate-in 0.3s ease-out;
   }
@@ -154,29 +155,27 @@
     }
   }
 
-  /* Focus visible utilities */
   .focus-visible-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
-  /* Container queries support */
-  .container-queries {
-    container-type: inline-size;
+  .glass {
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
   }
 }
 
-/* Print styles */
 @media print {
   body {
     @apply text-black bg-white;
   }
 
-  .no-print {
+  .no-print,
+  .print\:hidden {
     display: none !important;
   }
 }
 
-/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

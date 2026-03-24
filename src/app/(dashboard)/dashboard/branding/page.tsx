@@ -162,7 +162,7 @@ export default function BrandingPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Palette className="h-5 w-5 text-amber-600" />
+                <Palette className="h-5 w-5 text-primary" />
                 Renkler
               </CardTitle>
               <CardDescription>
@@ -238,7 +238,7 @@ export default function BrandingPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Type className="h-5 w-5 text-amber-600" />
+                <Type className="h-5 w-5 text-primary" />
                 Tipografi
               </CardTitle>
               <CardDescription>
@@ -271,7 +271,7 @@ export default function BrandingPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Layout className="h-5 w-5 text-amber-600" />
+                <Layout className="h-5 w-5 text-primary" />
                 Menü Düzeni
               </CardTitle>
               <CardDescription>
@@ -293,15 +293,15 @@ export default function BrandingPage() {
                       className={cn(
                         'flex items-start gap-3 p-4 rounded-lg border-2 transition-all text-left',
                         isSelected
-                          ? 'border-amber-500 bg-amber-500/5 shadow-sm'
-                          : 'border-border hover:border-amber-500/50 hover:bg-accent/50'
+                          ? 'border-primary bg-primary/5 shadow-sm'
+                          : 'border-border hover:border-primary/50 hover:bg-accent/50'
                       )}
                     >
                       <div
                         className={cn(
                           'rounded-lg p-2 mt-0.5',
                           isSelected
-                            ? 'bg-amber-500 text-white'
+                            ? 'bg-primary text-white'
                             : 'bg-accent text-muted-foreground'
                         )}
                       >
@@ -311,7 +311,7 @@ export default function BrandingPage() {
                         <h4
                           className={cn(
                             'font-semibold mb-1',
-                            isSelected && 'text-amber-600'
+                            isSelected && 'text-primary'
                           )}
                         >
                           {layout.label}
@@ -331,7 +331,7 @@ export default function BrandingPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-amber-600" />
+                <Sparkles className="h-5 w-5 text-primary" />
                 Başlık Stili
               </CardTitle>
               <CardDescription>
@@ -352,14 +352,14 @@ export default function BrandingPage() {
                       className={cn(
                         'p-4 rounded-lg border-2 transition-all text-left',
                         isSelected
-                          ? 'border-amber-500 bg-amber-500/5 shadow-sm'
-                          : 'border-border hover:border-amber-500/50 hover:bg-accent/50'
+                          ? 'border-primary bg-primary/5 shadow-sm'
+                          : 'border-border hover:border-primary/50 hover:bg-accent/50'
                       )}
                     >
                       <h4
                         className={cn(
                           'font-semibold mb-1',
-                          isSelected && 'text-amber-600'
+                          isSelected && 'text-primary'
                         )}
                       >
                         {style.label}
@@ -378,7 +378,7 @@ export default function BrandingPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ImageIcon className="h-5 w-5 text-amber-600" />
+                <ImageIcon className="h-5 w-5 text-primary" />
                 Görünüm Seçenekleri
               </CardTitle>
               <CardDescription>
@@ -439,7 +439,7 @@ export default function BrandingPage() {
         {/* Preview Panel */}
         <div className="lg:sticky lg:top-6 h-fit">
           <Card className="overflow-hidden">
-            <CardHeader className="bg-gradient-to-br from-amber-500/10 to-orange-500/10">
+            <CardHeader className="bg-gradient-to-br from-primary/10 to-primary/10">
               <CardTitle className="flex items-center gap-2">
                 <Eye className="h-5 w-5" />
                 Önizleme

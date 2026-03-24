@@ -57,7 +57,7 @@ const planIcons: Record<string, typeof Sparkles> = {
 const planColors: Record<string, string> = {
   FREE: 'from-gray-500 to-gray-600',
   STARTER: 'from-blue-500 to-blue-600',
-  PROFESSIONAL: 'from-amber-500 to-orange-600',
+  PROFESSIONAL: 'from-primary to-primary/80',
   ENTERPRISE: 'from-purple-500 to-indigo-600',
 };
 
@@ -82,7 +82,7 @@ export default function SubscriptionPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -103,14 +103,14 @@ export default function SubscriptionPage() {
 
       {/* Current Plan */}
       <motion.div variants={item}>
-        <Card className="border-2 border-amber-500/50 bg-gradient-to-br from-amber-500/5 to-orange-500/5">
+        <Card className="border-2 border-primary/50 bg-gradient-to-br from-primary/5 to-primary/5">
           <CardHeader>
             <div className="flex items-start justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
                   {(() => {
                     const Icon = planIcons[currentPlan] || Sparkles;
-                    return <Icon className="h-5 w-5 text-amber-600" />;
+                    return <Icon className="h-5 w-5 text-primary" />;
                   })()}
                   Mevcut Planınız: {currentPlanData?.name || currentPlan}
                 </CardTitle>
@@ -120,7 +120,7 @@ export default function SubscriptionPage() {
                     : 'Ücretsiz plan'}
                 </CardDescription>
               </div>
-              <Badge className="bg-gradient-to-r from-amber-500 to-orange-600">
+              <Badge className="bg-gradient-to-r from-primary to-primary/80">
                 {statusLabels[subscription?.status || 'ACTIVE']}
               </Badge>
             </div>
@@ -160,7 +160,7 @@ export default function SubscriptionPage() {
             <div className="space-y-3 pt-4 border-t">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-amber-600" />
+                  <Sparkles className="h-4 w-4 text-primary" />
                   <span className="font-medium">AI Kredi Kullanımı</span>
                 </div>
                 <span className="text-sm text-muted-foreground">
@@ -194,13 +194,13 @@ export default function SubscriptionPage() {
                 <Card
                   className={cn(
                     'relative h-full',
-                    isPopular && 'border-2 border-amber-500 shadow-lg',
-                    isCurrent && 'ring-2 ring-amber-500'
+                    isPopular && 'border-2 border-primary shadow-lg',
+                    isCurrent && 'ring-2 ring-primary'
                   )}
                 >
                   {isPopular && !isCurrent && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 px-4">
+                      <Badge className="bg-gradient-to-r from-primary to-primary/80 px-4">
                         En Popüler
                       </Badge>
                     </div>
@@ -259,7 +259,7 @@ export default function SubscriptionPage() {
                       <Button
                         className={cn(
                           'w-full gap-2',
-                          isPopular && 'bg-gradient-to-r from-amber-500 to-orange-600'
+                          isPopular && 'bg-gradient-to-r from-primary to-primary/80'
                         )}
                         variant={isPopular ? 'default' : 'outline'}
                       >
@@ -280,7 +280,7 @@ export default function SubscriptionPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5 text-amber-600" />
+              <CreditCard className="h-5 w-5 text-primary" />
               Ödeme Yöntemi
             </CardTitle>
             <CardDescription>

@@ -39,7 +39,7 @@ const STATUS_COLORS: Record<string, string> = {
   PREPARING: 'bg-purple-100 text-purple-800',
   READY: 'bg-green-100 text-green-800',
   SERVED: 'bg-teal-100 text-teal-800',
-  COMPLETED: 'bg-gray-100 text-gray-800',
+  COMPLETED: 'bg-muted/50 text-foreground',
   CANCELLED: 'bg-red-100 text-red-800',
 };
 
@@ -68,7 +68,7 @@ const PAYMENT_LABELS: Record<string, string> = {
 const PAYMENT_COLORS: Record<string, string> = {
   UNPAID: 'bg-red-100 text-red-800',
   PAID: 'bg-green-100 text-green-800',
-  REFUNDED: 'bg-amber-100 text-amber-800',
+  REFUNDED: 'bg-primary/10 text-primary',
 };
 
 export default function AdminOrdersPage() {

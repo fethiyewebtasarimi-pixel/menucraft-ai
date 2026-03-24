@@ -45,7 +45,7 @@ const PLAN_COLORS: Record<string, string> = {
   FREE: 'from-gray-500 to-gray-600',
   STARTER: 'from-blue-500 to-blue-600',
   PROFESSIONAL: 'from-purple-500 to-purple-600',
-  ENTERPRISE: 'from-amber-500 to-amber-600',
+  ENTERPRISE: 'from-primary to-primary/80',
 };
 
 export default function AdminPlansPage() {
@@ -154,7 +154,7 @@ export default function AdminPlansPage() {
       </div>
 
       {hasChanges && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
+        <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 text-sm text-primary">
           Kaydedilmemiş değişiklikler var. Kaydet butonuna tıklayarak değişiklikleri uygulayın.
         </div>
       )}

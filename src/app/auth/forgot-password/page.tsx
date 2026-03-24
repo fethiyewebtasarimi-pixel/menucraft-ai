@@ -69,14 +69,14 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+        <h1 className="text-2xl font-bold text-foreground dark:text-white mb-3">
           E-postanızı kontrol edin
         </h1>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-2">
+        <p className="text-muted-foreground dark:text-muted-foreground/70 mb-2">
           Şifre sıfırlama bağlantısı gönderildi:
         </p>
-        <p className="font-medium text-gray-900 dark:text-white mb-6">
+        <p className="font-medium text-foreground dark:text-white mb-6">
           {getValues("email")}
         </p>
 
@@ -99,7 +99,7 @@ export default function ForgotPasswordPage() {
           <Link href="/auth/login">
             <Button
               variant="ghost"
-              className="w-full text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300"
+              className="w-full text-primary hover:text-primary/80 dark:text-primary dark:hover:text-primary/80"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Giriş sayfasına dön
@@ -117,10 +117,10 @@ export default function ForgotPasswordPage() {
       transition={{ duration: 0.4 }}
     >
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-3xl font-bold text-foreground dark:text-white mb-2">
           Şifremi Unuttum
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-muted-foreground dark:text-muted-foreground/70">
           Endişelenmeyin, size sıfırlama talimatları göndereceğiz
         </p>
       </div>
@@ -128,11 +128,11 @@ export default function ForgotPasswordPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Email Field */}
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">
+          <Label htmlFor="email" className="text-foreground/80 dark:text-gray-300">
             E-posta adresi
           </Label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
             <Input
               id="email"
               type="email"
@@ -153,7 +153,7 @@ export default function ForgotPasswordPage() {
         {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+          className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white shadow-lg hover:shadow-xl transition-all duration-300"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -171,7 +171,7 @@ export default function ForgotPasswordPage() {
           <Button
             type="button"
             variant="ghost"
-            className="w-full text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+            className="w-full text-muted-foreground hover:text-gray-900 dark:text-muted-foreground/70 dark:hover:text-white"
             disabled={isLoading}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -181,8 +181,8 @@ export default function ForgotPasswordPage() {
       </form>
 
       {/* Help Text */}
-      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-        <p className="text-xs text-gray-600 dark:text-gray-400 text-center">
+      <div className="mt-6 p-4 bg-accent dark:bg-gray-700/50 rounded-lg">
+        <p className="text-xs text-muted-foreground dark:text-muted-foreground/70 text-center">
           Birkaç dakika içinde e-posta almadıysanız, lütfen spam klasörünüzü
           kontrol edin veya destek ile iletişime geçin.
         </p>

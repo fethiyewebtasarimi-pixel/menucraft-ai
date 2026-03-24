@@ -147,13 +147,13 @@ export default function OrderPage({
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-accent dark:bg-gray-950 flex items-center justify-center px-4">
         <div className="text-center">
-          <ShoppingBag className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          <ShoppingBag className="w-16 h-16 text-muted-foreground/70 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-foreground dark:text-white mb-2">
             Sepetiniz Boş
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-muted-foreground dark:text-muted-foreground/70 mb-6">
             Sipariş vermek için önce sepete ürün eklemelisiniz.
           </p>
           <button
@@ -169,18 +169,18 @@ export default function OrderPage({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-8">
+    <div className="min-h-screen bg-accent dark:bg-gray-950 py-8">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
+            className="flex items-center gap-2 text-muted-foreground dark:text-muted-foreground/70 hover:text-foreground dark:hover:text-white mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Geri Dön</span>
           </button>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-foreground dark:text-white">
             Siparişi Tamamla
           </h1>
         </div>
@@ -190,8 +190,8 @@ export default function OrderPage({
             {/* Main Form */}
             <div className="md:col-span-2 space-y-6">
               {/* Order Type Selection */}
-              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+              <div className="bg-card dark:bg-gray-900 rounded-xl shadow-md p-6">
+                <h2 className="text-xl font-bold mb-4 text-foreground dark:text-white">
                   Sipariş Tipi
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -208,7 +208,7 @@ export default function OrderPage({
                         className={`p-4 rounded-xl border-2 transition-all ${
                           isSelected
                             ? "shadow-lg"
-                            : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                            : "border-border dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
                         }`}
                         style={
                           isSelected
@@ -226,7 +226,7 @@ export default function OrderPage({
                         <div className="text-sm font-semibold">
                           {type.label}
                         </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                        <div className="text-xs text-muted-foreground dark:text-muted-foreground/70">
                           {type.description}
                         </div>
                       </motion.button>
@@ -240,19 +240,19 @@ export default function OrderPage({
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6"
+                  className="bg-card dark:bg-gray-900 rounded-xl shadow-md p-6"
                 >
-                  <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                  <h2 className="text-xl font-bold mb-4 text-foreground dark:text-white">
                     Masa Numarası
                   </h2>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
                     <input
                       type="text"
                       value={tableNumber}
                       onChange={(e) => setTableNumber(e.target.value)}
                       placeholder="Örn: 12"
-                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-border dark:border-gray-700 bg-card dark:bg-gray-800 focus:outline-none focus:ring-2"
                       style={{ "--tw-ring-color": accentColor } as any}
                       required
                     />
@@ -261,43 +261,43 @@ export default function OrderPage({
               )}
 
               {/* Customer Information */}
-              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+              <div className="bg-card dark:bg-gray-900 rounded-xl shadow-md p-6">
+                <h2 className="text-xl font-bold mb-4 text-foreground dark:text-white">
                   İletişim Bilgileri
                 </h2>
                 <div className="space-y-4">
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
                     <input
                       type="text"
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       placeholder="Adınız Soyadınız"
-                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-border dark:border-gray-700 bg-card dark:bg-gray-800 focus:outline-none focus:ring-2"
                       style={{ "--tw-ring-color": accentColor } as any}
                       required
                     />
                   </div>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
                     <input
                       type="tel"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
                       placeholder="Telefon Numaranız"
-                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-border dark:border-gray-700 bg-card dark:bg-gray-800 focus:outline-none focus:ring-2"
                       style={{ "--tw-ring-color": accentColor } as any}
                       required
                     />
                   </div>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
                     <input
                       type="email"
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
                       placeholder="E-posta Adresiniz (Opsiyonel)"
-                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-border dark:border-gray-700 bg-card dark:bg-gray-800 focus:outline-none focus:ring-2"
                       style={{ "--tw-ring-color": accentColor } as any}
                     />
                   </div>
@@ -309,16 +309,16 @@ export default function OrderPage({
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6"
+                  className="bg-card dark:bg-gray-900 rounded-xl shadow-md p-6"
                 >
-                  <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                  <h2 className="text-xl font-bold mb-4 text-foreground dark:text-white">
                     Teslimat Adresi
                   </h2>
                   <textarea
                     value={deliveryAddress}
                     onChange={(e) => setDeliveryAddress(e.target.value)}
                     placeholder="Tam adresinizi yazın..."
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 resize-none"
+                    className="w-full px-4 py-3 rounded-lg border border-border dark:border-gray-700 bg-card dark:bg-gray-800 focus:outline-none focus:ring-2 resize-none"
                     style={{ "--tw-ring-color": accentColor } as any}
                     rows={4}
                     required
@@ -327,17 +327,17 @@ export default function OrderPage({
               )}
 
               {/* Special Notes */}
-              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+              <div className="bg-card dark:bg-gray-900 rounded-xl shadow-md p-6">
+                <h2 className="text-xl font-bold mb-4 text-foreground dark:text-white">
                   Özel Notlar
                 </h2>
                 <div className="relative">
-                  <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-muted-foreground/70" />
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Özel istekleriniz varsa buraya yazabilirsiniz..."
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 resize-none"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-border dark:border-gray-700 bg-card dark:bg-gray-800 focus:outline-none focus:ring-2 resize-none"
                     style={{ "--tw-ring-color": accentColor } as any}
                     rows={4}
                   />
@@ -347,8 +347,8 @@ export default function OrderPage({
 
             {/* Order Summary */}
             <div className="md:col-span-1">
-              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 sticky top-4">
-                <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+              <div className="bg-card dark:bg-gray-900 rounded-xl shadow-md p-6 sticky top-4">
+                <h2 className="text-xl font-bold mb-4 text-foreground dark:text-white">
                   Sipariş Özeti
                 </h2>
                 <div className="space-y-3 mb-4">
@@ -358,45 +358,45 @@ export default function OrderPage({
                       className="flex justify-between text-sm"
                     >
                       <div className="flex-1">
-                        <div className="font-medium text-gray-900 dark:text-white">
+                        <div className="font-medium text-foreground dark:text-white">
                           {item.quantity}x {item.name}
                         </div>
                         {item.variant && (
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-muted-foreground">
                             {item.variant}
                           </div>
                         )}
                         {item.modifiers && item.modifiers.length > 0 && (
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-muted-foreground">
                             +{item.modifiers.join(", ")}
                           </div>
                         )}
                       </div>
-                      <div className="font-semibold text-gray-900 dark:text-white">
+                      <div className="font-semibold text-foreground dark:text-white">
                         {formatPrice(item.price * item.quantity)}
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
+                <div className="border-t border-border dark:border-gray-700 pt-4 space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">
+                    <span className="text-muted-foreground dark:text-muted-foreground/70">
                       Ara Toplam
                     </span>
-                    <span className="font-medium text-gray-900 dark:text-white">
+                    <span className="font-medium text-foreground dark:text-white">
                       {formatPrice(subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">
+                    <span className="text-muted-foreground dark:text-muted-foreground/70">
                       KDV (%10)
                     </span>
-                    <span className="font-medium text-gray-900 dark:text-white">
+                    <span className="font-medium text-foreground dark:text-white">
                       {formatPrice(tax)}
                     </span>
                   </div>
-                  <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200 dark:border-gray-700">
-                    <span className="text-gray-900 dark:text-white">
+                  <div className="flex justify-between text-lg font-bold pt-2 border-t border-border dark:border-gray-700">
+                    <span className="text-foreground dark:text-white">
                       Toplam
                     </span>
                     <span style={{ color: accentColor }}>

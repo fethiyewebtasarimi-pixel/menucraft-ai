@@ -41,7 +41,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="bg-gradient-to-br from-amber-500 to-orange-600 p-2 rounded-lg">
+              <div className="bg-gradient-to-br from-primary to-primary/80 p-2 rounded-lg">
                 <ChefHat className="w-6 h-6 text-white" />
               </div>
               <span className="text-xl font-bold text-white">MenuCraft AI</span>
@@ -55,14 +55,14 @@ export default function Footer() {
             <div className="space-y-3">
               <a
                 href="mailto:destek@menucraft.ai"
-                className="flex items-center gap-2 text-slate-400 hover:text-amber-500 transition-colors"
+                className="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors"
               >
                 <Mail className="w-4 h-4" />
                 <span className="text-sm">destek@menucraft.ai</span>
               </a>
               <a
                 href="tel:+905551234567"
-                className="flex items-center gap-2 text-slate-400 hover:text-amber-500 transition-colors"
+                className="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 <span className="text-sm">+90 (555) 123 45 67</span>
@@ -86,7 +86,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-slate-400 hover:text-amber-500 transition-colors text-sm"
+                    className="text-slate-400 hover:text-primary transition-colors text-sm"
                   >
                     {link.label}
                   </a>
@@ -103,7 +103,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-slate-400 hover:text-amber-500 transition-colors text-sm"
+                    className="text-slate-400 hover:text-primary transition-colors text-sm"
                   >
                     {link.label}
                   </a>
@@ -120,7 +120,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-slate-400 hover:text-amber-500 transition-colors text-sm"
+                    className="text-slate-400 hover:text-primary transition-colors text-sm"
                   >
                     {link.label}
                   </a>
@@ -137,7 +137,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-slate-400 hover:text-amber-500 transition-colors text-sm"
+                    className="text-slate-400 hover:text-primary transition-colors text-sm"
                   >
                     {link.label}
                   </a>
@@ -164,7 +164,7 @@ export default function Footer() {
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
-                className="w-10 h-10 bg-slate-800 hover:bg-amber-600 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                className="w-10 h-10 bg-slate-800 hover:bg-primary/90 rounded-full flex items-center justify-center transition-all hover:scale-110"
               >
                 <social.icon className="w-5 h-5" />
               </a>

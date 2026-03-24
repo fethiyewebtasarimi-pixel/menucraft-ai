@@ -31,14 +31,14 @@ const features = [
     title: "Sipariş Sistemi",
     description:
       "Müşterileriniz QR koddan menüye erişsin, sipariş versin. Siparişleri gerçek zamanlı olarak takip edin.",
-    gradient: "from-orange-500 to-red-600",
+    gradient: "from-primary to-red-600",
   },
   {
     icon: BarChart3,
     title: "Detaylı Analitik",
     description:
       "Hangi yemekler daha çok görüntüleniyor, hangi saatlerde sipariş alıyorsunuz, müşteri davranışlarını analiz edin.",
-    gradient: "from-amber-500 to-yellow-600",
+    gradient: "from-primary to-yellow-600",
   },
   {
     icon: Palette,
@@ -96,9 +96,9 @@ export default function Features() {
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className="group relative"
             >
-              <div className="relative h-full bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-amber-500/50 overflow-hidden">
+              <div className="relative h-full bg-card dark:bg-card rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-primary/50 overflow-hidden">
                 {/* Background Gradient on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 {/* Accent Border Gradient */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity">
@@ -127,7 +127,7 @@ export default function Features() {
                 </div>
 
                 {/* Decorative Circle */}
-                <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-br from-primary/10 to-primary/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </motion.div>
           ))}

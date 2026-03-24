@@ -98,8 +98,8 @@ export default function AdminAnalyticsPage() {
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <div className="p-3 rounded-full bg-amber-100">
-                    <CreditCard className="h-6 w-6 text-amber-600" />
+                  <div className="p-3 rounded-full bg-primary/10">
+                    <CreditCard className="h-6 w-6 text-primary" />
                   </div>
                 </div>
                 <p className="text-3xl font-bold">{formatPrice(last30.revenue || 0, 'TRY')}</p>

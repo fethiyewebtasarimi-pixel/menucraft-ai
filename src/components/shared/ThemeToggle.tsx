@@ -43,7 +43,7 @@ const ThemeToggle: React.FC = () => {
   // Avoid hydration mismatch by not rendering until mounted
   if (!mounted) {
     return (
-      <div className="w-10 h-10 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700" />
+      <div className="w-10 h-10 rounded-lg bg-card dark:bg-card shadow-md border border-border dark:border-border" />
     );
   }
 
@@ -52,7 +52,7 @@ const ThemeToggle: React.FC = () => {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all border border-gray-200 dark:border-gray-700 relative overflow-hidden"
+      className="p-2 rounded-lg bg-card dark:bg-card shadow-md hover:shadow-lg transition-all border border-border dark:border-border relative overflow-hidden"
       aria-label="Toggle theme"
     >
       <motion.div
@@ -65,7 +65,7 @@ const ThemeToggle: React.FC = () => {
         transition={{ duration: 0.3 }}
         className="absolute inset-0 flex items-center justify-center"
       >
-        <Sun className="w-5 h-5 text-amber-500" />
+        <Sun className="w-5 h-5 text-primary" />
       </motion.div>
       <motion.div
         initial={false}

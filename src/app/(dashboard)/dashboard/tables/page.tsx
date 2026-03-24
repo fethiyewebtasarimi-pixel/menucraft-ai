@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useRestaurants } from "@/hooks/useRestaurant";
 
 interface Table {
   id: string;
@@ -56,7 +57,9 @@ export default function TablesPage() {
     capacity: 4,
   });
 
-  const restaurantId = "current-restaurant-id";
+  const { data: restaurants } = useRestaurants();
+  const restaurant = restaurants?.[0];
+  const restaurantId = restaurant?.id;
 
   const { data: tables, isLoading } = useQuery<Table[]>({
     queryKey: ["tables", restaurantId],
@@ -65,6 +68,7 @@ export default function TablesPage() {
       if (!response.ok) throw new Error("Failed to fetch tables");
       return response.json();
     },
+    enabled: !!restaurantId,
   });
 
   const createTableMutation = useMutation({
@@ -183,10 +187,10 @@ export default function TablesPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto p-6 space-y-6">
-        <div className="h-10 bg-gray-200 rounded w-1/3 animate-pulse" />
+        <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
         <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-48 bg-gray-200 rounded-lg animate-pulse" />
+            <div key={i} className="h-48 bg-muted rounded-lg animate-pulse" />
           ))}
         </div>
       </div>
@@ -200,8 +204,8 @@ export default function TablesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Masa Yönetimi</h1>
-          <p className="text-gray-600 mt-1">{tables?.length || 0} masa tanımlandı</p>
+          <h1 className="text-3xl font-bold text-foreground">Masa Yönetimi</h1>
+          <p className="text-muted-foreground mt-1">{tables?.length || 0} masa tanımlandı</p>
         </div>
         <Button onClick={() => setIsCreateDialogOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
@@ -217,9 +221,9 @@ export default function TablesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="flex flex-col items-center justify-center py-20 bg-white rounded-lg border border-gray-200"
+            className="flex flex-col items-center justify-center py-20 bg-card rounded-lg border border-border"
           >
-            <div className="w-32 h-32 mb-6 text-gray-300">
+            <div className="w-32 h-32 mb-6 text-muted-foreground/70">
               <svg
                 viewBox="0 0 100 100"
                 fill="none"
@@ -233,10 +237,10 @@ export default function TablesPage() {
                 <circle cx="65" cy="65" r="4" fill="currentColor" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               Henüz masa eklenmemiş
             </h3>
-            <p className="text-gray-600 mb-6">İlk masanızı ekleyerek başlayın</p>
+            <p className="text-muted-foreground mb-6">İlk masanızı ekleyerek başlayın</p>
             <Button onClick={() => setIsCreateDialogOpen(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Masa Ekle
@@ -255,15 +259,15 @@ export default function TablesPage() {
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow"
+                className="bg-card rounded-lg border border-border p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-gray-900">
+                    <h3 className="text-2xl font-bold text-foreground">
                       Masa {table.number}
                     </h3>
                     {table.name && (
-                      <p className="text-sm text-gray-600 mt-1">{table.name}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{table.name}</p>
                     )}
                   </div>
                   <DropdownMenu>
@@ -289,15 +293,15 @@ export default function TablesPage() {
                 </div>
 
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-muted-foreground">
                     <Users className="w-4 h-4" />
                     <span className="text-sm">{table.capacity} kişilik</span>
                   </div>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                  <div className="flex items-center justify-between pt-3 border-t border-border/50">
                     <div className="flex items-center gap-2">
-                      <QrCode className="w-4 h-4 text-gray-600" />
-                      <span className="text-sm text-gray-600">QR Kod:</span>
+                      <QrCode className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">QR Kod:</span>
                     </div>
                     {table.hasQRCode ? (
                       <Badge variant="default">Bağlı</Badge>
@@ -307,7 +311,7 @@ export default function TablesPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-gray-100">
+                <div className="mt-4 pt-4 border-t border-border/50">
                   {table.hasQRCode ? (
                     <Button
                       variant="outline"

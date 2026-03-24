@@ -77,10 +77,10 @@ export const DAYS_OF_WEEK = [
 export const ORDER_STATUS_MAP = {
   PENDING: { label: "Bekliyor", color: "bg-yellow-100 text-yellow-800" },
   CONFIRMED: { label: "Onaylandı", color: "bg-blue-100 text-blue-800" },
-  PREPARING: { label: "Hazırlanıyor", color: "bg-orange-100 text-orange-800" },
+  PREPARING: { label: "Hazırlanıyor", color: "bg-primary/10 text-primary" },
   READY: { label: "Hazır", color: "bg-green-100 text-green-800" },
   SERVED: { label: "Servis Edildi", color: "bg-emerald-100 text-emerald-800" },
-  COMPLETED: { label: "Tamamlandı", color: "bg-gray-100 text-gray-800" },
+  COMPLETED: { label: "Tamamlandı", color: "bg-muted/50 text-foreground" },
   CANCELLED: { label: "İptal Edildi", color: "bg-red-100 text-red-800" },
 };
 

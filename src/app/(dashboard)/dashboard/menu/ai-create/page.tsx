@@ -698,14 +698,14 @@ export default function AIMenuWizardPage() {
             className="space-y-4"
           >
             {/* Disclaimer */}
-            <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
+            <Card className="border-primary/20 bg-primary/5 dark:bg-primary/5 dark:border-primary/30">
               <CardContent className="p-4 flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <AlertTriangle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                 <div className="text-sm">
-                  <p className="font-medium text-amber-900 dark:text-amber-300">
+                  <p className="font-medium text-primary dark:text-primary">
                     AI Tahmini - Son Kontrolü Siz Yapın
                   </p>
-                  <p className="text-amber-700 dark:text-amber-400 mt-1">
+                  <p className="text-primary dark:text-primary/80 mt-1">
                     Aşağıdaki değerler AI tarafından tahmin edilmiştir. Lütfen
                     tüm bilgileri kontrol edin ve gerektiğinde düzeltin.
                     Fiyatları kendiniz girmeniz gerekiyor.
@@ -1264,7 +1264,7 @@ export default function AIMenuWizardPage() {
                   <Button
                     size="lg"
                     onClick={() => router.push("/dashboard/menu/print")}
-                    className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+                    className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/80 text-white"
                   >
                     <FileDown className="w-5 h-5 mr-2" />
                     PDF Menü Oluştur

@@ -52,7 +52,7 @@ export default function Header() {
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
-            <div className="bg-gradient-to-br from-amber-500 to-orange-600 p-2 rounded-lg">
+            <div className="bg-gradient-to-br from-primary to-primary/80 p-2 rounded-lg">
               <ChefHat className="w-6 h-6 text-white" />
             </div>
             <span
@@ -77,7 +77,7 @@ export default function Header() {
                 transition={{ delay: index * 0.1 }}
                 onClick={() => scrollToSection(link.href)}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-amber-600",
+                  "text-sm font-medium transition-colors hover:text-primary",
                   isScrolled
                     ? "text-slate-600 dark:text-slate-300"
                     : "text-white/90 hover:text-white"
@@ -105,7 +105,7 @@ export default function Header() {
             >
               <Link href="/auth/login">Giriş Yap</Link>
             </Button>
-            <Button asChild className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg">
+            <Button asChild className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white shadow-lg">
               <Link href="/auth/register">Ücretsiz Başla</Link>
             </Button>
           </motion.div>
@@ -157,7 +157,7 @@ export default function Header() {
                 <Button variant="ghost" asChild className="w-full">
                   <Link href="/auth/login">Giriş Yap</Link>
                 </Button>
-                <Button asChild className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white">
+                <Button asChild className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white">
                   <Link href="/auth/register">Ücretsiz Başla</Link>
                 </Button>
               </div>

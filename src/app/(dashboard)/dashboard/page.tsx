@@ -235,7 +235,7 @@ export default function DashboardPage() {
                   {analytics.topSellingItems.slice(0, 5).map((item, index) => (
                     <div key={item.menuItem?.id || index} className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-amber-500/10 to-orange-500/10 text-amber-600 font-semibold text-xs">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 text-primary font-semibold text-xs">
                           #{index + 1}
                         </div>
                         <div>
@@ -304,15 +304,15 @@ export default function DashboardPage() {
                     const statusColors: Record<string, string> = {
                       PENDING: 'bg-yellow-100 text-yellow-800',
                       CONFIRMED: 'bg-blue-100 text-blue-800',
-                      PREPARING: 'bg-orange-100 text-orange-800',
+                      PREPARING: 'bg-primary/10 text-primary',
                       READY: 'bg-green-100 text-green-800',
                       SERVED: 'bg-emerald-100 text-emerald-800',
-                      COMPLETED: 'bg-gray-100 text-gray-800',
+                      COMPLETED: 'bg-muted/50 text-foreground',
                       CANCELLED: 'bg-red-100 text-red-800',
                     };
                     return (
                       <div key={status} className="flex items-center justify-between">
-                        <span className={`text-xs px-2 py-1 rounded-full ${statusColors[status] || 'bg-gray-100 text-gray-800'}`}>
+                        <span className={`text-xs px-2 py-1 rounded-full ${statusColors[status] || 'bg-muted/50 text-foreground'}`}>
                           {statusLabels[status] || status}
                         </span>
                         <span className="font-semibold">{count}</span>
@@ -357,21 +357,21 @@ export default function DashboardPage() {
             const Icon = link.icon;
             return (
               <Link key={link.title} href={link.href}>
-                <Card className="h-full hover:shadow-lg transition-all duration-300 hover:border-amber-500/50 cursor-pointer group">
+                <Card className="h-full hover:shadow-lg transition-all duration-300 hover:border-primary/50 cursor-pointer group">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-3 ring-1 ring-amber-500/20 group-hover:ring-amber-500/40 transition-all">
-                        <Icon className="h-6 w-6 text-amber-600" />
+                      <div className="rounded-lg bg-gradient-to-br from-primary/10 to-primary/10 p-3 ring-1 ring-primary/20 group-hover:ring-primary/40 transition-all">
+                        <Icon className="h-6 w-6 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold mb-1 group-hover:text-amber-600 transition-colors">
+                        <h3 className="font-semibold mb-1 group-hover:text-primary transition-colors">
                           {link.title}
                         </h3>
                         <p className="text-sm text-muted-foreground">
                           {link.description}
                         </p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-amber-600 group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                     </div>
                   </CardContent>
                 </Card>

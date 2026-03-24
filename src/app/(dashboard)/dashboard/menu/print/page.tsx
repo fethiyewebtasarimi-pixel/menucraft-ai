@@ -165,7 +165,7 @@ export default function PrintMenuPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-600 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
   }
@@ -182,7 +182,7 @@ export default function PrintMenuPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
-            <FileDown className="h-8 w-8 text-amber-600" />
+            <FileDown className="h-8 w-8 text-primary" />
             Basıma Hazır Menü
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -197,7 +197,7 @@ export default function PrintMenuPage() {
           <Button
             onClick={handleDownloadPDF}
             disabled={isGenerating}
-            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/80 text-white"
           >
             {isGenerating ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -230,7 +230,7 @@ export default function PrintMenuPage() {
                     }
                     className={`w-full text-left p-3 rounded-lg border-2 transition-all ${
                       settings.template === key
-                        ? "border-amber-500 bg-amber-50 dark:bg-amber-950/20"
+                        ? "border-primary bg-primary/5 dark:bg-primary/5"
                         : "border-transparent hover:border-muted"
                     }`}
                   >
@@ -531,7 +531,7 @@ export default function PrintMenuPage() {
 
                               <div className="flex items-center gap-2 mt-1 flex-wrap">
                                 {settings.showCalories && item.calories && (
-                                  <span className="text-[10px] text-orange-600 font-medium">
+                                  <span className="text-[10px] text-primary font-medium">
                                     {item.calories} kcal
                                   </span>
                                 )}

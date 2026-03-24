@@ -41,18 +41,18 @@ const Logo: React.FC<LogoProps> = ({
     <div className={`flex items-center gap-2 ${className}`}>
       <div className="relative">
         <ChefHat
-          className={`${config.icon} text-amber-600 dark:text-amber-500`}
+          className={`${config.icon} text-primary dark:text-primary`}
         />
       </div>
       {showText && (
         <div className="flex items-baseline gap-1">
           <span
-            className={`${config.text} font-bold text-gray-900 dark:text-white`}
+            className={`${config.text} font-bold text-foreground dark:text-white`}
           >
             MenuCraft
           </span>
           <span
-            className={`${config.ai} font-bold text-amber-600 dark:text-amber-500`}
+            className={`${config.ai} font-bold text-primary dark:text-primary`}
           >
             AI
           </span>

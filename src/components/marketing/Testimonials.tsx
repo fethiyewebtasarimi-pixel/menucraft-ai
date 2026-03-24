@@ -64,10 +64,10 @@ export default function Testimonials() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group"
             >
-              <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 h-full">
+              <div className="relative bg-card dark:bg-card rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 h-full">
                 {/* Quote Icon */}
                 <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                  <Quote className="w-16 h-16 text-amber-500" />
+                  <Quote className="w-16 h-16 text-primary" />
                 </div>
 
                 {/* Rating */}
@@ -75,7 +75,7 @@ export default function Testimonials() {
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
                     <Star
                       key={i}
-                      className="w-5 h-5 fill-amber-500 text-amber-500"
+                      className="w-5 h-5 fill-primary text-primary"
                     />
                   ))}
                 </div>
@@ -88,7 +88,7 @@ export default function Testimonials() {
                 {/* Author */}
                 <div className="flex items-center gap-4 relative z-10">
                   {/* Avatar */}
-                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
                     {testimonial.avatar}
                   </div>
 
@@ -107,7 +107,7 @@ export default function Testimonials() {
                 </div>
 
                 {/* Decorative Gradient */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-600 rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary/80 rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </motion.div>
           ))}
@@ -122,7 +122,7 @@ export default function Testimonials() {
           className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-4xl mx-auto"
         >
           <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-amber-600 mb-2">
+            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
               4.9/5
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-400">
@@ -130,7 +130,7 @@ export default function Testimonials() {
             </div>
           </div>
           <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-amber-600 mb-2">
+            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
               10,000+
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-400">
@@ -138,7 +138,7 @@ export default function Testimonials() {
             </div>
           </div>
           <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-amber-600 mb-2">
+            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
               %98
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-400">
@@ -146,7 +146,7 @@ export default function Testimonials() {
             </div>
           </div>
           <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-amber-600 mb-2">
+            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">
               500K+
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-400">

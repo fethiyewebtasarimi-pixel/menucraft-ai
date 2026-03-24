@@ -100,7 +100,7 @@ const Cart: React.FC<CartProps> = ({
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full md:w-96 bg-white dark:bg-gray-900 shadow-2xl z-50 flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-full md:w-96 bg-card dark:bg-gray-900 shadow-2xl z-50 flex flex-col"
             >
               {/* Header */}
               <div
@@ -125,7 +125,7 @@ const Cart: React.FC<CartProps> = ({
               {/* Items */}
               <div className="flex-1 overflow-y-auto p-4">
                 {items.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                  <div className="flex flex-col items-center justify-center h-full text-muted-foreground/70">
                     <ShoppingCart className="w-16 h-16 mb-4" />
                     <p className="text-lg font-medium">Sepetiniz boş</p>
                     <p className="text-sm">Menüden ürün ekleyin</p>
@@ -139,11 +139,11 @@ const Cart: React.FC<CartProps> = ({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, x: 100 }}
-                        className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4"
+                        className="bg-accent dark:bg-gray-800 rounded-xl p-4"
                       >
                         <div className="flex gap-3">
                           {/* Item Image/Icon */}
-                          <div className="w-16 h-16 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-2xl flex-shrink-0">
+                          <div className="w-16 h-16 rounded-lg bg-muted dark:bg-gray-700 flex items-center justify-center text-2xl flex-shrink-0">
                             {item.image ? (
                               <img
                                 src={item.image}
@@ -157,21 +157,21 @@ const Cart: React.FC<CartProps> = ({
 
                           {/* Item Details */}
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-1">
+                            <h3 className="font-semibold text-foreground dark:text-white line-clamp-1">
                               {item.name}
                             </h3>
                             {item.variant && (
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                              <p className="text-xs text-muted-foreground dark:text-muted-foreground/70">
                                 {item.variant}
                               </p>
                             )}
                             {item.modifiers && item.modifiers.length > 0 && (
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                              <p className="text-xs text-muted-foreground dark:text-muted-foreground/70">
                                 +{item.modifiers.join(", ")}
                               </p>
                             )}
                             {item.notes && (
-                              <p className="text-xs text-gray-500 dark:text-gray-400 italic line-clamp-1">
+                              <p className="text-xs text-muted-foreground dark:text-muted-foreground/70 italic line-clamp-1">
                                 "{item.notes}"
                               </p>
                             )}
@@ -186,7 +186,7 @@ const Cart: React.FC<CartProps> = ({
                                       Math.max(1, item.quantity - 1)
                                     )
                                   }
-                                  className="p-1 rounded bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                                  className="p-1 rounded bg-card dark:bg-gray-700 hover:bg-muted/50 dark:hover:bg-gray-600 transition-colors"
                                   aria-label="Decrease quantity"
                                 >
                                   <Minus className="w-4 h-4" />
@@ -198,7 +198,7 @@ const Cart: React.FC<CartProps> = ({
                                   onClick={() =>
                                     onUpdateQuantity(item.id, item.quantity + 1)
                                   }
-                                  className="p-1 rounded bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                                  className="p-1 rounded bg-card dark:bg-gray-700 hover:bg-muted/50 dark:hover:bg-gray-600 transition-colors"
                                   aria-label="Increase quantity"
                                 >
                                   <Plus className="w-4 h-4" />
@@ -231,7 +231,7 @@ const Cart: React.FC<CartProps> = ({
 
               {/* Footer */}
               {items.length > 0 && (
-                <div className="p-6 border-t border-gray-200 dark:border-gray-800 space-y-4">
+                <div className="p-6 border-t border-border dark:border-gray-800 space-y-4">
                   {/* Clear Cart Button */}
                   <button
                     onClick={onClearCart}
@@ -242,7 +242,7 @@ const Cart: React.FC<CartProps> = ({
 
                   {/* Subtotal */}
                   <div className="flex items-center justify-between text-lg">
-                    <span className="font-medium text-gray-700 dark:text-gray-300">
+                    <span className="font-medium text-foreground/80 dark:text-gray-300">
                       Ara Toplam
                     </span>
                     <span

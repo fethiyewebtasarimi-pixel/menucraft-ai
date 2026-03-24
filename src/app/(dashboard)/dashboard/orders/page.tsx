@@ -63,7 +63,7 @@ const statusConfig = {
   },
   completed: {
     label: "Tamamlandı",
-    color: "bg-gray-500",
+    color: "bg-accent0",
     icon: CheckCircle,
     nextStatus: null,
     nextLabel: null,
@@ -126,10 +126,10 @@ export default function OrdersPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto p-6 space-y-6">
-        <div className="h-10 bg-gray-200 rounded w-1/3 animate-pulse" />
+        <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-48 bg-gray-200 rounded-lg animate-pulse" />
+            <div key={i} className="h-48 bg-muted rounded-lg animate-pulse" />
           ))}
         </div>
       </div>
@@ -143,17 +143,17 @@ export default function OrdersPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Sipariş Yönetimi</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-foreground">Sipariş Yönetimi</h1>
+          <p className="text-muted-foreground mt-1">
             {orderCounts.pending} bekleyen sipariş
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-white rounded-lg border px-4 py-2">
+          <div className="flex items-center gap-2 bg-card rounded-lg border px-4 py-2">
             {soundEnabled ? (
-              <Bell className="w-5 h-5 text-gray-600" />
+              <Bell className="w-5 h-5 text-muted-foreground" />
             ) : (
-              <BellOff className="w-5 h-5 text-gray-400" />
+              <BellOff className="w-5 h-5 text-muted-foreground/70" />
             )}
             <Label htmlFor="sound-toggle" className="text-sm font-medium cursor-pointer">
               Bildirim Sesi
@@ -214,9 +214,9 @@ export default function OrdersPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="flex flex-col items-center justify-center py-20 bg-white rounded-lg border border-gray-200"
+                className="flex flex-col items-center justify-center py-20 bg-card rounded-lg border border-border"
               >
-                <div className="w-32 h-32 mb-6 text-gray-300">
+                <div className="w-32 h-32 mb-6 text-muted-foreground/70">
                   <svg
                     viewBox="0 0 100 100"
                     fill="none"
@@ -229,10 +229,10 @@ export default function OrdersPage() {
                     <line x1="35" y1="65" x2="65" y2="65" stroke="currentColor" strokeWidth="2" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold text-foreground mb-2">
                   Henüz sipariş yok
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   Yeni siparişler burada görünecek
                 </p>
               </motion.div>
@@ -241,13 +241,13 @@ export default function OrdersPage() {
                 key="no-filter"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-20 bg-white rounded-lg border border-gray-200"
+                className="flex flex-col items-center justify-center py-20 bg-card rounded-lg border border-border"
               >
-                <Clock className="w-16 h-16 text-gray-300 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <Clock className="w-16 h-16 text-muted-foreground/70 mb-4" />
+                <h3 className="text-xl font-semibold text-foreground mb-2">
                   Bu kategoride sipariş yok
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   Diğer kategorilere göz atın
                 </p>
               </motion.div>
@@ -269,7 +269,7 @@ export default function OrdersPage() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
-                      className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow"
+                      className="bg-card rounded-lg border border-border p-6 hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-4">
@@ -278,14 +278,14 @@ export default function OrdersPage() {
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="text-lg font-semibold text-gray-900">
+                              <h3 className="text-lg font-semibold text-foreground">
                                 Sipariş #{order.orderNumber}
                               </h3>
                               <Badge className={config.color}>
                                 {config.label}
                               </Badge>
                             </div>
-                            <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
+                            <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
                               <span>Masa {order.tableNumber}</span>
                               <span>•</span>
                               <span>
@@ -298,15 +298,15 @@ export default function OrdersPage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-gray-900">
+                          <p className="text-2xl font-bold text-foreground">
                             ₺{order.totalAmount.toFixed(2)}
                           </p>
                         </div>
                       </div>
 
                       {/* Order Items */}
-                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                        <h4 className="font-medium text-gray-900 mb-3">Ürünler</h4>
+                      <div className="bg-accent rounded-lg p-4 mb-4">
+                        <h4 className="font-medium text-foreground mb-3">Ürünler</h4>
                         <div className="space-y-2">
                           {order.items.map((item) => (
                             <div
@@ -314,12 +314,12 @@ export default function OrdersPage() {
                               className="flex items-center justify-between text-sm"
                             >
                               <div className="flex items-center gap-2">
-                                <span className="font-medium text-gray-900">
+                                <span className="font-medium text-foreground">
                                   {item.quantity}x
                                 </span>
-                                <span className="text-gray-700">{item.name}</span>
+                                <span className="text-foreground/80">{item.name}</span>
                               </div>
-                              <span className="font-medium text-gray-900">
+                              <span className="font-medium text-foreground">
                                 ₺{(item.price * item.quantity).toFixed(2)}
                               </span>
                             </div>
@@ -329,14 +329,14 @@ export default function OrdersPage() {
 
                       {/* Customer Note */}
                       {order.customerNote && (
-                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                        <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 mb-4">
                           <div className="flex items-start gap-2">
-                            <MessageSquare className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                            <MessageSquare className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                             <div>
-                              <p className="text-sm font-medium text-amber-900">
+                              <p className="text-sm font-medium text-primary">
                                 Müşteri Notu
                               </p>
-                              <p className="text-sm text-amber-700 mt-1">
+                              <p className="text-sm text-primary mt-1">
                                 {order.customerNote}
                               </p>
                             </div>

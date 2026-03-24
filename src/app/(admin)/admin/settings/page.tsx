@@ -147,7 +147,7 @@ export default function AdminSettingsPage() {
                   {service.status === 'online' ? (
                     <CheckCircle className="h-5 w-5 text-green-600" />
                   ) : (
-                    <AlertTriangle className="h-5 w-5 text-amber-600" />
+                    <AlertTriangle className="h-5 w-5 text-primary" />
                   )}
                 </div>
               );

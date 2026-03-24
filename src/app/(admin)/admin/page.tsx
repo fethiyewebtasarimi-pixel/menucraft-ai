@@ -82,7 +82,7 @@ const ORDER_STATUS_COLORS: Record<string, string> = {
   PREPARING: 'bg-purple-100 text-purple-800',
   READY: 'bg-green-100 text-green-800',
   SERVED: 'bg-teal-100 text-teal-800',
-  COMPLETED: 'bg-gray-100 text-gray-800',
+  COMPLETED: 'bg-muted/50 text-foreground',
   CANCELLED: 'bg-red-100 text-red-800',
 };
 
@@ -97,10 +97,10 @@ const ORDER_STATUS_LABELS: Record<string, string> = {
 };
 
 const PLAN_COLORS: Record<string, string> = {
-  FREE: 'bg-gray-100 text-gray-800',
+  FREE: 'bg-muted/50 text-foreground',
   STARTER: 'bg-blue-100 text-blue-800',
   PROFESSIONAL: 'bg-purple-100 text-purple-800',
-  ENTERPRISE: 'bg-amber-100 text-amber-800',
+  ENTERPRISE: 'bg-primary/10 text-primary',
 };
 
 export default function AdminDashboardPage() {
@@ -298,7 +298,7 @@ export default function AdminDashboardPage() {
                     <div className="text-right">
                       <p className="text-sm font-medium">{(r._count as Record<string, number>)?.orders || 0} sipariş</p>
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                        <Star className="h-3 w-3 fill-primary text-primary" />
                         {(r._count as Record<string, number>)?.reviews || 0} yorum
                       </div>
                     </div>

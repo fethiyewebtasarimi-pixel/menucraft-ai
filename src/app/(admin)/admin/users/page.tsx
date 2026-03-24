@@ -48,15 +48,15 @@ import { toast } from 'sonner';
 const ROLE_COLORS: Record<string, string> = {
   OWNER: 'bg-blue-100 text-blue-800',
   MANAGER: 'bg-purple-100 text-purple-800',
-  STAFF: 'bg-gray-100 text-gray-800',
+  STAFF: 'bg-muted/50 text-foreground',
   ADMIN: 'bg-red-100 text-red-800',
 };
 
 const PLAN_COLORS: Record<string, string> = {
-  FREE: 'bg-gray-100 text-gray-800',
+  FREE: 'bg-muted/50 text-foreground',
   STARTER: 'bg-blue-100 text-blue-800',
   PROFESSIONAL: 'bg-purple-100 text-purple-800',
-  ENTERPRISE: 'bg-amber-100 text-amber-800',
+  ENTERPRISE: 'bg-primary/10 text-primary',
 };
 
 export default function AdminUsersPage() {

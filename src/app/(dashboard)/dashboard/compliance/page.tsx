@@ -114,7 +114,7 @@ export default function CompliancePage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-600 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     );
   }
@@ -123,7 +123,7 @@ export default function CompliancePage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
-          <ShieldCheck className="h-8 w-8 text-amber-600" />
+          <ShieldCheck className="h-8 w-8 text-primary" />
           Alerjen & Besin Uyumluluk
         </h1>
         <p className="text-muted-foreground mt-1">
@@ -132,27 +132,27 @@ export default function CompliancePage() {
       </div>
 
       {/* Overall Score */}
-      <Card className="border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 dark:border-amber-800">
+      <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/5 dark:from-primary/5 dark:to-primary/5 dark:border-primary/30">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-amber-900 dark:text-amber-300">
+              <h2 className="text-xl font-bold text-primary dark:text-primary">
                 Genel Uyumluluk Skoru
               </h2>
-              <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
+              <p className="text-sm text-primary dark:text-primary/80 mt-1">
                 {totalItems} üründen {withAllergens} tanesinde alerjen, {withCalories} tanesinde kalori bilgisi var
               </p>
             </div>
             <div className="text-right">
               <div className={`text-5xl font-bold ${
                 overallPercent >= 80 ? 'text-green-600' :
-                overallPercent >= 50 ? 'text-amber-600' : 'text-red-600'
+                overallPercent >= 50 ? 'text-primary' : 'text-red-600'
               }`}>
                 %{overallPercent}
               </div>
               <Badge className={
                 overallPercent >= 80 ? 'bg-green-100 text-green-800' :
-                overallPercent >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'
+                overallPercent >= 50 ? 'bg-primary/10 text-primary' : 'bg-red-100 text-red-800'
               }>
                 {overallPercent >= 80 ? 'İyi Durumda' :
                  overallPercent >= 50 ? 'Geliştirilebilir' : 'Acil Düzenleme Gerekli'}
@@ -167,7 +167,7 @@ export default function CompliancePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: 'Alerjen Bilgisi', percent: allergenPercent, count: withAllergens, icon: AlertTriangle, color: 'text-yellow-600' },
-          { label: 'Kalori Bilgisi', percent: caloriePercent, count: withCalories, icon: Zap, color: 'text-orange-600' },
+          { label: 'Kalori Bilgisi', percent: caloriePercent, count: withCalories, icon: Zap, color: 'text-primary' },
           { label: 'Besin Değerleri', percent: nutritionPercent, count: withNutrition, icon: Apple, color: 'text-green-600' },
           { label: 'Malzeme Listesi', percent: ingredientPercent, count: withIngredients, icon: FileText, color: 'text-blue-600' },
         ].map((stat) => (
@@ -240,7 +240,7 @@ export default function CompliancePage() {
       {missingCalories.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-orange-700">
+            <CardTitle className="flex items-center gap-2 text-primary">
               <Zap className="h-5 w-5" />
               Kalori Bilgisi Eksik ({missingCalories.length} ürün)
             </CardTitle>
@@ -250,10 +250,10 @@ export default function CompliancePage() {
               {missingCalories.slice(0, 10).map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-800 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-primary/5 dark:bg-primary/5 border border-primary/20 dark:border-primary/30 rounded-lg"
                 >
                   <div className="flex items-center gap-2">
-                    <XCircle className="h-4 w-4 text-orange-600" />
+                    <XCircle className="h-4 w-4 text-primary" />
                     <span className="font-medium">{item.name}</span>
                   </div>
                   <div className="flex items-center gap-2">

@@ -114,7 +114,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
     },
     POPULAR: {
       icon: Star,
-      color: "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300",
+      color: "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary",
       label: "Popüler",
     },
     NEW: { icon: Sparkles, color: "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300", label: "Yeni" },
@@ -197,12 +197,12 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-2xl md:max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col"
+            className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-2xl md:max-h-[90vh] bg-card dark:bg-gray-900 rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col"
           >
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-colors shadow-lg"
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-card/90 dark:bg-gray-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-colors shadow-lg"
               aria-label="Close"
             >
               <X className="w-6 h-6" />
@@ -211,11 +211,11 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             {/* Scrollable Content */}
             <div className="overflow-y-auto flex-1">
               {/* Image */}
-              <div className="relative w-full aspect-[16/9] bg-gray-100 dark:bg-gray-800">
+              <div className="relative w-full aspect-[16/9] bg-muted/50 dark:bg-gray-800">
                 {item.image ? (
                   <>
                     {!imageLoaded && (
-                      <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-700" />
+                      <div className="absolute inset-0 animate-pulse bg-muted dark:bg-gray-700" />
                     )}
                     <Image
                       src={item.image}
@@ -243,13 +243,13 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
               {/* Content */}
               <div className="p-6">
                 {/* Title */}
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                <h2 className="text-3xl font-bold text-foreground dark:text-white mb-2">
                   {item.name}
                 </h2>
 
                 {/* Description */}
                 {item.description && (
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  <p className="text-muted-foreground dark:text-gray-400 mb-4">
                     {item.description}
                   </p>
                 )}
@@ -276,10 +276,10 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
                 {/* Quick Info Bar */}
                 {(item.calories || item.prepTime) && (
-                  <div className="flex gap-4 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="flex gap-4 mb-4 p-3 bg-accent dark:bg-gray-800 rounded-lg">
                     {item.calories ? (
                       <div className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-orange-500" />
+                        <Zap className="w-4 h-4 text-primary" />
                         <span className="text-sm font-medium">
                           {item.calories} kcal
                         </span>
@@ -292,7 +292,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                     ) : null}
                     {item.carbs ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-amber-600">K: {item.carbs}g</span>
+                        <span className="text-sm font-medium text-primary">K: {item.carbs}g</span>
                       </div>
                     ) : null}
                     {item.fat ? (
@@ -317,49 +317,49 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                     <div className="bg-gray-900 dark:bg-gray-800 text-white px-4 py-2">
                       <h4 className="font-bold text-sm">Besin Değerleri</h4>
                       {item.servingSize && (
-                        <p className="text-xs text-gray-300">{item.servingSize}</p>
+                        <p className="text-xs text-muted-foreground/70">{item.servingSize}</p>
                       )}
                     </div>
-                    <div className="divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                    <div className="divide-y divide-border dark:divide-gray-700 text-sm">
                       {item.calories ? (
-                        <div className="flex justify-between px-4 py-2 font-bold bg-gray-50 dark:bg-gray-800/50">
+                        <div className="flex justify-between px-4 py-2 font-bold bg-accent dark:bg-gray-800/50">
                           <span>Kalori</span>
                           <span>{item.calories} kcal</span>
                         </div>
                       ) : null}
                       {item.protein !== undefined && item.protein !== null ? (
                         <div className="flex justify-between px-4 py-1.5">
-                          <span className="text-gray-600 dark:text-gray-400">Protein</span>
+                          <span className="text-muted-foreground dark:text-gray-400">Protein</span>
                           <span className="font-medium">{item.protein}g</span>
                         </div>
                       ) : null}
                       {item.carbs !== undefined && item.carbs !== null ? (
                         <div className="flex justify-between px-4 py-1.5">
-                          <span className="text-gray-600 dark:text-gray-400">Karbonhidrat</span>
+                          <span className="text-muted-foreground dark:text-gray-400">Karbonhidrat</span>
                           <span className="font-medium">{item.carbs}g</span>
                         </div>
                       ) : null}
                       {item.sugar !== undefined && item.sugar !== null ? (
                         <div className="flex justify-between px-4 py-1.5 pl-8">
-                          <span className="text-gray-500 dark:text-gray-500 text-xs">Şeker</span>
+                          <span className="text-muted-foreground dark:text-muted-foreground text-xs">Şeker</span>
                           <span className="text-xs">{item.sugar}g</span>
                         </div>
                       ) : null}
                       {item.fat !== undefined && item.fat !== null ? (
                         <div className="flex justify-between px-4 py-1.5">
-                          <span className="text-gray-600 dark:text-gray-400">Yağ</span>
+                          <span className="text-muted-foreground dark:text-gray-400">Yağ</span>
                           <span className="font-medium">{item.fat}g</span>
                         </div>
                       ) : null}
                       {item.fiber !== undefined && item.fiber !== null ? (
                         <div className="flex justify-between px-4 py-1.5">
-                          <span className="text-gray-600 dark:text-gray-400">Lif</span>
+                          <span className="text-muted-foreground dark:text-gray-400">Lif</span>
                           <span className="font-medium">{item.fiber}g</span>
                         </div>
                       ) : null}
                       {item.sodium !== undefined && item.sodium !== null ? (
                         <div className="flex justify-between px-4 py-1.5">
-                          <span className="text-gray-600 dark:text-gray-400">Sodyum</span>
+                          <span className="text-muted-foreground dark:text-gray-400">Sodyum</span>
                           <span className="font-medium">{item.sodium}mg</span>
                         </div>
                       ) : null}
@@ -374,9 +374,9 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
                 {/* Ingredients */}
                 {item.ingredients && item.ingredients.length > 0 && (
-                  <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="mb-4 p-3 bg-accent dark:bg-gray-800 rounded-lg">
                     <h4 className="text-sm font-semibold mb-1">İçindekiler</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-muted-foreground dark:text-gray-400">
                       {item.ingredients.join(", ")}
                     </p>
                   </div>
@@ -420,7 +420,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                           className={`flex items-center justify-between p-3 rounded-lg border-2 cursor-pointer transition-all ${
                             selectedVariant === variant.id
                               ? "border-current shadow-md"
-                              : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                              : "border-border dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
                           }`}
                           style={
                             selectedVariant === variant.id
@@ -464,7 +464,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                           className={`flex items-center justify-between p-3 rounded-lg border-2 cursor-pointer transition-all ${
                             selectedModifiers.includes(modifier.id)
                               ? "border-current shadow-md"
-                              : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                              : "border-border dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
                           }`}
                           style={
                             selectedModifiers.includes(modifier.id)
@@ -486,7 +486,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                             />
                             <span className="font-medium">{modifier.name}</span>
                           </div>
-                          <span className="font-bold text-gray-700 dark:text-gray-300">
+                          <span className="font-bold text-foreground/80 dark:text-muted-foreground/70">
                             +{formatPrice(modifier.price)}
                           </span>
                         </label>
@@ -504,7 +504,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Özel istekleriniz varsa buraya yazabilirsiniz..."
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 resize-none"
+                    className="w-full px-4 py-3 rounded-lg border border-border dark:border-gray-700 bg-card dark:bg-gray-800 focus:outline-none focus:ring-2 resize-none"
                     style={{ "--tw-ring-color": accentColor } as any}
                     rows={3}
                   />
@@ -518,7 +518,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      className="p-3 rounded-lg bg-muted/50 dark:bg-gray-800 hover:bg-muted dark:hover:bg-gray-700 transition-colors"
                       aria-label="Decrease quantity"
                     >
                       <Minus className="w-5 h-5" />
@@ -528,7 +528,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                     </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      className="p-3 rounded-lg bg-muted/50 dark:bg-gray-800 hover:bg-muted dark:hover:bg-gray-700 transition-colors"
                       aria-label="Increase quantity"
                     >
                       <Plus className="w-5 h-5" />
@@ -539,7 +539,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             </div>
 
             {/* Bottom Action Bar */}
-            <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+            <div className="p-6 border-t border-border dark:border-gray-800 bg-accent dark:bg-gray-800/50">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

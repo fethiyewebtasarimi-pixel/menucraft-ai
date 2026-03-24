@@ -21,11 +21,11 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-amber-900">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-violet-950">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
       <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
@@ -39,7 +39,7 @@ export default function Hero() {
               transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20"
             >
-              <Sparkles className="w-4 h-4 text-amber-400" />
+              <Sparkles className="w-4 h-4 text-primary" />
               <span className="text-sm text-white font-medium">
                 AI Destekli Dijital Menü Platformu
               </span>
@@ -54,7 +54,7 @@ export default function Hero() {
             >
               Menünüzü Fotoğraflayın,
               <br />
-              <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                 Saniyeler İçinde
               </span>
               <br />
@@ -82,7 +82,7 @@ export default function Hero() {
               <Button
                 size="lg"
                 asChild
-                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-lg px-8 py-6 shadow-2xl shadow-amber-500/50"
+                className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white text-lg px-8 py-6 shadow-2xl shadow-primary/50"
               >
                 <Link href="/auth/register">
                   Ücretsiz Başla
@@ -115,7 +115,7 @@ export default function Hero() {
                   transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
                   className="text-center lg:text-left"
                 >
-                  <div className="text-2xl md:text-3xl font-bold text-amber-400">
+                  <div className="text-2xl md:text-3xl font-bold text-primary">
                     {stat.value}
                   </div>
                   <div className="text-sm text-slate-400 mt-1">
@@ -159,7 +159,7 @@ export default function Hero() {
                 className="absolute -bottom-8 -right-8 bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/20 shadow-xl"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -180,7 +180,7 @@ export default function Hero() {
                   {/* Screen Content */}
                   <div className="p-6 space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="h-8 w-24 bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg" />
+                      <div className="h-8 w-24 bg-gradient-to-r from-primary to-primary/80 rounded-lg" />
                       <div className="h-8 w-8 bg-slate-700 rounded-full" />
                     </div>
 
@@ -190,7 +190,7 @@ export default function Hero() {
                       <div className="h-4 bg-slate-700 rounded w-1/2" />
                       <div className="flex justify-between items-center pt-2">
                         <div className="h-6 bg-slate-700 rounded w-20" />
-                        <div className="h-8 w-8 bg-amber-500 rounded-full" />
+                        <div className="h-8 w-8 bg-primary rounded-full" />
                       </div>
                     </div>
 

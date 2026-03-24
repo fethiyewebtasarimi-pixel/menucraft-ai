@@ -381,7 +381,7 @@ export function MenuItemForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Temel Bilgiler */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Temel Bilgiler</h3>
+          <h3 className="text-lg font-semibold text-foreground dark:text-foreground">Temel Bilgiler</h3>
 
           <FormField
             control={form.control}
@@ -477,7 +477,7 @@ export function MenuItemForm({
 
         {/* Görsel */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Görsel</h3>
+          <h3 className="text-lg font-semibold text-foreground dark:text-foreground">Görsel</h3>
 
           <FormField
             control={form.control}
@@ -487,7 +487,7 @@ export function MenuItemForm({
                 <FormLabel>Ürün Görseli</FormLabel>
                 <FormControl>
                   <div className="space-y-4">
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+                    <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-border transition-colors">
                       {imagePreview ? (
                         <div className="space-y-4">
                           <img
@@ -541,9 +541,9 @@ export function MenuItemForm({
                         </div>
                       ) : (
                         <div className="space-y-4">
-                          <Upload className="w-12 h-12 mx-auto text-gray-400" />
+                          <Upload className="w-12 h-12 mx-auto text-muted-foreground/70" />
                           <div>
-                            <p className="text-sm text-gray-600 mb-2">
+                            <p className="text-sm text-muted-foreground mb-2">
                               Görseli sürükleyip bırakın
                             </p>
                             <label htmlFor="image-upload">
@@ -559,7 +559,7 @@ export function MenuItemForm({
                               onChange={handleImageChange}
                             />
                           </div>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-muted-foreground">
                             PNG, JPG, WEBP (max. 5MB)
                           </p>
                         </div>
@@ -577,8 +577,8 @@ export function MenuItemForm({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                <ChefHat className="h-5 w-5 text-amber-600" />
+              <h3 className="text-lg font-semibold text-foreground dark:text-foreground flex items-center gap-2">
+                <ChefHat className="h-5 w-5 text-primary" />
                 Malzemeler
               </h3>
               <p className="text-sm text-muted-foreground">Ürünün içindeki malzemeleri ekleyin</p>
@@ -637,7 +637,7 @@ export function MenuItemForm({
         {/* Alerjenler */}
         <div className="space-y-4">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-foreground dark:text-foreground flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-yellow-600" />
               Alerjen Bilgileri
               <Badge variant="destructive" className="text-xs ml-2">Yasal Zorunluluk</Badge>
@@ -659,11 +659,11 @@ export function MenuItemForm({
                   className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left text-sm ${
                     isSelected
                       ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 shadow-sm"
-                      : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                      : "border-border dark:border-border hover:border-border dark:hover:border-border"
                   }`}
                 >
                   <span className="text-lg flex-shrink-0">{icon}</span>
-                  <span className={`font-medium ${isSelected ? "text-yellow-900 dark:text-yellow-300" : "text-gray-700 dark:text-gray-300"}`}>
+                  <span className={`font-medium ${isSelected ? "text-yellow-900 dark:text-yellow-300" : "text-foreground/80 dark:text-foreground/80"}`}>
                     {allergen}
                   </span>
                   {isSelected && (
@@ -687,7 +687,7 @@ export function MenuItemForm({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-foreground dark:text-foreground flex items-center gap-2">
                 <Apple className="h-5 w-5 text-green-600" />
                 Besin Değerleri
                 <Badge variant="destructive" className="text-xs ml-2">Yasal Zorunluluk</Badge>
@@ -719,7 +719,7 @@ export function MenuItemForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center gap-1.5">
-                    <Zap className="h-4 w-4 text-orange-500" />
+                    <Zap className="h-4 w-4 text-primary" />
                     Kalori (kcal)
                   </FormLabel>
                   <FormControl>
@@ -753,7 +753,7 @@ export function MenuItemForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center gap-1.5">
-                    <Wheat className="h-4 w-4 text-amber-600" />
+                    <Wheat className="h-4 w-4 text-primary" />
                     Karbonhidrat (g)
                   </FormLabel>
                   <FormControl>
@@ -868,7 +868,7 @@ export function MenuItemForm({
 
         {/* Özellikler */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Özellikler & Etiketler</h3>
+          <h3 className="text-lg font-semibold text-foreground dark:text-foreground">Özellikler & Etiketler</h3>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
@@ -922,7 +922,7 @@ export function MenuItemForm({
 
         {/* Durum */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Durum</h3>
+          <h3 className="text-lg font-semibold text-foreground dark:text-foreground">Durum</h3>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField

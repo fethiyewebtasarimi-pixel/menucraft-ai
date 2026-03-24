@@ -208,7 +208,7 @@ export default function SettingsPage() {
                   <div className="flex items-center gap-4">
                     <Avatar className="h-20 w-20">
                       <AvatarImage src={user?.image || undefined} />
-                      <AvatarFallback className="bg-gradient-to-br from-amber-500 to-orange-600 text-white text-2xl">
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white text-2xl">
                         {user?.name?.charAt(0) || 'U'}
                       </AvatarFallback>
                     </Avatar>

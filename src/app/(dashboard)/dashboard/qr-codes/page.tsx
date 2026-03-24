@@ -191,10 +191,10 @@ export default function QRCodesPage() {
   if (qrLoading) {
     return (
       <div className="container mx-auto p-6 space-y-6">
-        <div className="h-10 bg-gray-200 rounded w-1/3 animate-pulse" />
+        <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
         <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-64 bg-gray-200 rounded-lg animate-pulse" />
+            <div key={i} className="h-64 bg-muted rounded-lg animate-pulse" />
           ))}
         </div>
       </div>
@@ -208,8 +208,8 @@ export default function QRCodesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">QR Kod Yönetimi</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-foreground">QR Kod Yönetimi</h1>
+          <p className="text-muted-foreground mt-1">
             {qrCodes?.length || 0} QR kod oluşturuldu
           </p>
         </div>
@@ -238,9 +238,9 @@ export default function QRCodesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="flex flex-col items-center justify-center py-20 bg-white rounded-lg border border-gray-200"
+            className="flex flex-col items-center justify-center py-20 bg-card rounded-lg border border-border"
           >
-            <div className="w-32 h-32 mb-6 text-gray-300">
+            <div className="w-32 h-32 mb-6 text-muted-foreground/70">
               <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="10" y="10" width="80" height="80" fill="none" stroke="currentColor" strokeWidth="2" />
                 <rect x="15" y="15" width="15" height="15" fill="currentColor" />
@@ -265,10 +265,10 @@ export default function QRCodesPage() {
                 })}
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               Henüz QR kodunuz yok
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               Masalarınız için QR kod oluşturun
             </p>
             <Button onClick={() => setIsCreateDialogOpen(true)}>
@@ -289,15 +289,15 @@ export default function QRCodesPage() {
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow"
+                className="bg-card rounded-lg border border-border p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-foreground">
                       Masa {qr.tableNumber}
                     </h3>
                     {qr.tableName && (
-                      <p className="text-sm text-gray-600">{qr.tableName}</p>
+                      <p className="text-sm text-muted-foreground">{qr.tableName}</p>
                     )}
                   </div>
                   <DropdownMenu>
@@ -336,8 +336,8 @@ export default function QRCodesPage() {
                 </div>
 
                 {/* QR Code Preview */}
-                <div className="bg-gray-100 rounded-lg p-6 mb-4 flex items-center justify-center">
-                  <div className="w-32 h-32 bg-white rounded p-2">
+                <div className="bg-muted/50 rounded-lg p-6 mb-4 flex items-center justify-center">
+                  <div className="w-32 h-32 bg-card rounded p-2">
                     {/* Placeholder QR pattern */}
                     <svg viewBox="0 0 100 100" className="w-full h-full">
                       <rect width="100" height="100" fill={qr.backgroundColor} />
@@ -366,11 +366,11 @@ export default function QRCodesPage() {
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Tarama:</span>
+                    <span className="text-muted-foreground">Tarama:</span>
                     <Badge variant="secondary">{qr.scanCount}</Badge>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Stil:</span>
+                    <span className="text-muted-foreground">Stil:</span>
                     <Badge variant="outline">{qr.style}</Badge>
                   </div>
                 </div>
@@ -420,9 +420,9 @@ export default function QRCodesPage() {
                       />
                       <Label
                         htmlFor={style.id}
-                        className="flex flex-col items-center justify-between rounded-lg border-2 border-gray-200 p-4 hover:bg-gray-50 peer-data-[state=checked]:border-amber-500 cursor-pointer"
+                        className="flex flex-col items-center justify-between rounded-lg border-2 border-border p-4 hover:bg-accent peer-data-[state=checked]:border-primary cursor-pointer"
                       >
-                        <div className="w-16 h-16 bg-gray-100 rounded mb-2" />
+                        <div className="w-16 h-16 bg-muted/50 rounded mb-2" />
                         <span className="text-xs font-medium">{style.name}</span>
                       </Label>
                     </div>
@@ -470,9 +470,9 @@ export default function QRCodesPage() {
             </div>
 
             {/* Preview */}
-            <div className="border rounded-lg p-6 bg-gray-50">
+            <div className="border rounded-lg p-6 bg-accent">
               <Label className="mb-3 block">Önizleme</Label>
-              <div className="bg-white rounded-lg p-8 flex items-center justify-center">
+              <div className="bg-card rounded-lg p-8 flex items-center justify-center">
                 <div className="w-48 h-48">
                   <svg viewBox="0 0 100 100" className="w-full h-full">
                     <rect width="100" height="100" fill={backgroundColor} />

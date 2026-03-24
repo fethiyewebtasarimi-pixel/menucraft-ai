@@ -93,8 +93,8 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
         key={i}
         className={`w-4 h-4 ${
           i < Math.floor(rating)
-            ? "fill-amber-400 text-amber-400"
-            : "text-gray-300"
+            ? "fill-primary text-primary"
+            : "text-muted-foreground/70"
         }`}
       />
     ));
@@ -120,11 +120,11 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-6"
+        className="bg-card dark:bg-gray-900 border-b border-border dark:border-gray-800 py-6"
       >
         <div className="container mx-auto px-4 flex items-center gap-4">
           {restaurant.logo && (
-            <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700 flex-shrink-0">
+            <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-border dark:border-gray-700 flex-shrink-0">
               <Image
                 src={restaurant.logo}
                 alt={restaurant.name}
@@ -143,7 +143,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
             {restaurant.rating && (
               <div className="flex items-center gap-2 mt-1">
                 <div className="flex gap-0.5">{renderStars(restaurant.rating)}</div>
-                <span className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="text-sm text-muted-foreground dark:text-gray-400">
                   {restaurant.rating.toFixed(1)}{" "}
                   {restaurant.reviewCount && `(${restaurant.reviewCount})`}
                 </span>
@@ -160,7 +160,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800"
+        className="bg-card dark:bg-gray-900 border-b border-border dark:border-gray-800"
       >
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
@@ -182,7 +182,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
                 {restaurant.name}
               </h1>
               {restaurant.description && (
-                <p className="text-gray-600 dark:text-gray-400 mb-3">
+                <p className="text-muted-foreground dark:text-gray-400 mb-3">
                   {restaurant.description}
                 </p>
               )}
@@ -217,7 +217,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      className="p-2 rounded-full bg-muted/50 dark:bg-gray-800 hover:bg-muted dark:hover:bg-gray-700 transition-colors"
                       aria-label={link.label}
                     >
                       <link.icon className="w-4 h-4" />
@@ -382,7 +382,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
       {/* Restaurant Info */}
       <div className="container mx-auto px-4">
         <div className="relative -mt-16 md:-mt-20">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 md:p-8">
+          <div className="bg-card dark:bg-gray-900 rounded-2xl shadow-2xl p-6 md:p-8">
             <div className="flex flex-col md:flex-row gap-6">
               {/* Logo */}
               {restaurant.logo && (
@@ -405,7 +405,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
                   {restaurant.name}
                 </h1>
                 {restaurant.description && (
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  <p className="text-muted-foreground dark:text-gray-400 mb-4">
                     {restaurant.description}
                   </p>
                 )}
@@ -438,7 +438,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
                   {restaurant.address && (
                     <div className="flex items-center gap-2">
                       <MapPin className="w-4 h-4" />
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                      <span className="text-sm text-muted-foreground dark:text-gray-400">
                         {restaurant.address}
                       </span>
                     </div>
@@ -452,7 +452,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        className="p-2 rounded-full bg-muted/50 dark:bg-gray-800 hover:bg-muted dark:hover:bg-gray-700 transition-colors"
                         aria-label={link.label}
                         style={{
                           color: primaryColor,

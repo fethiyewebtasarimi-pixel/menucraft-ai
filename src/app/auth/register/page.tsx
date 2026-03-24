@@ -95,10 +95,10 @@ export default function RegisterPage() {
       transition={{ duration: 0.4 }}
     >
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="text-3xl font-bold text-foreground dark:text-white mb-2">
           Hesap Oluşturun
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-muted-foreground dark:text-muted-foreground/70">
           AI ile harika menüler oluşturmaya başlayın
         </p>
       </div>
@@ -106,11 +106,11 @@ export default function RegisterPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Name Field */}
         <div className="space-y-2">
-          <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">
+          <Label htmlFor="name" className="text-foreground/80 dark:text-gray-300">
             Ad Soyad
           </Label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
             <Input
               id="name"
               type="text"
@@ -129,11 +129,11 @@ export default function RegisterPage() {
 
         {/* Email Field */}
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">
+          <Label htmlFor="email" className="text-foreground/80 dark:text-gray-300">
             E-posta adresi
           </Label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
             <Input
               id="email"
               type="email"
@@ -152,12 +152,12 @@ export default function RegisterPage() {
 
         {/* Phone Field (Optional) */}
         <div className="space-y-2">
-          <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300">
+          <Label htmlFor="phone" className="text-foreground/80 dark:text-gray-300">
             Telefon numarası{" "}
-            <span className="text-gray-400 text-xs">(isteğe bağlı)</span>
+            <span className="text-muted-foreground/70 text-xs">(isteğe bağlı)</span>
           </Label>
           <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
             <Input
               id="phone"
               type="tel"
@@ -178,12 +178,12 @@ export default function RegisterPage() {
         <div className="space-y-2">
           <Label
             htmlFor="password"
-            className="text-gray-700 dark:text-gray-300"
+            className="text-foreground/80 dark:text-gray-300"
           >
             Şifre
           </Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
             <Input
               id="password"
               type="password"
@@ -204,12 +204,12 @@ export default function RegisterPage() {
         <div className="space-y-2">
           <Label
             htmlFor="confirmPassword"
-            className="text-gray-700 dark:text-gray-300"
+            className="text-foreground/80 dark:text-gray-300"
           >
             Şifre tekrar
           </Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
             <Input
               id="confirmPassword"
               type="password"
@@ -237,11 +237,11 @@ export default function RegisterPage() {
           />
           <label
             htmlFor="terms"
-            className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed cursor-pointer"
+            className="text-sm text-muted-foreground dark:text-muted-foreground/70 leading-relaxed cursor-pointer"
           >
             <Link
               href="/terms"
-              className="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 underline"
+              className="text-primary hover:text-primary/80 dark:text-primary dark:hover:text-primary/80 underline"
               target="_blank"
             >
               Kullanım Koşulları
@@ -249,7 +249,7 @@ export default function RegisterPage() {
             ve{" "}
             <Link
               href="/privacy"
-              className="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 underline"
+              className="text-primary hover:text-primary/80 dark:text-primary dark:hover:text-primary/80 underline"
               target="_blank"
             >
               Gizlilik Politikası
@@ -261,7 +261,7 @@ export default function RegisterPage() {
         {/* Sign Up Button */}
         <Button
           type="submit"
-          className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+          className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white shadow-lg hover:shadow-xl transition-all duration-300"
           disabled={isLoading || isGoogleLoading}
         >
           {isLoading ? (
@@ -280,10 +280,10 @@ export default function RegisterPage() {
         {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200 dark:border-gray-700" />
+            <div className="w-full border-t border-border dark:border-gray-700" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+            <span className="px-4 bg-card dark:bg-gray-800 text-muted-foreground dark:text-muted-foreground/70">
               Veya şununla devam edin
             </span>
           </div>
@@ -293,7 +293,7 @@ export default function RegisterPage() {
         <Button
           type="button"
           variant="outline"
-          className="w-full border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="w-full border-border dark:border-gray-600 hover:bg-accent dark:hover:bg-gray-700 transition-colors"
           onClick={handleGoogleSignIn}
           disabled={isLoading || isGoogleLoading}
         >
@@ -313,11 +313,11 @@ export default function RegisterPage() {
 
       {/* Login Link */}
       <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-muted-foreground dark:text-muted-foreground/70">
           Zaten hesabınız var mı?{" "}
           <Link
             href="/auth/login"
-            className="font-medium text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 transition-colors"
+            className="font-medium text-primary hover:text-primary/80 dark:text-primary dark:hover:text-primary/80 transition-colors"
           >
             Giriş yapın
           </Link>

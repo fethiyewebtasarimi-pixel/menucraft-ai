@@ -71,13 +71,13 @@ export function StatsCard({
             <motion.div
               className={cn(
                 'rounded-lg p-3',
-                'bg-gradient-to-br from-amber-500/10 to-orange-500/10',
-                'ring-1 ring-amber-500/20'
+                'bg-gradient-to-br from-primary/10 to-primary/10',
+                'ring-1 ring-primary/20'
               )}
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >
-              <Icon className="h-6 w-6 text-amber-600" />
+              <Icon className="h-6 w-6 text-primary" />
             </motion.div>
           </div>
         </CardContent>

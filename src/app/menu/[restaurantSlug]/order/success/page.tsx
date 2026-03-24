@@ -43,13 +43,13 @@ function SuccessContent({ params }: { params: { restaurantSlug: string } }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-accent dark:bg-gray-950 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", duration: 0.6 }}
-          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 text-center"
+          className="bg-card dark:bg-gray-900 rounded-2xl shadow-2xl p-8 text-center"
         >
           {/* Success Icon */}
           <motion.div
@@ -74,7 +74,7 @@ function SuccessContent({ params }: { params: { restaurantSlug: string } }) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-3xl font-bold text-gray-900 dark:text-white mb-3"
+            className="text-3xl font-bold text-foreground dark:text-white mb-3"
           >
             Siparişiniz Alındı!
           </motion.h1>
@@ -83,7 +83,7 @@ function SuccessContent({ params }: { params: { restaurantSlug: string } }) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-gray-600 dark:text-gray-400 mb-6"
+            className="text-muted-foreground dark:text-gray-400 mb-6"
           >
             Siparişiniz başarıyla oluşturuldu ve restoran tarafından hazırlanmaya
             başlanacak.
@@ -95,9 +95,9 @@ function SuccessContent({ params }: { params: { restaurantSlug: string } }) {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 mb-6"
+              className="bg-accent dark:bg-gray-800 rounded-xl p-4 mb-6"
             >
-              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+              <div className="text-sm text-muted-foreground dark:text-gray-400 mb-1">
                 Sipariş Numaranız
               </div>
               <div
@@ -114,7 +114,7 @@ function SuccessContent({ params }: { params: { restaurantSlug: string } }) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="flex items-center justify-center gap-2 text-gray-600 dark:text-gray-400 mb-8"
+            className="flex items-center justify-center gap-2 text-muted-foreground dark:text-gray-400 mb-8"
           >
             <Clock className="w-5 h-5" />
             <span>Tahmini Hazırlanma Süresi: 20-30 dakika</span>
@@ -150,7 +150,7 @@ function SuccessContent({ params }: { params: { restaurantSlug: string } }) {
             </button>
             <button
               onClick={() => router.push("/")}
-              className="w-full py-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-semibold transition-all hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-muted/50 dark:bg-gray-800 text-foreground/80 dark:text-gray-300 font-semibold transition-all hover:bg-muted dark:hover:bg-gray-700 flex items-center justify-center gap-2"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Ana Sayfaya Dön</span>
@@ -162,7 +162,7 @@ function SuccessContent({ params }: { params: { restaurantSlug: string } }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="text-sm text-gray-500 dark:text-gray-400 mt-8"
+            className="text-sm text-muted-foreground dark:text-gray-400 mt-8"
           >
             Bizi tercih ettiğiniz için teşekkür ederiz! 🎉
           </motion.p>
@@ -175,21 +175,21 @@ function SuccessContent({ params }: { params: { restaurantSlug: string } }) {
           transition={{ delay: 0.9 }}
           className="mt-6 grid grid-cols-3 gap-3"
         >
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 text-center">
+          <div className="bg-card dark:bg-gray-900 rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl mb-1">📱</div>
-            <div className="text-xs text-gray-600 dark:text-gray-400">
+            <div className="text-xs text-muted-foreground dark:text-gray-400">
               SMS ile takip
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 text-center">
+          <div className="bg-card dark:bg-gray-900 rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl mb-1">⚡</div>
-            <div className="text-xs text-gray-600 dark:text-gray-400">
+            <div className="text-xs text-muted-foreground dark:text-gray-400">
               Hızlı hazırlık
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-4 text-center">
+          <div className="bg-card dark:bg-gray-900 rounded-xl shadow-md p-4 text-center">
             <div className="text-2xl mb-1">✨</div>
-            <div className="text-xs text-gray-600 dark:text-gray-400">
+            <div className="text-xs text-muted-foreground dark:text-gray-400">
               Taze malzemeler
             </div>
           </div>
@@ -206,10 +206,10 @@ export default function OrderSuccessPage({
 }) {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-accent dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-amber-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">Yükleniyor...</p>
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground dark:text-gray-400">Yükleniyor...</p>
         </div>
       </div>
     }>

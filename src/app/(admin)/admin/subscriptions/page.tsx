@@ -44,10 +44,10 @@ import { useAdminSubscriptions, useUpdateSubscription } from '@/hooks/useAdmin';
 import { toast } from 'sonner';
 
 const PLAN_COLORS: Record<string, string> = {
-  FREE: 'bg-gray-100 text-gray-800',
+  FREE: 'bg-muted/50 text-foreground',
   STARTER: 'bg-blue-100 text-blue-800',
   PROFESSIONAL: 'bg-purple-100 text-purple-800',
-  ENTERPRISE: 'bg-amber-100 text-amber-800',
+  ENTERPRISE: 'bg-primary/10 text-primary',
 };
 
 const PLAN_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -67,7 +67,7 @@ const PLAN_LABELS: Record<string, string> = {
 const STATUS_COLORS: Record<string, string> = {
   ACTIVE: 'bg-green-100 text-green-800',
   PAST_DUE: 'bg-red-100 text-red-800',
-  CANCELLED: 'bg-gray-100 text-gray-800',
+  CANCELLED: 'bg-muted/50 text-foreground',
   TRIALING: 'bg-blue-100 text-blue-800',
 };
 

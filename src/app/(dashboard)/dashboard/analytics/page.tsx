@@ -107,7 +107,7 @@ export default function AnalyticsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -210,7 +210,7 @@ export default function AnalyticsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <LineChartIcon className="h-5 w-5 text-amber-600" />
+                    <LineChartIcon className="h-5 w-5 text-primary" />
                     Menü Görüntüleme Trendi
                   </CardTitle>
                   <CardDescription>Son {days} gündeki görüntüleme sayısı</CardDescription>
@@ -226,7 +226,7 @@ export default function AnalyticsPage() {
                             <span className="w-12 text-muted-foreground text-xs">{day.date}</span>
                             <div className="flex-1">
                               <div
-                                className="h-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all"
+                                className="h-4 bg-gradient-to-r from-primary to-primary/80 rounded-full transition-all"
                                 style={{ width: `${Math.max(percentage, 2)}%` }}
                               />
                             </div>
@@ -249,7 +249,7 @@ export default function AnalyticsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <PieChartIcon className="h-5 w-5 text-amber-600" />
+                    <PieChartIcon className="h-5 w-5 text-primary" />
                     Sipariş Tipi Dağılımı
                   </CardTitle>
                   <CardDescription>Sipariş türlerine göre dağılım</CardDescription>
@@ -311,7 +311,7 @@ export default function AnalyticsPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5 text-amber-600" />
+                  <BarChart3 className="h-5 w-5 text-primary" />
                   Popüler Yemekler
                 </CardTitle>
                 <CardDescription>
@@ -329,7 +329,7 @@ export default function AnalyticsPage() {
                         <div key={topItem.menuItem?.id || index} className="space-y-2">
                           <div className="flex items-center justify-between text-sm">
                             <div className="flex items-center gap-3">
-                              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-amber-500/10 to-orange-500/10 text-amber-600 font-semibold text-xs">
+                              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-primary/10 to-primary/80/10 text-primary font-semibold text-xs">
                                 #{index + 1}
                               </div>
                               <div>
@@ -372,7 +372,7 @@ export default function AnalyticsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-amber-600" />
+                    <Clock className="h-5 w-5 text-primary" />
                     Saat Bazlı Trafik (Tahmini)
                   </CardTitle>
                   <CardDescription>

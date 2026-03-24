@@ -9,7 +9,7 @@ export default function CTA() {
   return (
     <section className="relative py-20 md:py-32 overflow-hidden">
       {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-500 via-orange-600 to-red-600" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/80 to-primary/70" />
 
       {/* Animated Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -95,7 +95,7 @@ export default function CTA() {
               <Button
                 size="lg"
                 asChild
-                className="bg-white text-amber-600 hover:bg-slate-50 text-lg px-10 py-7 shadow-2xl font-bold group"
+                className="bg-white text-primary hover:bg-slate-50 text-lg px-10 py-7 shadow-2xl font-bold group"
               >
                 <Link href="/auth/register">
                   <Sparkles className="mr-2 w-5 h-5" />

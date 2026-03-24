@@ -141,13 +141,13 @@ export default function Pricing() {
               className={cn(
                 "relative rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-2xl",
                 plan.popular
-                  ? "bg-gradient-to-br from-amber-500 to-orange-600 text-white scale-105 lg:scale-110 z-10 border-4 border-amber-400"
+                  ? "bg-gradient-to-br from-primary to-primary/80 text-white scale-105 lg:scale-110 z-10 border-4 border-primary"
                   : "bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800"
               )}
             >
               {/* Popular Badge */}
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white text-amber-600 px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow-lg">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white text-primary px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow-lg">
                   <Sparkles className="w-4 h-4" />
                   En Popüler
                 </div>
@@ -225,8 +225,8 @@ export default function Pricing() {
                 className={cn(
                   "w-full mb-6",
                   plan.popular
-                    ? "bg-white text-amber-600 hover:bg-slate-50"
-                    : "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white"
+                    ? "bg-white text-primary hover:bg-slate-50"
+                    : "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white"
                 )}
                 size="lg"
               >

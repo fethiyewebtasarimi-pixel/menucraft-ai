@@ -35,7 +35,7 @@ export default function AdminReviewsPage() {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${i < rating ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}`}
+        className={`h-4 w-4 ${i < rating ? 'fill-primary text-primary' : 'text-muted-foreground/70'}`}
       />
     ));
   };

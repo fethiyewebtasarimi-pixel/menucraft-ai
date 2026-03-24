@@ -76,9 +76,9 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
     <div
       className={`sticky top-0 z-40 transition-all duration-300 ${
         isSticky
-          ? "bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-md"
-          : "bg-white dark:bg-gray-900"
-      } border-b border-gray-200 dark:border-gray-800`}
+          ? "bg-card/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-md"
+          : "bg-card dark:bg-gray-900"
+      } border-b border-border dark:border-gray-800`}
     >
       <div className="container mx-auto px-4 py-3">
         <div className="relative">
@@ -89,7 +89,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => scroll("left")}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white dark:bg-gray-900 shadow-lg rounded-full p-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-card dark:bg-gray-900 shadow-lg rounded-full p-2 hover:bg-accent dark:hover:bg-gray-800 transition-colors"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -120,7 +120,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
                   className={`relative flex items-center gap-2 px-4 py-2 rounded-full font-medium whitespace-nowrap transition-all duration-200 ${
                     isActive
                       ? "text-white shadow-lg"
-                      : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                      : "bg-muted/50 dark:bg-gray-800 text-foreground/80 dark:text-gray-300 hover:bg-muted dark:hover:bg-gray-700"
                   }`}
                   style={
                     isActive
@@ -155,7 +155,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => scroll("right")}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white dark:bg-gray-900 shadow-lg rounded-full p-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-card dark:bg-gray-900 shadow-lg rounded-full p-2 hover:bg-accent dark:hover:bg-gray-800 transition-colors"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-5 h-5" />

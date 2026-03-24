@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { useRestaurants } from "@/hooks/useRestaurant";
 
 interface Menu {
   id: string;
@@ -40,8 +41,9 @@ export default function MenuManagementPage() {
   const queryClient = useQueryClient();
   const [deleteMenuId, setDeleteMenuId] = useState<string | null>(null);
 
-  // Mock restaurant ID - in real app, get from auth context
-  const restaurantId = "current-restaurant-id";
+  const { data: restaurants } = useRestaurants();
+  const restaurant = restaurants?.[0];
+  const restaurantId = restaurant?.id;
 
   const { data: menus, isLoading } = useQuery<Menu[]>({
     queryKey: ["menus", restaurantId],
@@ -50,6 +52,7 @@ export default function MenuManagementPage() {
       if (!response.ok) throw new Error("Failed to fetch menus");
       return response.json();
     },
+    enabled: !!restaurantId,
   });
 
   const toggleMenuMutation = useMutation({
@@ -102,10 +105,10 @@ export default function MenuManagementPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto p-6 space-y-6">
-        <div className="h-10 bg-gray-200 rounded w-1/3 animate-pulse" />
+        <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-48 bg-gray-200 rounded-lg animate-pulse" />
+            <div key={i} className="h-48 bg-muted rounded-lg animate-pulse" />
           ))}
         </div>
       </div>
@@ -119,20 +122,20 @@ export default function MenuManagementPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Menü Yönetimi</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-foreground">Menü Yönetimi</h1>
+          <p className="text-muted-foreground mt-1">
             Menülerinizi oluşturun, düzenleyin ve yönetin
           </p>
         </div>
         <div className="flex gap-3">
           <Button
             onClick={() => router.push("/dashboard/menu/ai-create")}
-            className="bg-amber-500 hover:bg-amber-600 text-white"
+            className="bg-primary hover:bg-primary/90 text-white"
           >
             <Sparkles className="w-4 h-4 mr-2" />
             AI ile Oluştur
           </Button>
-          <Button onClick={() => router.push("/dashboard/menu/create")}>
+          <Button onClick={() => router.push("/dashboard/menu/items")}>
             <Plus className="w-4 h-4 mr-2" />
             Yeni Menü Oluştur
           </Button>
@@ -152,7 +155,7 @@ export default function MenuManagementPage() {
             <div className="relative w-64 h-64 mb-6">
               <svg
                 viewBox="0 0 200 200"
-                className="w-full h-full text-gray-300"
+                className="w-full h-full text-muted-foreground/70"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -173,10 +176,10 @@ export default function MenuManagementPage() {
                 <line x1="60" y1="140" x2="140" y2="140" stroke="currentColor" strokeWidth="3" />
               </svg>
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-2xl font-semibold text-foreground mb-2">
               Henüz menünüz yok
             </h3>
-            <p className="text-gray-600 mb-8 text-center max-w-md">
+            <p className="text-muted-foreground mb-8 text-center max-w-md">
               Hemen ilk menünüzü oluşturun veya AI'ın menü fotoğrafınızı analiz ederek
               otomatik oluşturmasını sağlayın.
             </p>
@@ -184,13 +187,13 @@ export default function MenuManagementPage() {
               <Button
                 onClick={() => router.push("/dashboard/menu/ai-create")}
                 size="lg"
-                className="bg-amber-500 hover:bg-amber-600 text-white"
+                className="bg-primary hover:bg-primary/90 text-white"
               >
                 <Sparkles className="w-5 h-5 mr-2" />
                 AI ile Oluştur
               </Button>
               <Button
-                onClick={() => router.push("/dashboard/menu/create")}
+                onClick={() => router.push("/dashboard/menu/items")}
                 size="lg"
                 variant="outline"
               >
@@ -214,16 +217,16 @@ export default function MenuManagementPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow"
+                className="bg-card rounded-lg border border-border p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                    <h3 className="text-lg font-semibold text-foreground mb-1">
                       {menu.name}
                     </h3>
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">{menu.type}</Badge>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-muted-foreground">
                         {menu.itemCount} ürün
                       </span>
                     </div>
@@ -252,9 +255,9 @@ export default function MenuManagementPage() {
                   </DropdownMenu>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                <div className="flex items-center justify-between pt-4 border-t border-border/50">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600">Durum:</span>
+                    <span className="text-sm text-muted-foreground">Durum:</span>
                     <Badge variant={menu.isActive ? "default" : "secondary"}>
                       {menu.isActive ? "Aktif" : "Pasif"}
                     </Badge>

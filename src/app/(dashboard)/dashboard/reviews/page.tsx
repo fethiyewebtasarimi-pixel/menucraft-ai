@@ -139,8 +139,8 @@ export default function ReviewsPage() {
             key={star}
             className={`${sizeClasses[size]} ${
               star <= rating
-                ? "fill-amber-400 text-amber-400"
-                : "text-gray-300"
+                ? "fill-yellow-400 text-yellow-400"
+                : "text-muted-foreground/70"
             }`}
           />
         ))}
@@ -153,11 +153,11 @@ export default function ReviewsPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto p-6 space-y-6">
-        <div className="h-10 bg-gray-200 rounded w-1/3 animate-pulse" />
-        <div className="h-48 bg-gray-200 rounded-lg animate-pulse" />
+        <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
+        <div className="h-48 bg-muted rounded-lg animate-pulse" />
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-32 bg-gray-200 rounded-lg animate-pulse" />
+            <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
           ))}
         </div>
       </div>
@@ -170,23 +170,23 @@ export default function ReviewsPage() {
     <div className="container mx-auto p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Değerlendirmeler</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-3xl font-bold text-foreground">Değerlendirmeler</h1>
+        <p className="text-muted-foreground mt-1">
           Müşteri yorumlarını görüntüleyin ve yönetin
         </p>
       </div>
 
       {/* Stats Card */}
       {stats && (
-        <div className="bg-white rounded-lg border border-gray-200 p-8">
+        <div className="bg-card rounded-lg border border-border p-8">
           <div className="grid md:grid-cols-2 gap-8">
             {/* Average Rating */}
             <div className="text-center">
-              <div className="text-6xl font-bold text-gray-900 mb-2">
+              <div className="text-6xl font-bold text-foreground mb-2">
                 {stats.average.toFixed(1)}
               </div>
               {renderStars(Math.round(stats.average), "lg")}
-              <p className="text-gray-600 mt-4">{stats.total} değerlendirme</p>
+              <p className="text-muted-foreground mt-4">{stats.total} değerlendirme</p>
             </div>
 
             {/* Rating Distribution */}
@@ -198,20 +198,20 @@ export default function ReviewsPage() {
                 return (
                   <div key={rating} className="flex items-center gap-3">
                     <div className="flex items-center gap-1 w-12">
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-foreground/80">
                         {rating}
                       </span>
-                      <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                     </div>
-                    <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
+                    <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${percentage}%` }}
                         transition={{ duration: 0.5, delay: rating * 0.1 }}
-                        className="h-full bg-amber-400"
+                        className="h-full bg-yellow-400"
                       />
                     </div>
-                    <span className="text-sm text-gray-600 w-12 text-right">
+                    <span className="text-sm text-muted-foreground w-12 text-right">
                       {count}
                     </span>
                   </div>
@@ -224,10 +224,10 @@ export default function ReviewsPage() {
 
       {/* Filters */}
       {!isEmpty && (
-        <div className="flex flex-col sm:flex-row gap-4 bg-white rounded-lg border border-gray-200 p-4">
+        <div className="flex flex-col sm:flex-row gap-4 bg-card rounded-lg border border-border p-4">
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">Filtrele:</span>
+            <Filter className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-foreground/80">Filtrele:</span>
           </div>
           <Select value={ratingFilter} onValueChange={setRatingFilter}>
             <SelectTrigger className="w-full sm:w-[180px]">
@@ -263,9 +263,9 @@ export default function ReviewsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="flex flex-col items-center justify-center py-20 bg-white rounded-lg border border-gray-200"
+            className="flex flex-col items-center justify-center py-20 bg-card rounded-lg border border-border"
           >
-            <div className="w-32 h-32 mb-6 text-gray-300">
+            <div className="w-32 h-32 mb-6 text-muted-foreground/70">
               <svg
                 viewBox="0 0 100 100"
                 fill="none"
@@ -292,10 +292,10 @@ export default function ReviewsPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               Henüz değerlendirme yok
             </h3>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Müşterilerinizden gelen yorumlar burada görünecek
             </p>
           </motion.div>
@@ -304,13 +304,13 @@ export default function ReviewsPage() {
             key="no-results"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-20 bg-white rounded-lg border border-gray-200"
+            className="flex flex-col items-center justify-center py-20 bg-card rounded-lg border border-border"
           >
-            <Filter className="w-16 h-16 text-gray-300 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <Filter className="w-16 h-16 text-muted-foreground/70 mb-4" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               Filtreye uygun yorum bulunamadı
             </h3>
-            <p className="text-gray-600">Filtreleri değiştirmeyi deneyin</p>
+            <p className="text-muted-foreground">Filtreleri değiştirmeyi deneyin</p>
           </motion.div>
         ) : (
           <motion.div
@@ -326,12 +326,12 @@ export default function ReviewsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow"
+                className="bg-card rounded-lg border border-border p-6 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-foreground">
                         {review.customerName}
                       </h3>
                       <Badge
@@ -341,7 +341,7 @@ export default function ReviewsPage() {
                       </Badge>
                     </div>
                     {renderStars(review.rating, "sm")}
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       {formatDistanceToNow(new Date(review.createdAt), {
                         addSuffix: true,
                         locale: tr,
@@ -352,9 +352,9 @@ export default function ReviewsPage() {
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-2">
                       {review.isPublished ? (
-                        <Eye className="w-4 h-4 text-gray-600" />
+                        <Eye className="w-4 h-4 text-muted-foreground" />
                       ) : (
-                        <EyeOff className="w-4 h-4 text-gray-400" />
+                        <EyeOff className="w-4 h-4 text-muted-foreground/70" />
                       )}
                       <Switch
                         checked={review.isPublished}
@@ -377,7 +377,7 @@ export default function ReviewsPage() {
                   </div>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                <p className="text-foreground/80 leading-relaxed">{review.comment}</p>
               </motion.div>
             ))}
           </motion.div>

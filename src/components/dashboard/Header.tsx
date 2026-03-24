@@ -152,7 +152,7 @@ export function Header() {
             <Button variant="ghost" className="relative h-10 rounded-full">
               <Avatar className="h-8 w-8">
                 <AvatarImage src={user?.image || undefined} alt={user?.name || undefined} />
-                <AvatarFallback className="bg-gradient-to-br from-amber-500 to-orange-600 text-white">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
                   {initials}
                 </AvatarFallback>
               </Avatar>

@@ -104,7 +104,7 @@ export default function FAQ() {
           </p>
           <a
             href="mailto:destek@menucraft.ai"
-            className="text-amber-600 hover:text-amber-700 font-semibold inline-flex items-center gap-2 group"
+            className="text-primary hover:text-primary font-semibold inline-flex items-center gap-2 group"
           >
             Bizimle İletişime Geçin
             <span className="group-hover:translate-x-1 transition-transform">→</span>

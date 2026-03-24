@@ -73,10 +73,10 @@ const LanguageSwitcher: React.FC = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all border border-gray-200 dark:border-gray-700 flex items-center gap-2"
+        className="p-2 rounded-lg bg-card dark:bg-card shadow-md hover:shadow-lg transition-all border border-border dark:border-border flex items-center gap-2"
         aria-label="Select language"
       >
-        <Globe className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+        <Globe className="w-5 h-5 text-foreground/80 dark:text-foreground/80" />
         <span className="text-lg">{currentLanguage.flag}</span>
       </motion.button>
 
@@ -88,7 +88,7 @@ const LanguageSwitcher: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
+            className="absolute right-0 top-full mt-2 w-48 bg-card dark:bg-card rounded-xl shadow-xl border border-border dark:border-border overflow-hidden z-50"
           >
             <div className="py-2">
               {LANGUAGES.map((language) => {
@@ -100,8 +100,8 @@ const LanguageSwitcher: React.FC = () => {
                     onClick={() => handleLanguageSelect(language)}
                     className={`w-full px-4 py-2 flex items-center justify-between transition-colors ${
                       isSelected
-                        ? "bg-amber-50 dark:bg-amber-900/20"
-                        : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                        ? "bg-primary/5 dark:bg-primary/20"
+                        : "hover:bg-accent dark:hover:bg-accent"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -109,15 +109,15 @@ const LanguageSwitcher: React.FC = () => {
                       <span
                         className={`text-sm font-medium ${
                           isSelected
-                            ? "text-amber-700 dark:text-amber-400"
-                            : "text-gray-700 dark:text-gray-300"
+                            ? "text-primary dark:text-primary"
+                            : "text-foreground/80 dark:text-foreground/80"
                         }`}
                       >
                         {language.name}
                       </span>
                     </div>
                     {isSelected && (
-                      <Check className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                      <Check className="w-4 h-4 text-primary dark:text-primary" />
                     )}
                   </motion.button>
                 );

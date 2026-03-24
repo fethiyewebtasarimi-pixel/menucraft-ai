@@ -67,7 +67,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     },
     POPULAR: {
       icon: Star,
-      color: "bg-amber-100 text-amber-700",
+      color: "bg-primary/10 text-primary",
       label: "Popüler",
     },
     NEW: { icon: Sparkles, color: "bg-purple-100 text-purple-700", label: "Yeni" },
@@ -97,15 +97,15 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
         animate={{ opacity: 1, y: 0 }}
         whileHover={{ scale: 1.02 }}
         onClick={() => onViewDetail?.(item)}
-        className="bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden border border-gray-200 dark:border-gray-800"
+        className="bg-card dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden border border-border dark:border-gray-800"
       >
         <div className="flex gap-4 p-4">
           {/* Image */}
-          <div className="relative w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-800">
+          <div className="relative w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-muted/50 dark:bg-gray-800">
             {item.image && !imageError ? (
               <>
                 {!imageLoaded && (
-                  <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-700" />
+                  <div className="absolute inset-0 animate-pulse bg-muted dark:bg-gray-700" />
                 )}
                 <Image
                   src={item.image}
@@ -128,13 +128,13 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-1">
-              <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-1">
+              <h3 className="font-semibold text-foreground dark:text-white line-clamp-1">
                 {item.name}
               </h3>
               {onAddToCart && (
                 <button
                   onClick={handleAddToCart}
-                  className="flex-shrink-0 p-1.5 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="flex-shrink-0 p-1.5 rounded-full transition-colors hover:bg-muted/50 dark:hover:bg-gray-800"
                   style={{ color: accentColor }}
                   aria-label="Add to cart"
                 >
@@ -144,7 +144,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
             </div>
 
             {item.description && (
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-2">
+              <p className="text-sm text-muted-foreground dark:text-gray-400 line-clamp-2 mb-2">
                 {item.description}
               </p>
             )}
@@ -173,7 +173,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
             {(item.calories || (item.allergens && item.allergens.length > 0)) && (
               <div className="flex items-center gap-2 mb-1 text-xs">
                 {item.calories ? (
-                  <span className="inline-flex items-center gap-1 text-orange-600 dark:text-orange-400">
+                  <span className="inline-flex items-center gap-1 text-primary dark:text-primary">
                     <Zap className="w-3 h-3" />
                     {item.calories} kcal
                   </span>
@@ -197,7 +197,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                   >
                     {formatPrice(item.discountPrice)}
                   </span>
-                  <span className="text-sm text-gray-500 line-through">
+                  <span className="text-sm text-muted-foreground line-through">
                     {formatPrice(item.price)}
                   </span>
                 </>
@@ -223,14 +223,14 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.03, y: -5 }}
       onClick={() => onViewDetail?.(item)}
-      className="bg-white dark:bg-gray-900 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden border border-gray-200 dark:border-gray-800 group"
+      className="bg-card dark:bg-gray-900 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden border border-border dark:border-gray-800 group"
     >
       {/* Image */}
-      <div className="relative w-full aspect-[4/3] bg-gray-100 dark:bg-gray-800 overflow-hidden">
+      <div className="relative w-full aspect-[4/3] bg-muted/50 dark:bg-gray-800 overflow-hidden">
         {item.image && !imageError ? (
           <>
             {!imageLoaded && (
-              <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-700" />
+              <div className="absolute inset-0 animate-pulse bg-muted dark:bg-gray-700" />
             )}
             <Image
               src={item.image}
@@ -281,12 +281,12 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
 
       {/* Content */}
       <div className="p-4">
-        <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1 line-clamp-1">
+        <h3 className="font-bold text-lg text-foreground dark:text-white mb-1 line-clamp-1">
           {item.name}
         </h3>
 
         {item.description && (
-          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3 h-10">
+          <p className="text-sm text-muted-foreground dark:text-gray-400 line-clamp-2 mb-3 h-10">
             {item.description}
           </p>
         )}
@@ -315,7 +315,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
         {(item.calories || (item.allergens && item.allergens.length > 0)) && (
           <div className="flex items-center gap-2 mb-3 text-xs">
             {item.calories ? (
-              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary">
                 <Zap className="w-3 h-3" />
                 {item.calories} kcal
               </span>
@@ -340,7 +340,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 >
                   {formatPrice(item.discountPrice)}
                 </span>
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-sm text-muted-foreground line-through">
                   {formatPrice(item.price)}
                 </span>
               </>

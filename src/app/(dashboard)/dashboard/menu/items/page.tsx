@@ -175,8 +175,8 @@ export default function MenuItemsPage() {
   if (itemsLoading) {
     return (
       <div className="container mx-auto p-6 space-y-6">
-        <div className="h-10 bg-gray-200 rounded w-1/3 animate-pulse" />
-        <div className="h-96 bg-gray-200 rounded-lg animate-pulse" />
+        <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
+        <div className="h-96 bg-muted rounded-lg animate-pulse" />
       </div>
     );
   }
@@ -188,8 +188,8 @@ export default function MenuItemsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Tüm Yemekler</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-foreground">Tüm Yemekler</h1>
+          <p className="text-muted-foreground mt-1">
             {filteredItems?.length || 0} ürün bulundu
           </p>
         </div>
@@ -202,7 +202,7 @@ export default function MenuItemsPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground/70 w-4 h-4" />
           <Input
             placeholder="Yemek ara..."
             value={searchQuery}
@@ -243,9 +243,9 @@ export default function MenuItemsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="flex flex-col items-center justify-center py-20 bg-white rounded-lg border border-gray-200"
+            className="flex flex-col items-center justify-center py-20 bg-card rounded-lg border border-border"
           >
-            <div className="w-32 h-32 mb-6 text-gray-300">
+            <div className="w-32 h-32 mb-6 text-muted-foreground/70">
               <svg
                 viewBox="0 0 100 100"
                 fill="none"
@@ -261,10 +261,10 @@ export default function MenuItemsPage() {
                 <line x1="50" y1="40" x2="50" y2="70" stroke="currentColor" strokeWidth="2" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               Henüz yemek eklenmemiş
             </h3>
-            <p className="text-gray-600 mb-6">Hemen ilk yemeğinizi ekleyin</p>
+            <p className="text-muted-foreground mb-6">Hemen ilk yemeğinizi ekleyin</p>
             <Button onClick={() => setIsAddDialogOpen(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Yemek Ekle
@@ -275,20 +275,20 @@ export default function MenuItemsPage() {
             key="no-results"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-20 bg-white rounded-lg border border-gray-200"
+            className="flex flex-col items-center justify-center py-20 bg-card rounded-lg border border-border"
           >
-            <Filter className="w-16 h-16 text-gray-300 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <Filter className="w-16 h-16 text-muted-foreground/70 mb-4" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               Sonuç bulunamadı
             </h3>
-            <p className="text-gray-600">Filtreleri değiştirmeyi deneyin</p>
+            <p className="text-muted-foreground">Filtreleri değiştirmeyi deneyin</p>
           </motion.div>
         ) : (
           <motion.div
             key="table"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white rounded-lg border border-gray-200 overflow-hidden"
+            className="bg-card rounded-lg border border-border overflow-hidden"
           >
             <Table>
               <TableHeader>
@@ -306,7 +306,7 @@ export default function MenuItemsPage() {
                 {paginatedItems?.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell>
-                      <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden">
+                      <div className="w-12 h-12 bg-muted/50 rounded-lg overflow-hidden">
                         {item.image ? (
                           <img
                             src={item.image}
@@ -314,7 +314,7 @@ export default function MenuItemsPage() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground/70">
                             <svg
                               className="w-6 h-6"
                               fill="none"
@@ -401,8 +401,8 @@ export default function MenuItemsPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
-                <p className="text-sm text-gray-600">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-border">
+                <p className="text-sm text-muted-foreground">
                   Sayfa {currentPage} / {totalPages}
                 </p>
                 <div className="flex gap-2">

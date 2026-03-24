@@ -119,7 +119,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   return (
     <div className={className}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-foreground/80 dark:text-foreground/80 mb-2">
           {label}
         </label>
       )}
@@ -143,10 +143,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           onDragLeave={handleDragLeave}
           className={`relative overflow-hidden rounded-xl border-2 transition-all ${
             isDragging
-              ? "border-amber-500 bg-amber-50 dark:bg-amber-900/20"
+              ? "border-primary bg-primary/5 dark:bg-primary/20"
               : preview
-              ? "border-gray-200 dark:border-gray-700"
-              : "border-dashed border-gray-300 dark:border-gray-600 hover:border-amber-500 dark:hover:border-amber-500 cursor-pointer bg-gray-50 dark:bg-gray-800/50"
+              ? "border-border dark:border-border"
+              : "border-dashed border-border dark:border-border hover:border-primary dark:hover:border-primary cursor-pointer bg-accent dark:bg-accent/50"
           }`}
           style={{ aspectRatio }}
         >
@@ -168,7 +168,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     e.stopPropagation();
                     handleClick();
                   }}
-                  className="p-3 rounded-full bg-white text-gray-900 shadow-lg hover:bg-gray-100 transition-colors"
+                  className="p-3 rounded-full bg-card text-foreground shadow-lg hover:bg-muted/50 transition-colors"
                   aria-label="Change image"
                 >
                   <Upload className="w-5 h-5" />
@@ -193,20 +193,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
               {isUploading ? (
                 <>
-                  <Loader2 className="w-12 h-12 text-amber-500 animate-spin mb-3" />
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <Loader2 className="w-12 h-12 text-primary animate-spin mb-3" />
+                  <p className="text-sm font-medium text-foreground/80 dark:text-foreground/80">
                     Uploading...
                   </p>
                 </>
               ) : (
                 <>
-                  <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
-                    <ImageIcon className="w-8 h-8 text-amber-600 dark:text-amber-500" />
+                  <div className="w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
+                    <ImageIcon className="w-8 h-8 text-primary dark:text-primary" />
                   </div>
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <p className="text-sm font-medium text-foreground/80 dark:text-foreground/80 mb-1">
                     Click to upload or drag and drop
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                     PNG, JPG, WEBP up to {maxSize}MB
                   </p>
                 </>
@@ -222,11 +222,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm flex items-center justify-center rounded-xl"
+              className="absolute inset-0 bg-card/80 dark:bg-card/80 backdrop-blur-sm flex items-center justify-center rounded-xl"
             >
               <div className="text-center">
-                <Loader2 className="w-8 h-8 text-amber-500 animate-spin mx-auto mb-2" />
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-2" />
+                <p className="text-sm font-medium text-foreground/80 dark:text-foreground/80">
                   Uploading...
                 </p>
               </div>
@@ -250,7 +250,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       </AnimatePresence>
 
       {/* Help Text */}
-      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-xs text-muted-foreground dark:text-muted-foreground">
         Recommended aspect ratio: {aspectRatio}. Maximum file size: {maxSize}MB
       </p>
     </div>
