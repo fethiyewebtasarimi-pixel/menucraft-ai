@@ -37,7 +37,7 @@ interface NavItem {
 
 const mainNavItems: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Menüler', href: '/dashboard/menus', icon: UtensilsCrossed },
+  { label: 'Menüler', href: '/dashboard/menu', icon: UtensilsCrossed },
   { label: 'QR Kodlar', href: '/dashboard/qr-codes', icon: QrCode },
   { label: 'Siparişler', href: '/dashboard/orders', icon: ShoppingBag },
   { label: 'Masalar', href: '/dashboard/tables', icon: Grid3X3 },

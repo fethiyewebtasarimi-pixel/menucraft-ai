@@ -37,6 +37,7 @@ export function Header() {
 
     const pathMap: Record<string, string> = {
       dashboard: 'Dashboard',
+      menu: 'Menüler',
       menus: 'Menüler',
       'qr-codes': 'QR Kodlar',
       orders: 'Siparişler',
