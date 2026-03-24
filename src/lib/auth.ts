@@ -19,12 +19,7 @@ declare module "next-auth" {
   }
 }
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    id: string;
-    role: string;
-  }
-}
+// JWT type extension handled via callbacks below
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const providers: any[] = [];
@@ -144,8 +139,8 @@ const nextAuth = NextAuth({
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id;
-        session.user.role = token.role;
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
       }
       return session;
     },
