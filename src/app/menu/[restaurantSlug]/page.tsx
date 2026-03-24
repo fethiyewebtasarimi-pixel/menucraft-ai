@@ -236,11 +236,11 @@ export default function MenuPage({
         throw new Error("Failed to submit review");
       }
 
-      toast.success("Yorumunuz gonderildi! Onaylandiktan sonra gorunur olacaktir.");
+      toast.success("Yorumunuz gönderildi! Onaylandıktan sonra görünür olacaktır.");
       setReviewForm({ name: "", rating: 5, comment: "" });
     } catch (error) {
       console.error("Review submission error:", error);
-      toast.error("Yorum gonderilirken bir hata olustu. Tekrar deneyin.");
+      toast.error("Yorum gönderilirken bir hata oluştu. Tekrar deneyin.");
     } finally {
       setReviewSubmitting(false);
     }
@@ -527,10 +527,10 @@ export default function MenuPage({
                   {reviewSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Gonderiliyor...
+                      Gönderiliyor...
                     </>
                   ) : (
-                    "Gonder"
+                    "Gönder"
                   )}
                 </motion.button>
               </form>

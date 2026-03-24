@@ -8,10 +8,10 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 
 const navLinks = [
+  { href: "#how-it-works", label: "Nasıl Çalışır?" },
   { href: "#features", label: "Özellikler" },
   { href: "#pricing", label: "Fiyatlandırma" },
-  { href: "#about", label: "Hakkımızda" },
-  { href: "#blog", label: "Blog" },
+  { href: "#faq", label: "S.S.S." },
 ]
 
 export default function Header() {

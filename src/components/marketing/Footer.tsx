@@ -4,27 +4,22 @@ import { ChefHat, Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } 
 
 const footerLinks = {
   product: [
+    { label: "Nasıl Çalışır?", href: "#how-it-works" },
     { label: "Özellikler", href: "#features" },
     { label: "Fiyatlandırma", href: "#pricing" },
-    { label: "Demo", href: "#" },
-    { label: "API", href: "#" },
+    { label: "S.S.S.", href: "#faq" },
   ],
   company: [
-    { label: "Hakkımızda", href: "#about" },
-    { label: "Blog", href: "#blog" },
-    { label: "Kariyer", href: "#" },
-    { label: "İletişim", href: "#" },
+    { label: "Hakkımızda", href: "#faq" },
+    { label: "İletişim", href: "mailto:destek@menucraft.ai" },
   ],
   support: [
-    { label: "Yardım Merkezi", href: "#" },
-    { label: "SSS", href: "#faq" },
-    { label: "Dökümantasyon", href: "#" },
-    { label: "Durum", href: "#" },
+    { label: "S.S.S.", href: "#faq" },
+    { label: "Destek", href: "mailto:destek@menucraft.ai" },
   ],
   legal: [
-    { label: "Gizlilik Politikası", href: "#" },
-    { label: "Kullanım Şartları", href: "#" },
-    { label: "Çerez Politikası", href: "#" },
+    { label: "Gizlilik Politikası", href: "/privacy" },
+    { label: "Kullanım Şartları", href: "/terms" },
   ],
 }
 
@@ -176,16 +171,9 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* Language Switcher */}
-          <div className="flex items-center gap-2">
-            <select className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-300 hover:border-amber-500 transition-colors cursor-pointer">
-              <option value="tr">🇹🇷 Türkçe</option>
-              <option value="en">🇬🇧 English</option>
-              <option value="de">🇩🇪 Deutsch</option>
-              <option value="fr">🇫🇷 Français</option>
-              <option value="ru">🇷🇺 Русский</option>
-              <option value="ar">🇸🇦 العربية</option>
-            </select>
+          {/* Language */}
+          <div className="text-sm text-slate-400">
+            🇹🇷 Türkçe
           </div>
         </div>
       </div>

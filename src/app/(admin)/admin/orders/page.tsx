@@ -44,12 +44,12 @@ const STATUS_COLORS: Record<string, string> = {
 
 const STATUS_LABELS: Record<string, string> = {
   PENDING: 'Bekliyor',
-  CONFIRMED: 'Onaylandi',
-  PREPARING: 'Hazirlaniyor',
-  READY: 'Hazir',
+  CONFIRMED: 'Onaylandı',
+  PREPARING: 'Hazırlanıyor',
+  READY: 'Hazır',
   SERVED: 'Servis Edildi',
-  COMPLETED: 'Tamamlandi',
-  CANCELLED: 'Iptal',
+  COMPLETED: 'Tamamlandı',
+  CANCELLED: 'İptal',
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -59,9 +59,9 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const PAYMENT_LABELS: Record<string, string> = {
-  UNPAID: 'Odenmedi',
-  PAID: 'Odendi',
-  REFUNDED: 'Iade Edildi',
+  UNPAID: 'Ödenmedi',
+  PAID: 'Ödendi',
+  REFUNDED: 'İade Edildi',
 };
 
 const PAYMENT_COLORS: Record<string, string> = {
@@ -91,9 +91,9 @@ export default function AdminOrdersPage() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <ShoppingBag className="h-8 w-8 text-red-600" />
-          Siparis Yonetimi
+          Sipariş Yönetimi
         </h1>
-        <p className="text-muted-foreground mt-1">Tum platform siparislerini goruntuleyip takip et</p>
+        <p className="text-muted-foreground mt-1">Tüm platform siparişlerini görüntüleyip takip et</p>
       </div>
 
       {/* Summary */}
@@ -102,7 +102,7 @@ export default function AdminOrdersPage() {
           <Card>
             <CardContent className="p-4 text-center">
               <p className="text-2xl font-bold">{data.pagination?.total || 0}</p>
-              <p className="text-xs text-muted-foreground">Toplam Siparis</p>
+              <p className="text-xs text-muted-foreground">Toplam Sipariş</p>
             </CardContent>
           </Card>
           <Card>
@@ -114,7 +114,7 @@ export default function AdminOrdersPage() {
           <Card>
             <CardContent className="p-4 text-center">
               <p className="text-2xl font-bold">{formatPrice(data.stats.averageOrder, 'TRY')}</p>
-              <p className="text-xs text-muted-foreground">Ortalama Siparis</p>
+              <p className="text-xs text-muted-foreground">Ortalama Sipariş</p>
             </CardContent>
           </Card>
         </div>
@@ -127,7 +127,7 @@ export default function AdminOrdersPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Siparis no, musteri adi veya restoran ara..."
+                placeholder="Sipariş no, müşteri adı veya restoran ara..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                 className="pl-9"
@@ -138,7 +138,7 @@ export default function AdminOrdersPage() {
                 <SelectValue placeholder="Durum" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tum Durumlar</SelectItem>
+                <SelectItem value="all">Tüm Durumlar</SelectItem>
                 {Object.entries(STATUS_LABELS).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
                 ))}
@@ -149,7 +149,7 @@ export default function AdminOrdersPage() {
                 <SelectValue placeholder="Tip" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tum Tipler</SelectItem>
+                <SelectItem value="all">Tüm Tipler</SelectItem>
                 {Object.entries(TYPE_LABELS).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
                 ))}
@@ -157,10 +157,10 @@ export default function AdminOrdersPage() {
             </Select>
             <Select value={paymentFilter} onValueChange={(v) => { setPaymentFilter(v === 'all' ? '' : v); setPage(1); }}>
               <SelectTrigger className="w-full md:w-36">
-                <SelectValue placeholder="Odeme" />
+                <SelectValue placeholder="Ödeme" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tum Odemeler</SelectItem>
+                <SelectItem value="all">Tüm Ödemeler</SelectItem>
                 {Object.entries(PAYMENT_LABELS).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
                 ))}
@@ -208,7 +208,7 @@ export default function AdminOrdersPage() {
                       <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Package className="h-3 w-3" />
-                          {(order.items as unknown[])?.length || 0} urun
+                          {(order.items as unknown[])?.length || 0} ürün
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
@@ -228,7 +228,7 @@ export default function AdminOrdersPage() {
           {data?.orders?.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
-                Siparis bulunamadi
+                Sipariş bulunamadı
               </CardContent>
             </Card>
           )}
@@ -252,7 +252,7 @@ export default function AdminOrdersPage() {
       <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Siparis Detayi - #{selectedOrder?.orderNumber as string}</DialogTitle>
+            <DialogTitle>Sipariş Detayı - #{selectedOrder?.orderNumber as string}</DialogTitle>
           </DialogHeader>
           {selectedOrder && (
             <div className="space-y-4">
@@ -268,7 +268,7 @@ export default function AdminOrdersPage() {
 
               <div className="text-sm space-y-1">
                 <p><span className="text-muted-foreground">Restoran:</span> {(selectedOrder.restaurant as Record<string, string>)?.name}</p>
-                {selectedOrder.customerName ? <p><span className="text-muted-foreground">Musteri:</span> {selectedOrder.customerName as string}</p> : null}
+                {selectedOrder.customerName ? <p><span className="text-muted-foreground">Müşteri:</span> {selectedOrder.customerName as string}</p> : null}
                 {selectedOrder.customerPhone ? <p><span className="text-muted-foreground">Telefon:</span> {selectedOrder.customerPhone as string}</p> : null}
                 {(selectedOrder.table as Record<string, unknown>)?.number ? <p><span className="text-muted-foreground">Masa:</span> {String((selectedOrder.table as Record<string, unknown>).number)}</p> : null}
                 <p><span className="text-muted-foreground">Tarih:</span> {new Date(selectedOrder.createdAt as string).toLocaleString('tr-TR')}</p>
@@ -277,7 +277,7 @@ export default function AdminOrdersPage() {
               <Separator />
 
               <div className="space-y-2">
-                <p className="font-medium">Urunler</p>
+                <p className="font-medium">Ürünler</p>
                 {(selectedOrder.items as Record<string, unknown>[])?.map((item: Record<string, unknown>) => (
                   <div key={item.id as string} className="flex justify-between text-sm">
                     <span>

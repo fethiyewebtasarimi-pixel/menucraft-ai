@@ -126,7 +126,7 @@ export default function AnalyticsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Analitik</h1>
           <p className="text-muted-foreground">
-            Restoraninizin performans istatistikleri
+            Restoranınızın performans istatistikleri
           </p>
         </div>
         <div className="flex gap-3">
@@ -136,15 +136,15 @@ export default function AnalyticsPage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="7d">Son 7 Gun</SelectItem>
-              <SelectItem value="30d">Son 30 Gun</SelectItem>
-              <SelectItem value="90d">Son 90 Gun</SelectItem>
-              <SelectItem value="1y">Son 1 Yil</SelectItem>
+              <SelectItem value="7d">Son 7 Gün</SelectItem>
+              <SelectItem value="30d">Son 30 Gün</SelectItem>
+              <SelectItem value="90d">Son 90 Gün</SelectItem>
+              <SelectItem value="1y">Son 1 Yıl</SelectItem>
             </SelectContent>
           </Select>
           <Button variant="outline" className="gap-2">
             <Download className="h-4 w-4" />
-            Disa Aktar
+            Dışa Aktar
           </Button>
         </div>
       </motion.div>
@@ -155,32 +155,32 @@ export default function AnalyticsPage() {
         className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
       >
         <StatsCard
-          title="Menu Goruntuleme"
+          title="Menü Görüntüleme"
           value={(analytics?.summary?.totalMenuViews || 0).toLocaleString('tr-TR')}
           icon={Eye}
           trend="up"
-          description="Toplam goruntuleme"
+          description="Toplam görüntüleme"
         />
         <StatsCard
-          title="QR Kod Taramasi"
+          title="QR Kod Taraması"
           value={qrScans.toLocaleString('tr-TR')}
           icon={QrCode}
           trend="up"
           description="Benzersiz tarama"
         />
         <StatsCard
-          title="Siparis Sayisi"
+          title="Sipariş Sayısı"
           value={(analytics?.summary?.totalOrders || 0).toLocaleString('tr-TR')}
           icon={ShoppingBag}
           trend="up"
-          description="Tamamlanan siparis"
+          description="Tamamlanan sipariş"
         />
         <StatsCard
           title="Toplam Gelir"
           value={formatPrice(analytics?.summary?.totalRevenue || 0)}
           icon={TrendingUp}
           trend="up"
-          description={`Ort. siparis: ${formatPrice(analytics?.summary?.avgOrderValue || 0)}`}
+          description={`Ort. sipariş: ${formatPrice(analytics?.summary?.avgOrderValue || 0)}`}
         />
       </motion.div>
 
@@ -193,11 +193,11 @@ export default function AnalyticsPage() {
               </div>
               <h3 className="font-semibold text-lg mb-2">Yeterli Veri Yok</h3>
               <p className="text-sm text-muted-foreground text-center max-w-md">
-                Analitik verilerinizi gormek icin menunuzun daha fazla goruntulenmesi gerekiyor.
-                QR kodunuzu paylasin ve musterilerinizin menunuze erismesini saglayin.
+                Analitik verilerinizi görmek için menünüzün daha fazla görüntülenmesi gerekiyor.
+                QR kodunuzu paylaşın ve müşterilerinizin menünüze erişmesini sağlayın.
               </p>
               <Button className="mt-6" variant="outline" asChild>
-                <a href="/dashboard/qr-codes">QR Kod Indir</a>
+                <a href="/dashboard/qr-codes">QR Kod İndir</a>
               </Button>
             </CardContent>
           </Card>
@@ -211,9 +211,9 @@ export default function AnalyticsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <LineChartIcon className="h-5 w-5 text-amber-600" />
-                    Menu Goruntuleme Trendi
+                    Menü Görüntüleme Trendi
                   </CardTitle>
-                  <CardDescription>Son {days} gundeki goruntuleme sayisi</CardDescription>
+                  <CardDescription>Son {days} gündeki görüntüleme sayısı</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {dailyTrend.length > 0 ? (
@@ -250,9 +250,9 @@ export default function AnalyticsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <PieChartIcon className="h-5 w-5 text-amber-600" />
-                    Siparis Tip Dagilimi
+                    Sipariş Tipi Dağılımı
                   </CardTitle>
-                  <CardDescription>Siparis turlerine gore dagilim</CardDescription>
+                  <CardDescription>Sipariş türlerine göre dağılım</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {analytics?.orderTypeDistribution &&
@@ -284,7 +284,7 @@ export default function AnalyticsPage() {
                     </>
                   ) : (
                     <p className="text-sm text-muted-foreground text-center py-8">
-                      Henuz siparis verisi yok
+                      Henüz sipariş verisi yok
                     </p>
                   )}
 
@@ -312,10 +312,10 @@ export default function AnalyticsPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5 text-amber-600" />
-                  Populer Yemekler
+                  Popüler Yemekler
                 </CardTitle>
                 <CardDescription>
-                  En cok siparis edilen urunler
+                  En çok sipariş edilen ürünler
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -348,7 +348,7 @@ export default function AnalyticsPage() {
                               </span>
                               <span className="flex items-center gap-1">
                                 <Eye className="h-3 w-3" />
-                                {topItem.orderCount} siparis
+                                {topItem.orderCount} sipariş
                               </span>
                             </div>
                           </div>
@@ -359,7 +359,7 @@ export default function AnalyticsPage() {
                   </div>
                 ) : (
                   <p className="text-sm text-muted-foreground text-center py-8">
-                    Henuz siparis verisi yok
+                    Henüz sipariş verisi yok
                   </p>
                 )}
               </CardContent>
@@ -373,10 +373,10 @@ export default function AnalyticsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Clock className="h-5 w-5 text-amber-600" />
-                    Saat Bazli Trafik (Tahmini)
+                    Saat Bazlı Trafik (Tahmini)
                   </CardTitle>
                   <CardDescription>
-                    Gun icinde menu goruntuleme dagilimi
+                    Gün içinde menü görüntüleme dağılımı
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

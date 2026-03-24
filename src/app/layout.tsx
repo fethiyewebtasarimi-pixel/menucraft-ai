@@ -11,16 +11,17 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'MenuCraft AI - AI Destekli Dijital Menu Platformu',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://menucraft-ai-production.up.railway.app'),
+  title: 'MenuCraft AI - AI Destekli Dijital Menü Platformu',
   description:
     'MenuCraft AI ile restoranınız için AI destekli dijital menü oluşturun, QR kod ile müşterilerinize sunun ve sipariş yönetimi yapın.',
   keywords: [
-    'dijital menu',
-    'QR menu',
-    'restoran menu',
-    'AI menu',
-    'menu yapay zeka',
-    'restoran yonetim',
+    'dijital menü',
+    'QR menü',
+    'restoran menü',
+    'AI menü',
+    'menü yapay zeka',
+    'restoran yönetimi',
     'dijital restoran',
   ],
   authors: [{ name: 'MenuCraft AI' }],
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     locale: 'tr_TR',
     url: 'https://menucraft-ai.com',
     siteName: 'MenuCraft AI',
-    title: 'MenuCraft AI - AI Destekli Dijital Menu Platformu',
+    title: 'MenuCraft AI - AI Destekli Dijital Menü Platformu',
     description:
       'MenuCraft AI ile restoranınız için AI destekli dijital menü oluşturun, QR kod ile müşterilerinize sunun ve sipariş yönetimi yapın.',
     images: [
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MenuCraft AI - AI Destekli Dijital Menu Platformu',
+    title: 'MenuCraft AI - AI Destekli Dijital Menü Platformu',
     description:
       'MenuCraft AI ile restoranınız için AI destekli dijital menü oluşturun, QR kod ile müşterilerinize sunun ve sipariş yönetimi yapın.',
     images: ['/og-image.png'],

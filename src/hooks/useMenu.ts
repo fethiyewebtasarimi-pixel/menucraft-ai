@@ -35,7 +35,7 @@ export interface UpdateCategoryInput extends Partial<CreateCategoryInput> {
 
 // API functions for Menu Items
 async function fetchMenuItems(restaurantId: string): Promise<MenuItem[]> {
-  const response = await fetch(`/api/restaurants/${restaurantId}/menu-items`);
+  const response = await fetch(`/api/restaurants/${restaurantId}/items`);
   if (!response.ok) {
     throw new Error('Failed to fetch menu items');
   }
@@ -44,7 +44,7 @@ async function fetchMenuItems(restaurantId: string): Promise<MenuItem[]> {
 
 async function createMenuItem(data: CreateMenuItemInput): Promise<MenuItem> {
   const { restaurantId, ...itemData } = data;
-  const response = await fetch(`/api/restaurants/${restaurantId}/menu-items`, {
+  const response = await fetch(`/api/restaurants/${restaurantId}/items`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ async function createMenuItem(data: CreateMenuItemInput): Promise<MenuItem> {
 
 async function updateMenuItem(data: UpdateMenuItemInput): Promise<MenuItem> {
   const { id, ...updateData } = data;
-  const response = await fetch(`/api/menu-items/${id}`, {
+  const response = await fetch(`/api/items/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ async function updateMenuItem(data: UpdateMenuItemInput): Promise<MenuItem> {
 }
 
 async function deleteMenuItem(id: string): Promise<void> {
-  const response = await fetch(`/api/menu-items/${id}`, {
+  const response = await fetch(`/api/items/${id}`, {
     method: 'DELETE',
   });
 

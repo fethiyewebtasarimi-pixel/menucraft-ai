@@ -100,7 +100,7 @@ export default function OrderPage({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Siparis olusturulamadi");
+        throw new Error(errorData.error || "Sipariş oluşturulamadı");
       }
 
       const order = await response.json();
@@ -117,7 +117,7 @@ export default function OrderPage({
       toast.error(
         error instanceof Error
           ? error.message
-          : "Siparis gonderilirken bir hata olustu."
+          : "Sipariş gönderilirken bir hata oluştu."
       );
     } finally {
       setIsSubmitting(false);
