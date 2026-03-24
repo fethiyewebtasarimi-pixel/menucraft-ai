@@ -17,15 +17,22 @@ export async function GET(req: NextRequest) {
     if (target) where.target = target;
     if (action) where.action = { contains: action };
 
-    const [logs, total] = await Promise.all([
-      prisma.auditLog.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.auditLog.count({ where }),
-    ]);
+    let logs: unknown[] = [];
+    let total = 0;
+
+    try {
+      [logs, total] = await Promise.all([
+        prisma.auditLog.findMany({
+          where,
+          skip: (page - 1) * limit,
+          take: limit,
+          orderBy: { createdAt: "desc" },
+        }),
+        prisma.auditLog.count({ where }),
+      ]);
+    } catch {
+      // Table may not exist yet
+    }
 
     return NextResponse.json({
       logs,

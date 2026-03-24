@@ -27,15 +27,22 @@ export async function GET(req: NextRequest) {
       ];
     }
 
-    const [coupons, total] = await Promise.all([
-      prisma.coupon.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.coupon.count({ where }),
-    ]);
+    let coupons: unknown[] = [];
+    let total = 0;
+
+    try {
+      [coupons, total] = await Promise.all([
+        prisma.coupon.findMany({
+          where,
+          skip: (page - 1) * limit,
+          take: limit,
+          orderBy: { createdAt: "desc" },
+        }),
+        prisma.coupon.count({ where }),
+      ]);
+    } catch {
+      // Table may not exist yet
+    }
 
     return NextResponse.json({
       coupons,

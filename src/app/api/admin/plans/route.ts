@@ -11,9 +11,14 @@ export async function GET() {
     const { error } = await requireAdmin();
     if (error) return error;
 
-    const config = await prisma.systemConfig.findUnique({
-      where: { key: PLAN_CONFIG_KEY },
-    });
+    let config = null;
+    try {
+      config = await prisma.systemConfig.findUnique({
+        where: { key: PLAN_CONFIG_KEY },
+      });
+    } catch {
+      // Table may not exist yet, fall through to defaults
+    }
 
     if (config) {
       return NextResponse.json({ plans: config.value });
