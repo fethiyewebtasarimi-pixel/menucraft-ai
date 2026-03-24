@@ -12,6 +12,7 @@ import {
   Eye,
   ChevronLeft,
   ChevronRight,
+  Download,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -111,14 +112,20 @@ export default function AdminUsersPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Users className="h-8 w-8 text-red-600" />
-          Kullanıcı Yönetimi
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Tüm kullanıcıları görüntüleyip yönet
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <Users className="h-8 w-8 text-red-600" />
+            Kullanıcı Yönetimi
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Tüm kullanıcıları görüntüleyip yönet
+          </p>
+        </div>
+        <Button variant="outline" onClick={() => window.open('/api/admin/export/users', '_blank')}>
+          <Download className="h-4 w-4 mr-2" />
+          CSV İndir
+        </Button>
       </div>
 
       {/* Filters */}

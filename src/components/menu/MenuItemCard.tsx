@@ -11,6 +11,8 @@ import {
   ChefHat,
   Plus,
   ShoppingCart,
+  Zap,
+  AlertTriangle,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -23,7 +25,13 @@ interface MenuItem {
   image?: string;
   tags?: string[];
   calories?: number;
+  protein?: number;
   prepTime?: number;
+  allergens?: string[];
+  isVegan?: boolean;
+  isVegetarian?: boolean;
+  isGlutenFree?: boolean;
+  isSpicy?: boolean;
 }
 
 interface MenuItemCardProps {
@@ -161,6 +169,24 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
               </div>
             )}
 
+            {/* Calorie & Allergen (List) */}
+            {(item.calories || (item.allergens && item.allergens.length > 0)) && (
+              <div className="flex items-center gap-2 mb-1 text-xs">
+                {item.calories ? (
+                  <span className="inline-flex items-center gap-1 text-orange-600 dark:text-orange-400">
+                    <Zap className="w-3 h-3" />
+                    {item.calories} kcal
+                  </span>
+                ) : null}
+                {item.allergens && item.allergens.length > 0 ? (
+                  <span className="inline-flex items-center gap-1 text-yellow-600 dark:text-yellow-400">
+                    <AlertTriangle className="w-3 h-3" />
+                    {item.allergens.length} alerjen
+                  </span>
+                ) : null}
+              </div>
+            )}
+
             {/* Price */}
             <div className="flex items-center gap-2">
               {item.discountPrice ? (
@@ -282,6 +308,24 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 </span>
               );
             })}
+          </div>
+        )}
+
+        {/* Calorie & Allergen Indicators */}
+        {(item.calories || (item.allergens && item.allergens.length > 0)) && (
+          <div className="flex items-center gap-2 mb-3 text-xs">
+            {item.calories ? (
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                <Zap className="w-3 h-3" />
+                {item.calories} kcal
+              </span>
+            ) : null}
+            {item.allergens && item.allergens.length > 0 ? (
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
+                <AlertTriangle className="w-3 h-3" />
+                {item.allergens.length} alerjen
+              </span>
+            ) : null}
           </div>
         )}
 

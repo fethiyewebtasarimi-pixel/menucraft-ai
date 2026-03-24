@@ -5,11 +5,29 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { Upload, Loader2 } from "lucide-react";
+import {
+  Upload,
+  Loader2,
+  Sparkles,
+  AlertTriangle,
+  Zap,
+  Beef,
+  Wheat,
+  Droplets,
+  Candy,
+  Apple,
+  FlaskConical,
+  ChefHat,
+  X,
+  Plus,
+  Camera,
+  Wand2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import {
   Form,
   FormControl,
@@ -27,6 +45,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { ALLERGENS } from "@/constants";
+
+const ALLERGEN_ICONS: Record<string, string> = {
+  "Gluten": "🌾",
+  "Süt Ürünleri": "🥛",
+  "Yumurta": "🥚",
+  "Fıstık": "🥜",
+  "Kabuklu Deniz Ürünleri": "🦐",
+  "Balık": "🐟",
+  "Soya": "🫘",
+  "Kereviz": "🥬",
+  "Hardal": "🟡",
+  "Susam": "🟤",
+  "Kükürt Dioksit": "🍷",
+  "Lupin": "🌱",
+  "Yumuşakçalar": "🐚",
+  "Kuruyemiş": "🌰",
+};
 
 const menuItemSchema = z.object({
   name: z.string().min(1, "Ürün adı zorunludur"),
@@ -43,8 +79,17 @@ const menuItemSchema = z.object({
   isNew: z.boolean().default(false),
   isChefRecommended: z.boolean().default(false),
   calories: z.coerce.number().optional(),
+  protein: z.coerce.number().optional(),
+  carbs: z.coerce.number().optional(),
+  fat: z.coerce.number().optional(),
+  fiber: z.coerce.number().optional(),
+  sugar: z.coerce.number().optional(),
+  sodium: z.coerce.number().optional(),
+  servingSize: z.string().optional(),
+  ingredients: z.array(z.string()).default([]),
+  nutritionVerified: z.boolean().default(false),
   prepTime: z.coerce.number().optional(),
-  allergens: z.string().optional(),
+  allergens: z.array(z.string()).default([]),
   tags: z.string().optional(),
   isActive: z.boolean().default(true),
   isAvailable: z.boolean().default(true),
@@ -68,6 +113,17 @@ export function MenuItemForm({
   const [imagePreview, setImagePreview] = useState<string | null>(
     initialData?.image || null
   );
+  const [ingredientInput, setIngredientInput] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [visionLoading, setVisionLoading] = useState(false);
+  const [enhanceLoading, setEnhanceLoading] = useState(false);
+
+  // Parse initial allergens - handle both string and array
+  const parseAllergens = (val: unknown): string[] => {
+    if (Array.isArray(val)) return val;
+    if (typeof val === "string" && val) return val.split(",").map(s => s.trim()).filter(Boolean);
+    return [];
+  };
 
   const form = useForm<MenuItemFormData>({
     resolver: zodResolver(menuItemSchema) as any,
@@ -86,13 +142,25 @@ export function MenuItemForm({
       isNew: initialData?.isNew || false,
       isChefRecommended: initialData?.isChefRecommended || false,
       calories: initialData?.calories || undefined,
+      protein: (initialData as any)?.protein || undefined,
+      carbs: (initialData as any)?.carbs || undefined,
+      fat: (initialData as any)?.fat || undefined,
+      fiber: (initialData as any)?.fiber || undefined,
+      sugar: (initialData as any)?.sugar || undefined,
+      sodium: (initialData as any)?.sodium || undefined,
+      servingSize: (initialData as any)?.servingSize || "",
+      ingredients: (initialData as any)?.ingredients || [],
+      nutritionVerified: (initialData as any)?.nutritionVerified || false,
       prepTime: initialData?.prepTime || undefined,
-      allergens: initialData?.allergens || "",
+      allergens: parseAllergens(initialData?.allergens),
       tags: initialData?.tags || "",
       isActive: initialData?.isActive ?? true,
       isAvailable: initialData?.isAvailable ?? true,
     },
   });
+
+  const selectedAllergens = form.watch("allergens") || [];
+  const ingredients = form.watch("ingredients") || [];
 
   const mutation = useMutation({
     mutationFn: async (data: MenuItemFormData) => {
@@ -141,12 +209,179 @@ export function MenuItemForm({
     }
   };
 
+  const toggleAllergen = (allergen: string) => {
+    const current = form.getValues("allergens") || [];
+    if (current.includes(allergen)) {
+      form.setValue("allergens", current.filter((a) => a !== allergen));
+    } else {
+      form.setValue("allergens", [...current, allergen]);
+    }
+  };
+
+  const addIngredient = () => {
+    const trimmed = ingredientInput.trim();
+    if (!trimmed) return;
+    const current = form.getValues("ingredients") || [];
+    if (!current.includes(trimmed)) {
+      form.setValue("ingredients", [...current, trimmed]);
+    }
+    setIngredientInput("");
+  };
+
+  const removeIngredient = (ingredient: string) => {
+    const current = form.getValues("ingredients") || [];
+    form.setValue("ingredients", current.filter((i) => i !== ingredient));
+  };
+
+  const handleAiAnalysis = async () => {
+    const currentIngredients = form.getValues("ingredients") || [];
+    const name = form.getValues("name");
+
+    if (currentIngredients.length === 0 && !name) {
+      toast.error("Lütfen önce malzeme veya ürün adı girin");
+      return;
+    }
+
+    setAiLoading(true);
+    try {
+      const response = await fetch("/api/ai/nutrition", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          description: form.getValues("description"),
+          ingredients: currentIngredients,
+        }),
+      });
+
+      if (!response.ok) throw new Error("AI analiz başarısız");
+
+      const data = await response.json();
+
+      if (data.calories) form.setValue("calories", data.calories);
+      if (data.protein) form.setValue("protein", data.protein);
+      if (data.carbs) form.setValue("carbs", data.carbs);
+      if (data.fat) form.setValue("fat", data.fat);
+      if (data.fiber) form.setValue("fiber", data.fiber);
+      if (data.sugar) form.setValue("sugar", data.sugar);
+      if (data.sodium) form.setValue("sodium", data.sodium);
+      if (data.servingSize) form.setValue("servingSize", data.servingSize);
+      if (data.allergens?.length > 0) {
+        const currentAllergens = form.getValues("allergens") || [];
+        const merged = Array.from(new Set([...currentAllergens, ...data.allergens]));
+        form.setValue("allergens", merged);
+      }
+
+      toast.success("AI analizi tamamlandı! Değerleri kontrol edin.");
+    } catch {
+      toast.error("AI analizi yapılamadı. Lütfen tekrar deneyin.");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handleVisionAnalysis = async () => {
+    const currentImage = form.getValues("image");
+    if (!currentImage) {
+      toast.error("Lütfen önce bir fotoğraf yükleyin");
+      return;
+    }
+
+    setVisionLoading(true);
+    try {
+      const response = await fetch("/api/ai/vision-analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          image: currentImage,
+          mimeType: "image/jpeg",
+        }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Analiz başarısız");
+      }
+
+      const data = await response.json();
+
+      if (data.name && !form.getValues("name")) form.setValue("name", data.name);
+      if (data.description && !form.getValues("description")) form.setValue("description", data.description);
+      if (data.calories) form.setValue("calories", data.calories);
+      if (data.protein) form.setValue("protein", data.protein);
+      if (data.carbs) form.setValue("carbs", data.carbs);
+      if (data.fat) form.setValue("fat", data.fat);
+      if (data.fiber) form.setValue("fiber", data.fiber);
+      if (data.sugar) form.setValue("sugar", data.sugar);
+      if (data.sodium) form.setValue("sodium", data.sodium);
+      if (data.servingSize) form.setValue("servingSize", data.servingSize);
+      if (data.ingredients?.length > 0) {
+        const current = form.getValues("ingredients") || [];
+        const merged = Array.from(new Set([...current, ...data.ingredients]));
+        form.setValue("ingredients", merged);
+      }
+      if (data.allergens?.length > 0) {
+        const current = form.getValues("allergens") || [];
+        const merged = Array.from(new Set([...current, ...data.allergens]));
+        form.setValue("allergens", merged);
+      }
+      if (data.isVegan) form.setValue("isVegan", true);
+      if (data.isVegetarian) form.setValue("isVegetarian", true);
+      if (data.isGlutenFree) form.setValue("isGlutenFree", true);
+      if (data.isSpicy) form.setValue("isSpicy", true);
+
+      toast.success("Fotoğraf analiz edildi! Tüm değerleri kontrol edin - bunlar AI tahminidir.");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Fotoğraf analizi yapılamadı");
+    } finally {
+      setVisionLoading(false);
+    }
+  };
+
+  const handleEnhanceImage = async () => {
+    const currentImage = form.getValues("image");
+    const currentName = form.getValues("name");
+    if (!currentImage) {
+      toast.error("Lütfen önce bir fotoğraf yükleyin");
+      return;
+    }
+    if (!currentName) {
+      toast.error("Lütfen önce yemek adını girin");
+      return;
+    }
+
+    setEnhanceLoading(true);
+    try {
+      const response = await fetch("/api/ai/enhance-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          image: currentImage,
+          mimeType: "image/jpeg",
+          dishName: currentName,
+          description: form.getValues("description"),
+        }),
+      });
+
+      if (!response.ok) throw new Error("İyileştirme başarısız");
+
+      const data = await response.json();
+      setImagePreview(data.enhancedImage);
+      form.setValue("image", data.enhancedImage);
+      toast.success("Fotoğraf HD kaliteye yükseltildi!");
+    } catch {
+      toast.error("Fotoğraf iyileştirme yapılamadı");
+    } finally {
+      setEnhanceLoading(false);
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Temel Bilgiler */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Temel Bilgiler</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Temel Bilgiler</h3>
 
           <FormField
             control={form.control}
@@ -242,12 +477,12 @@ export function MenuItemForm({
 
         {/* Görsel */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Görsel</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Görsel</h3>
 
           <FormField
             control={form.control}
             name="image"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Ürün Görseli</FormLabel>
                 <FormControl>
@@ -260,16 +495,49 @@ export function MenuItemForm({
                             alt="Preview"
                             className="max-h-64 mx-auto rounded-lg"
                           />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => {
-                              setImagePreview(null);
-                              form.setValue("image", "");
-                            }}
-                          >
-                            Görseli Kaldır
-                          </Button>
+                          <div className="flex items-center justify-center gap-2 flex-wrap">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={handleVisionAnalysis}
+                              disabled={visionLoading}
+                              className="text-purple-700 border-purple-200 hover:bg-purple-50"
+                            >
+                              {visionLoading ? (
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              ) : (
+                                <Camera className="h-4 w-4 mr-2" />
+                              )}
+                              Fotoğraftan AI Analiz
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={handleEnhanceImage}
+                              disabled={enhanceLoading}
+                              className="text-pink-700 border-pink-200 hover:bg-pink-50"
+                            >
+                              {enhanceLoading ? (
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              ) : (
+                                <Wand2 className="h-4 w-4 mr-2" />
+                              )}
+                              HD&apos;ye Yükselt
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setImagePreview(null);
+                                form.setValue("image", "");
+                              }}
+                            >
+                              Görseli Kaldır
+                            </Button>
+                          </div>
                         </div>
                       ) : (
                         <div className="space-y-4">
@@ -305,138 +573,259 @@ export function MenuItemForm({
           />
         </div>
 
-        {/* Özellikler */}
+        {/* Malzemeler */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Özellikler</h3>
-
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="isVegan"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <FormLabel>Vegan</FormLabel>
-                    <FormDescription>Bu ürün vegan mı?</FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <ChefHat className="h-5 w-5 text-amber-600" />
+                Malzemeler
+              </h3>
+              <p className="text-sm text-muted-foreground">Ürünün içindeki malzemeleri ekleyin</p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleAiAnalysis}
+              disabled={aiLoading}
+              className="text-purple-700 border-purple-200 hover:bg-purple-50"
+            >
+              {aiLoading ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Sparkles className="h-4 w-4 mr-2" />
               )}
-            />
-
-            <FormField
-              control={form.control}
-              name="isVegetarian"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <FormLabel>Vejetaryen</FormLabel>
-                    <FormDescription>Bu ürün vejetaryen mi?</FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="isGlutenFree"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <FormLabel>Glutensiz</FormLabel>
-                    <FormDescription>Gluten içermiyor mu?</FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="isSpicy"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <FormLabel>Acılı</FormLabel>
-                    <FormDescription>Bu ürün acılı mı?</FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="isPopular"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <FormLabel>Popüler</FormLabel>
-                    <FormDescription>Popüler ürün olarak işaretle</FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="isNew"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <FormLabel>Yeni</FormLabel>
-                    <FormDescription>Yeni ürün olarak işaretle</FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="isChefRecommended"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <FormLabel>Şef Önerisi</FormLabel>
-                    <FormDescription>Şef önerisi olarak işaretle</FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+              AI ile Analiz Et
+            </Button>
           </div>
+
+          <div className="flex gap-2">
+            <Input
+              placeholder="Malzeme adı yazın (Örn: un, yumurta, süt...)"
+              value={ingredientInput}
+              onChange={(e) => setIngredientInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addIngredient();
+                }
+              }}
+            />
+            <Button type="button" variant="outline" onClick={addIngredient}>
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {ingredients.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {ingredients.map((ingredient) => (
+                <Badge
+                  key={ingredient}
+                  variant="secondary"
+                  className="px-3 py-1.5 text-sm cursor-pointer hover:bg-red-100 transition-colors"
+                  onClick={() => removeIngredient(ingredient)}
+                >
+                  {ingredient}
+                  <X className="h-3 w-3 ml-2" />
+                </Badge>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Detaylar */}
+        {/* Alerjenler */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Detaylar</h3>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-yellow-600" />
+              Alerjen Bilgileri
+              <Badge variant="destructive" className="text-xs ml-2">Yasal Zorunluluk</Badge>
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Yemekte bulunan alerjenleri seçin. Bu bilgi müşterilere menüde gösterilir.
+            </p>
+          </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {ALLERGENS.map((allergen) => {
+              const isSelected = selectedAllergens.includes(allergen);
+              const icon = ALLERGEN_ICONS[allergen] || "⚠️";
+              return (
+                <button
+                  key={allergen}
+                  type="button"
+                  onClick={() => toggleAllergen(allergen)}
+                  className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left text-sm ${
+                    isSelected
+                      ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 shadow-sm"
+                      : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                  }`}
+                >
+                  <span className="text-lg flex-shrink-0">{icon}</span>
+                  <span className={`font-medium ${isSelected ? "text-yellow-900 dark:text-yellow-300" : "text-gray-700 dark:text-gray-300"}`}>
+                    {allergen}
+                  </span>
+                  {isSelected && (
+                    <span className="ml-auto text-yellow-600">✓</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {selectedAllergens.length > 0 && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+              <p className="text-sm text-yellow-800 dark:text-yellow-300">
+                <strong>{selectedAllergens.length}</strong> alerjen seçildi: {selectedAllergens.join(", ")}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Besin Değerleri */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <Apple className="h-5 w-5 text-green-600" />
+                Besin Değerleri
+                <Badge variant="destructive" className="text-xs ml-2">Yasal Zorunluluk</Badge>
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                1 porsiyon için besin değerlerini girin
+              </p>
+            </div>
+          </div>
+
+          <FormField
+            control={form.control}
+            name="servingSize"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Porsiyon Bilgisi</FormLabel>
+                <FormControl>
+                  <Input placeholder="Örn: 1 porsiyon (250g)" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <FormField
               control={form.control}
               name="calories"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Kalori</FormLabel>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Zap className="h-4 w-4 text-orange-500" />
+                    Kalori (kcal)
+                  </FormLabel>
                   <FormControl>
-                    <Input type="number" min="0" placeholder="Örn: 450" {...field} />
+                    <Input type="number" min="0" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="protein"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Beef className="h-4 w-4 text-red-500" />
+                    Protein (g)
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" min="0" step="0.1" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="carbs"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Wheat className="h-4 w-4 text-amber-600" />
+                    Karbonhidrat (g)
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" min="0" step="0.1" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="fat"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Droplets className="h-4 w-4 text-yellow-500" />
+                    Yağ (g)
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" min="0" step="0.1" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="fiber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Apple className="h-4 w-4 text-green-500" />
+                    Lif (g)
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" min="0" step="0.1" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="sugar"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <Candy className="h-4 w-4 text-pink-500" />
+                    Şeker (g)
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" min="0" step="0.1" placeholder="0" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="sodium"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-1.5">
+                    <FlaskConical className="h-4 w-4 text-blue-500" />
+                    Sodyum (mg)
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" min="0" step="0.1" placeholder="0" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -450,7 +839,7 @@ export function MenuItemForm({
                 <FormItem>
                   <FormLabel>Hazırlık Süresi (dk)</FormLabel>
                   <FormControl>
-                    <Input type="number" min="0" placeholder="Örn: 15" {...field} />
+                    <Input type="number" min="0" placeholder="0" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -460,30 +849,62 @@ export function MenuItemForm({
 
           <FormField
             control={form.control}
-            name="allergens"
+            name="nutritionVerified"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Alerjenler</FormLabel>
+              <FormItem className="flex items-center justify-between p-4 border rounded-lg bg-green-50/50 dark:bg-green-900/10">
+                <div>
+                  <FormLabel className="text-green-800 dark:text-green-300">Besin Değerleri Onaylandı</FormLabel>
+                  <FormDescription>
+                    Değerler laboratuvar/uzman tarafından doğrulandıysa işaretleyin
+                  </FormDescription>
+                </div>
                 <FormControl>
-                  <Input
-                    placeholder="Örn: Fıstık, Süt ürünleri, Gluten"
-                    {...field}
-                  />
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
-                <FormDescription>
-                  Virgülle ayırarak giriniz
-                </FormDescription>
-                <FormMessage />
               </FormItem>
             )}
           />
+        </div>
+
+        {/* Özellikler */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Özellikler & Etiketler</h3>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {[
+              { name: "isVegan" as const, label: "Vegan", emoji: "🌱" },
+              { name: "isVegetarian" as const, label: "Vejetaryen", emoji: "🥗" },
+              { name: "isGlutenFree" as const, label: "Glutensiz", emoji: "🌾" },
+              { name: "isSpicy" as const, label: "Acılı", emoji: "🌶️" },
+              { name: "isPopular" as const, label: "Popüler", emoji: "⭐" },
+              { name: "isNew" as const, label: "Yeni", emoji: "✨" },
+              { name: "isChefRecommended" as const, label: "Şef Önerisi", emoji: "👨‍🍳" },
+            ].map((item) => (
+              <FormField
+                key={item.name}
+                control={form.control}
+                name={item.name}
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between p-3 border rounded-lg">
+                    <FormLabel className="flex items-center gap-2 cursor-pointer">
+                      <span>{item.emoji}</span>
+                      {item.label}
+                    </FormLabel>
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            ))}
+          </div>
 
           <FormField
             control={form.control}
             name="tags"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Etiketler</FormLabel>
+                <FormLabel>Ek Etiketler</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Örn: İtalyan, Pizza, Favoriler"
@@ -501,7 +922,7 @@ export function MenuItemForm({
 
         {/* Durum */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Durum</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Durum</h3>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField

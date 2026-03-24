@@ -214,6 +214,15 @@ model MenuItem {
   image                   String?
   aiGeneratedImage        String?
   calories                Int?
+  protein                 Float?
+  carbs                   Float?
+  fat                     Float?
+  fiber                   Float?
+  sugar                   Float?
+  sodium                  Float?
+  servingSize             String?
+  ingredients             String[]
+  nutritionVerified       Boolean  @default(false)
   prepTime                Int?
   isVegan                 Boolean  @default(false)
   isVegetarian            Boolean  @default(false)
@@ -454,6 +463,55 @@ enum SubStatus {
   PAST_DUE
   CANCELLED
   TRIALING
+}
+
+// ==================== SYSTEM CONFIG & AUDIT ====================
+
+model SystemConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  userName  String
+  action    String
+  target    String
+  targetId  String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([target])
+  @@index([createdAt])
+}
+
+model Coupon {
+  id              String       @id @default(cuid())
+  code            String       @unique
+  description     String?
+  discountType    DiscountType @default(PERCENTAGE)
+  discountValue   Decimal      @db.Decimal(10, 2)
+  maxUses         Int?
+  usedCount       Int          @default(0)
+  minPurchase     Decimal?     @db.Decimal(10, 2)
+  validFrom       DateTime     @default(now())
+  validUntil      DateTime?
+  applicablePlans String[]
+  isActive        Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([code])
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
 }
 
 // ==================== EXTRAS ====================

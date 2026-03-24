@@ -10,6 +10,7 @@ import {
   Filter,
   Package,
   Clock,
+  Download,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -88,12 +89,18 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <ShoppingBag className="h-8 w-8 text-red-600" />
-          Sipariş Yönetimi
-        </h1>
-        <p className="text-muted-foreground mt-1">Tüm platform siparişlerini görüntüleyip takip et</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <ShoppingBag className="h-8 w-8 text-red-600" />
+            Sipariş Yönetimi
+          </h1>
+          <p className="text-muted-foreground mt-1">Tüm platform siparişlerini görüntüleyip takip et</p>
+        </div>
+        <Button variant="outline" onClick={() => window.open('/api/admin/export/orders', '_blank')}>
+          <Download className="h-4 w-4 mr-2" />
+          CSV İndir
+        </Button>
       </div>
 
       {/* Summary */}

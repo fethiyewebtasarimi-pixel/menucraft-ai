@@ -145,6 +145,28 @@ export function useAdminSubscriptions(params?: Record<string, string>) {
   });
 }
 
+export function useUpdateSubscription() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Record<string, unknown> }) => {
+      const res = await fetch(`/api/admin/subscriptions/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to update subscription');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'subscriptions'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'stats'] });
+    },
+  });
+}
+
 // Admin Reviews
 export function useAdminReviews(params?: Record<string, string>) {
   const searchParams = new URLSearchParams(params);
@@ -153,6 +175,118 @@ export function useAdminReviews(params?: Record<string, string>) {
     queryFn: async () => {
       const res = await fetch(`/api/admin/reviews?${searchParams}`);
       if (!res.ok) throw new Error('Failed to fetch reviews');
+      return res.json();
+    },
+  });
+}
+
+// Admin Plans
+export function useAdminPlans() {
+  return useQuery({
+    queryKey: ['admin', 'plans'],
+    queryFn: async () => {
+      const res = await fetch('/api/admin/plans');
+      if (!res.ok) throw new Error('Failed to fetch plans');
+      return res.json();
+    },
+  });
+}
+
+export function useUpdatePlans() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (plans: unknown[]) => {
+      const res = await fetch('/api/admin/plans', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plans }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to update plans');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'plans'] });
+    },
+  });
+}
+
+// Admin Coupons
+export function useAdminCoupons(params?: Record<string, string>) {
+  const searchParams = new URLSearchParams(params);
+  return useQuery({
+    queryKey: ['admin', 'coupons', params],
+    queryFn: async () => {
+      const res = await fetch(`/api/admin/coupons?${searchParams}`);
+      if (!res.ok) throw new Error('Failed to fetch coupons');
+      return res.json();
+    },
+  });
+}
+
+export function useCreateCoupon() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const res = await fetch('/api/admin/coupons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to create coupon');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'coupons'] });
+    },
+  });
+}
+
+export function useUpdateCoupon() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Record<string, unknown> }) => {
+      const res = await fetch(`/api/admin/coupons/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('Failed to update coupon');
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'coupons'] });
+    },
+  });
+}
+
+export function useDeleteCoupon() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/admin/coupons/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete coupon');
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'coupons'] });
+    },
+  });
+}
+
+// Admin Audit Logs
+export function useAdminLogs(params?: Record<string, string>) {
+  const searchParams = new URLSearchParams(params);
+  return useQuery({
+    queryKey: ['admin', 'logs', params],
+    queryFn: async () => {
+      const res = await fetch(`/api/admin/logs?${searchParams}`);
+      if (!res.ok) throw new Error('Failed to fetch logs');
       return res.json();
     },
   });

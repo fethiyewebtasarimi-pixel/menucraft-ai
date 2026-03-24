@@ -12,6 +12,7 @@ import {
   ExternalLink,
   ChevronLeft,
   ChevronRight,
+  Download,
   UtensilsCrossed,
   ShoppingBag,
   Star,
@@ -84,12 +85,18 @@ export default function AdminRestaurantsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Store className="h-8 w-8 text-red-600" />
-          Restoran Yonetimi
-        </h1>
-        <p className="text-muted-foreground mt-1">Tum restoranlari goruntuleyip yonet</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <Store className="h-8 w-8 text-red-600" />
+            Restoran Yönetimi
+          </h1>
+          <p className="text-muted-foreground mt-1">Tüm restoranları görüntüleyip yönet</p>
+        </div>
+        <Button variant="outline" onClick={() => window.open('/api/admin/export/restaurants', '_blank')}>
+          <Download className="h-4 w-4 mr-2" />
+          CSV İndir
+        </Button>
       </div>
 
       <Card>
@@ -98,7 +105,7 @@ export default function AdminRestaurantsPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Restoran adi, slug veya sahip ara..."
+                placeholder="Restoran adı, slug veya sahip ara..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                 className="pl-9"
@@ -217,7 +224,7 @@ export default function AdminRestaurantsPage() {
           {data?.restaurants?.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
-                Restoran bulunamadi
+                Restoran bulunamadı
               </CardContent>
             </Card>
           )}
@@ -239,10 +246,10 @@ export default function AdminRestaurantsPage() {
       <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Restorani Sil</DialogTitle>
+            <DialogTitle>Restoranı Sil</DialogTitle>
             <DialogDescription>
-              Bu restorani silmek istediginizden emin misiniz? Tum menuleri, siparisleri,
-              yorumlari ve QR kodlari da silinecektir. Bu islem geri alinamaz.
+              Bu restoranı silmek istediğinizden emin misiniz? Tüm menüleri, siparişleri,
+              yorumları ve QR kodları da silinecektir. Bu işlem geri alınamaz.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

@@ -27,6 +27,15 @@ interface MenuItem {
   image?: string;
   tags?: string[];
   calories?: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+  fiber?: number;
+  sugar?: number;
+  sodium?: number;
+  servingSize?: string;
+  ingredients?: string[];
+  nutritionVerified?: boolean;
   prepTime?: number;
   allergens?: string[];
   variants?: {
@@ -265,25 +274,111 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                   </div>
                 )}
 
-                {/* Nutritional Info */}
+                {/* Quick Info Bar */}
                 {(item.calories || item.prepTime) && (
                   <div className="flex gap-4 mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                    {item.calories && (
+                    {item.calories ? (
                       <div className="flex items-center gap-2">
                         <Zap className="w-4 h-4 text-orange-500" />
                         <span className="text-sm font-medium">
                           {item.calories} kcal
                         </span>
                       </div>
-                    )}
-                    {item.prepTime && (
+                    ) : null}
+                    {item.protein ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-red-600">P: {item.protein}g</span>
+                      </div>
+                    ) : null}
+                    {item.carbs ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-amber-600">K: {item.carbs}g</span>
+                      </div>
+                    ) : null}
+                    {item.fat ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-yellow-600">Y: {item.fat}g</span>
+                      </div>
+                    ) : null}
+                    {item.prepTime ? (
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-blue-500" />
                         <span className="text-sm font-medium">
                           {item.prepTime} dk
                         </span>
                       </div>
+                    ) : null}
+                  </div>
+                )}
+
+                {/* Detailed Nutrition Facts */}
+                {(item.calories || item.protein || item.carbs || item.fat) && (
+                  <div className="mb-4 border rounded-lg overflow-hidden">
+                    <div className="bg-gray-900 dark:bg-gray-800 text-white px-4 py-2">
+                      <h4 className="font-bold text-sm">Besin Değerleri</h4>
+                      {item.servingSize && (
+                        <p className="text-xs text-gray-300">{item.servingSize}</p>
+                      )}
+                    </div>
+                    <div className="divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                      {item.calories ? (
+                        <div className="flex justify-between px-4 py-2 font-bold bg-gray-50 dark:bg-gray-800/50">
+                          <span>Kalori</span>
+                          <span>{item.calories} kcal</span>
+                        </div>
+                      ) : null}
+                      {item.protein !== undefined && item.protein !== null ? (
+                        <div className="flex justify-between px-4 py-1.5">
+                          <span className="text-gray-600 dark:text-gray-400">Protein</span>
+                          <span className="font-medium">{item.protein}g</span>
+                        </div>
+                      ) : null}
+                      {item.carbs !== undefined && item.carbs !== null ? (
+                        <div className="flex justify-between px-4 py-1.5">
+                          <span className="text-gray-600 dark:text-gray-400">Karbonhidrat</span>
+                          <span className="font-medium">{item.carbs}g</span>
+                        </div>
+                      ) : null}
+                      {item.sugar !== undefined && item.sugar !== null ? (
+                        <div className="flex justify-between px-4 py-1.5 pl-8">
+                          <span className="text-gray-500 dark:text-gray-500 text-xs">Şeker</span>
+                          <span className="text-xs">{item.sugar}g</span>
+                        </div>
+                      ) : null}
+                      {item.fat !== undefined && item.fat !== null ? (
+                        <div className="flex justify-between px-4 py-1.5">
+                          <span className="text-gray-600 dark:text-gray-400">Yağ</span>
+                          <span className="font-medium">{item.fat}g</span>
+                        </div>
+                      ) : null}
+                      {item.fiber !== undefined && item.fiber !== null ? (
+                        <div className="flex justify-between px-4 py-1.5">
+                          <span className="text-gray-600 dark:text-gray-400">Lif</span>
+                          <span className="font-medium">{item.fiber}g</span>
+                        </div>
+                      ) : null}
+                      {item.sodium !== undefined && item.sodium !== null ? (
+                        <div className="flex justify-between px-4 py-1.5">
+                          <span className="text-gray-600 dark:text-gray-400">Sodyum</span>
+                          <span className="font-medium">{item.sodium}mg</span>
+                        </div>
+                      ) : null}
+                    </div>
+                    {item.nutritionVerified && (
+                      <div className="px-4 py-1.5 bg-green-50 dark:bg-green-900/20 text-xs text-green-700 dark:text-green-400">
+                        ✓ Onaylanmış besin değerleri
+                      </div>
                     )}
+                  </div>
+                )}
+
+                {/* Ingredients */}
+                {item.ingredients && item.ingredients.length > 0 && (
+                  <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <h4 className="text-sm font-semibold mb-1">İçindekiler</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {item.ingredients.join(", ")}
+                    </p>
                   </div>
                 )}
 

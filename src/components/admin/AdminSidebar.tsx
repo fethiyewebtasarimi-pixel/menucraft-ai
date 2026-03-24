@@ -16,6 +16,9 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
+  Settings2,
+  Ticket,
+  ScrollText,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -41,8 +44,11 @@ const mainNavItems: NavItem[] = [
   { label: 'Restoranlar', href: '/admin/restaurants', icon: Store },
   { label: 'Siparişler', href: '/admin/orders', icon: ShoppingBag },
   { label: 'Abonelikler', href: '/admin/subscriptions', icon: CreditCard },
+  { label: 'Plan Yönetimi', href: '/admin/plans', icon: Settings2 },
+  { label: 'Kuponlar', href: '/admin/coupons', icon: Ticket },
   { label: 'Yorumlar', href: '/admin/reviews', icon: MessageSquare },
   { label: 'Analitik', href: '/admin/analytics', icon: BarChart3 },
+  { label: 'İşlem Geçmişi', href: '/admin/logs', icon: ScrollText },
 ];
 
 const bottomNavItems: NavItem[] = [

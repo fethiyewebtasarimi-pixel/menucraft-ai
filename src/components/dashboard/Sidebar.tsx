@@ -17,6 +17,8 @@ import {
   ChefHat,
   ChevronLeft,
   ChevronRight,
+  ShieldCheck,
+  FileDown,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -44,6 +46,8 @@ const mainNavItems: NavItem[] = [
   { label: 'Yorumlar', href: '/dashboard/reviews', icon: MessageSquare },
   { label: 'Analitik', href: '/dashboard/analytics', icon: BarChart3 },
   { label: 'Marka & Tasarım', href: '/dashboard/branding', icon: Palette },
+  { label: 'Alerjen Uyumluluk', href: '/dashboard/compliance', icon: ShieldCheck },
+  { label: 'PDF Menü', href: '/dashboard/menu/print', icon: FileDown },
 ];
 
 const bottomNavItems: NavItem[] = [

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Star, MapPin, Phone, Mail, ChevronUp, Loader2 } from "lucide-react";
+import { Search, Star, MapPin, Phone, Mail, ChevronUp, Loader2, Filter, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import MenuHeader from "@/components/menu/MenuHeader";
@@ -102,6 +102,8 @@ export default function MenuPage({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [excludedAllergens, setExcludedAllergens] = useState<string[]>([]);
+  const [showAllergenFilter, setShowAllergenFilter] = useState(false);
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewForm, setReviewForm] = useState({
     name: "",
@@ -246,14 +248,37 @@ export default function MenuPage({
     }
   };
 
+  const toggleAllergenFilter = (allergen: string) => {
+    setExcludedAllergens((prev) =>
+      prev.includes(allergen)
+        ? prev.filter((a) => a !== allergen)
+        : [...prev, allergen]
+    );
+  };
+
+  // Collect all allergens from menu for filter UI
+  const allAllergens = Array.from(
+    new Set(
+      categories.flatMap((cat) =>
+        cat.items.flatMap((item) => item.allergens || [])
+      )
+    )
+  );
+
   const filteredCategories = categories
     .map((category) => ({
       ...category,
-      items: category.items.filter(
-        (item) =>
+      items: category.items.filter((item) => {
+        const matchesSearch =
           item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
+          item.description?.toLowerCase().includes(searchQuery.toLowerCase());
+
+        const passesAllergenFilter =
+          excludedAllergens.length === 0 ||
+          !item.allergens?.some((a) => excludedAllergens.includes(a));
+
+        return matchesSearch && passesAllergenFilter;
+      }),
     }))
     .filter((category) => category.items.length > 0);
 
@@ -301,20 +326,81 @@ export default function MenuPage({
       {/* Header */}
       <MenuHeader restaurant={restaurant} branding={restaurant.branding} />
 
-      {/* Search Bar */}
+      {/* Search Bar & Allergen Filter */}
       <div className="sticky top-0 z-30 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="container mx-auto px-4 py-4">
-          <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Menüde ara..."
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2"
-              style={{ "--tw-ring-color": accentColor } as any}
-            />
+          <div className="flex items-center gap-2 max-w-2xl mx-auto">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Menüde ara..."
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2"
+                style={{ "--tw-ring-color": accentColor } as any}
+              />
+            </div>
+            {allAllergens.length > 0 && (
+              <button
+                onClick={() => setShowAllergenFilter(!showAllergenFilter)}
+                className={`flex items-center gap-2 px-4 py-3 rounded-xl border transition-colors ${
+                  excludedAllergens.length > 0
+                    ? "border-yellow-500 bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400"
+                    : "border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+                }`}
+              >
+                <Filter className="w-5 h-5" />
+                <span className="text-sm font-medium hidden sm:inline">Alerjen</span>
+                {excludedAllergens.length > 0 && (
+                  <span className="bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {excludedAllergens.length}
+                  </span>
+                )}
+              </button>
+            )}
           </div>
+
+          {/* Allergen Filter Panel */}
+          {showAllergenFilter && allAllergens.length > 0 && (
+            <div className="max-w-2xl mx-auto mt-3 p-4 bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800 rounded-xl">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-yellow-900 dark:text-yellow-300">
+                  Alerjen Filtresi
+                </h3>
+                {excludedAllergens.length > 0 && (
+                  <button
+                    onClick={() => setExcludedAllergens([])}
+                    className="text-xs text-yellow-700 dark:text-yellow-400 hover:underline"
+                  >
+                    Filtreleri Temizle
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-yellow-700 dark:text-yellow-400 mb-3">
+                Alerjenli ürünleri gizlemek için seçin:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {allAllergens.map((allergen) => {
+                  const isActive = excludedAllergens.includes(allergen);
+                  return (
+                    <button
+                      key={allergen}
+                      onClick={() => toggleAllergenFilter(allergen)}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                        isActive
+                          ? "bg-yellow-500 text-white shadow-sm"
+                          : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-yellow-400"
+                      }`}
+                    >
+                      {isActive && <X className="w-3 h-3" />}
+                      {allergen}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

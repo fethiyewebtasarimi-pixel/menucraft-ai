@@ -4,16 +4,21 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   CreditCard,
-  Search,
   ChevronLeft,
   ChevronRight,
   Sparkles,
   Zap,
   Crown,
   Star,
+  MoreHorizontal,
+  RefreshCw,
+  ArrowUpDown,
+  XCircle,
+  CheckCircle,
+  Clock,
+  Download,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -25,7 +30,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useAdminSubscriptions } from '@/hooks/useAdmin';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useAdminSubscriptions, useUpdateSubscription } from '@/hooks/useAdmin';
+import { toast } from 'sonner';
 
 const PLAN_COLORS: Record<string, string> = {
   FREE: 'bg-gray-100 text-gray-800',
@@ -39,6 +55,13 @@ const PLAN_ICONS: Record<string, React.ComponentType<{ className?: string }>> = 
   STARTER: Sparkles,
   PROFESSIONAL: Zap,
   ENTERPRISE: Crown,
+};
+
+const PLAN_LABELS: Record<string, string> = {
+  FREE: 'Ücretsiz',
+  STARTER: 'Başlangıç',
+  PROFESSIONAL: 'Profesyonel',
+  ENTERPRISE: 'Kurumsal',
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -65,8 +88,28 @@ export default function AdminSubscriptionsPage() {
   if (statusFilter) params.status = statusFilter;
 
   const { data, isLoading } = useAdminSubscriptions(params);
+  const updateSub = useUpdateSubscription();
 
-  // Calculate plan stats summary
+  const handleAction = async (subId: string, action: string, extra?: Record<string, unknown>) => {
+    try {
+      await updateSub.mutateAsync({ id: subId, data: { action, ...extra } });
+      const actionLabels: Record<string, string> = {
+        change_plan: 'Plan değiştirildi',
+        cancel: 'Abonelik iptal edildi',
+        reactivate: 'Abonelik aktifleştirildi',
+        reset_credits: 'AI kredileri sıfırlandı',
+        extend_period: 'Süre uzatıldı',
+      };
+      toast.success(actionLabels[action] || 'İşlem başarılı');
+    } catch {
+      toast.error('İşlem başarısız oldu');
+    }
+  };
+
+  const handleExport = () => {
+    window.open('/api/admin/export/subscriptions', '_blank');
+  };
+
   const planSummary: Record<string, number> = {};
   data?.planStats?.forEach((s: { plan: string; _count: { plan: number } }) => {
     planSummary[s.plan] = (planSummary[s.plan] || 0) + s._count.plan;
@@ -74,17 +117,23 @@ export default function AdminSubscriptionsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <CreditCard className="h-8 w-8 text-red-600" />
-          Abonelik Yönetimi
-        </h1>
-        <p className="text-muted-foreground mt-1">Kullanıcı planları ve abonelik durumlarını yönet</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <CreditCard className="h-8 w-8 text-red-600" />
+            Abonelik Yönetimi
+          </h1>
+          <p className="text-muted-foreground mt-1">Kullanıcı planları ve abonelik durumlarını yönet</p>
+        </div>
+        <Button variant="outline" onClick={handleExport}>
+          <Download className="h-4 w-4 mr-2" />
+          CSV İndir
+        </Button>
       </div>
 
       {/* Plan Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {['FREE', 'STARTER', 'PROFESSIONAL', 'ENTERPRISE'].map((plan) => {
+        {(['FREE', 'STARTER', 'PROFESSIONAL', 'ENTERPRISE'] as const).map((plan) => {
           const Icon = PLAN_ICONS[plan];
           return (
             <Card key={plan}>
@@ -94,7 +143,7 @@ export default function AdminSubscriptionsPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{planSummary[plan] || 0}</p>
-                  <p className="text-xs text-muted-foreground">{plan}</p>
+                  <p className="text-xs text-muted-foreground">{PLAN_LABELS[plan]}</p>
                 </div>
               </CardContent>
             </Card>
@@ -112,10 +161,10 @@ export default function AdminSubscriptionsPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tüm Planlar</SelectItem>
-                <SelectItem value="FREE">Free</SelectItem>
-                <SelectItem value="STARTER">Starter</SelectItem>
-                <SelectItem value="PROFESSIONAL">Professional</SelectItem>
-                <SelectItem value="ENTERPRISE">Enterprise</SelectItem>
+                <SelectItem value="FREE">Ücretsiz</SelectItem>
+                <SelectItem value="STARTER">Başlangıç</SelectItem>
+                <SelectItem value="PROFESSIONAL">Profesyonel</SelectItem>
+                <SelectItem value="ENTERPRISE">Kurumsal</SelectItem>
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v === 'all' ? '' : v); setPage(1); }}>
@@ -146,6 +195,8 @@ export default function AdminSubscriptionsPage() {
             const aiTotal = (sub.aiCredits as number) || 0;
             const aiUsed = (sub.aiCreditsUsed as number) || 0;
             const aiPercentage = aiTotal > 0 ? Math.round((aiUsed / aiTotal) * 100) : 0;
+            const user = sub.user as Record<string, unknown>;
+            const userCount = (user?._count as Record<string, number>) || {};
 
             return (
               <motion.div
@@ -158,40 +209,114 @@ export default function AdminSubscriptionsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={((sub.user as Record<string, unknown>)?.avatar as string) || undefined} />
+                          <AvatarImage src={(user?.avatar as string) || undefined} />
                           <AvatarFallback className="bg-red-100 text-red-700">
-                            {((sub.user as Record<string, unknown>)?.name as string)?.charAt(0)?.toUpperCase()}
+                            {(user?.name as string)?.charAt(0)?.toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-2">
-                            <p className="font-semibold">{(sub.user as Record<string, unknown>)?.name as string}</p>
+                            <p className="font-semibold">{user?.name as string}</p>
                             <Badge className={PLAN_COLORS[sub.plan as string]}>
                               <Icon className="h-3 w-3 mr-1" />
-                              {sub.plan as string}
+                              {PLAN_LABELS[sub.plan as string]}
                             </Badge>
                             <Badge className={STATUS_COLORS[sub.status as string]}>
                               {STATUS_LABELS[sub.status as string]}
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground">
-                            {(sub.user as Record<string, unknown>)?.email as string}
+                            {user?.email as string}
                             {' - '}
-                            {((sub.user as Record<string, unknown>)?._count as Record<string, number>)?.restaurants || 0} restoran
+                            {userCount?.restaurants || 0} restoran
                           </p>
                         </div>
                       </div>
 
-                      <div className="text-right space-y-1 min-w-[160px]">
-                        <div className="text-xs text-muted-foreground">
-                          AI Kredisi: {aiUsed}/{aiTotal}
+                      <div className="flex items-center gap-4">
+                        <div className="text-right space-y-1 min-w-[160px]">
+                          <div className="text-xs text-muted-foreground">
+                            AI Kredisi: {aiUsed}/{aiTotal}
+                          </div>
+                          <Progress value={aiPercentage} className="h-2" />
+                          {sub.currentPeriodEnd ? (
+                            <p className="text-xs text-muted-foreground">
+                              Bitiş: {new Date(sub.currentPeriodEnd as string).toLocaleDateString('tr-TR')}
+                            </p>
+                          ) : null}
                         </div>
-                        <Progress value={aiPercentage} className="h-2" />
-                        {sub.currentPeriodEnd ? (
-                          <p className="text-xs text-muted-foreground">
-                            Bitiş: {new Date(sub.currentPeriodEnd as string).toLocaleDateString('tr-TR')}
-                          </p>
-                        ) : null}
+
+                        {/* Actions Dropdown */}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-56">
+                            <DropdownMenuSub>
+                              <DropdownMenuSubTrigger>
+                                <ArrowUpDown className="h-4 w-4 mr-2" />
+                                Plan Değiştir
+                              </DropdownMenuSubTrigger>
+                              <DropdownMenuSubContent>
+                                {['FREE', 'STARTER', 'PROFESSIONAL', 'ENTERPRISE'].map((p) => (
+                                  <DropdownMenuItem
+                                    key={p}
+                                    disabled={sub.plan === p}
+                                    onClick={() => handleAction(sub.id as string, 'change_plan', { plan: p })}
+                                  >
+                                    {PLAN_LABELS[p]}
+                                    {sub.plan === p && ' (mevcut)'}
+                                  </DropdownMenuItem>
+                                ))}
+                              </DropdownMenuSubContent>
+                            </DropdownMenuSub>
+
+                            <DropdownMenuItem onClick={() => handleAction(sub.id as string, 'reset_credits')}>
+                              <RefreshCw className="h-4 w-4 mr-2" />
+                              AI Krediyi Sıfırla
+                            </DropdownMenuItem>
+
+                            <DropdownMenuSub>
+                              <DropdownMenuSubTrigger>
+                                <Clock className="h-4 w-4 mr-2" />
+                                Süre Uzat
+                              </DropdownMenuSubTrigger>
+                              <DropdownMenuSubContent>
+                                <DropdownMenuItem onClick={() => handleAction(sub.id as string, 'extend_period', { periodDays: 7 })}>
+                                  +7 Gün
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleAction(sub.id as string, 'extend_period', { periodDays: 30 })}>
+                                  +30 Gün
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleAction(sub.id as string, 'extend_period', { periodDays: 90 })}>
+                                  +90 Gün
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleAction(sub.id as string, 'extend_period', { periodDays: 365 })}>
+                                  +1 Yıl
+                                </DropdownMenuItem>
+                              </DropdownMenuSubContent>
+                            </DropdownMenuSub>
+
+                            <DropdownMenuSeparator />
+
+                            {sub.status === 'CANCELLED' ? (
+                              <DropdownMenuItem onClick={() => handleAction(sub.id as string, 'reactivate')}>
+                                <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                                Yeniden Aktifleştir
+                              </DropdownMenuItem>
+                            ) : (
+                              <DropdownMenuItem
+                                onClick={() => handleAction(sub.id as string, 'cancel')}
+                                className="text-red-600"
+                              >
+                                <XCircle className="h-4 w-4 mr-2" />
+                                İptal Et
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
                   </CardContent>
