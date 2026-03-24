@@ -26,8 +26,22 @@ declare module "next-auth/jwt" {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const providers: any[] = [];
+
+// Only add Google provider if credentials are configured
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    })
+  );
+}
+
 const nextAuth = NextAuth({
   adapter: PrismaAdapter(prisma) as import("next-auth/adapters").Adapter,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
@@ -36,10 +50,7 @@ const nextAuth = NextAuth({
     error: "/auth/login",
   },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+    ...providers,
     CredentialsProvider({
       name: "credentials",
       credentials: {
