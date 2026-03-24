@@ -345,10 +345,22 @@ export default function AIMenuWizardPage() {
   // --- SAVE ALL ---
 
   const saveAll = async () => {
-    const validItems = items.filter((i) => i.name && i.price > 0 && i.categoryId);
+    // Auto-assign first category if not selected
+    const defaultCategoryId = categories?.[0]?.id || "";
+    const itemsWithCategory = items.map((i) => ({
+      ...i,
+      categoryId: i.categoryId || defaultCategoryId,
+    }));
+
+    const validItems = itemsWithCategory.filter((i) => i.name && i.price > 0);
 
     if (validItems.length === 0) {
-      toast.error("Lütfen en az bir ürünün adını, fiyatını ve kategorisini girin");
+      toast.error("Lütfen en az bir ürünün adını ve fiyatını girin");
+      return;
+    }
+
+    if (!validItems[0].categoryId) {
+      toast.error("Henüz kategori oluşturulmamış. Önce Menüler sayfasından bir kategori ekleyin.");
       return;
     }
 
@@ -1196,12 +1208,12 @@ export default function AIMenuWizardPage() {
               <Button
                 size="lg"
                 onClick={saveAll}
-                disabled={items.filter((i) => i.name && i.price > 0 && i.categoryId).length === 0}
+                disabled={items.filter((i) => i.name && i.price > 0).length === 0}
                 className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
               >
                 <Check className="w-5 h-5 mr-2" />
                 Kaydet (
-                {items.filter((i) => i.name && i.price > 0 && i.categoryId).length}{" "}
+                {items.filter((i) => i.name && i.price > 0).length}{" "}
                 ürün)
               </Button>
             </div>
