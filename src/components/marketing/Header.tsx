@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ChefHat, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 const navLinks = [
   { href: "#features", label: "Özellikler" },
@@ -95,16 +96,17 @@ export default function Header() {
           >
             <Button
               variant="ghost"
+              asChild
               className={cn(
                 isScrolled
                   ? "text-slate-700 dark:text-slate-200"
                   : "text-white hover:text-white hover:bg-white/10"
               )}
             >
-              Giriş Yap
+              <Link href="/auth/login">Giriş Yap</Link>
             </Button>
-            <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg">
-              Ücretsiz Başla
+            <Button asChild className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg">
+              <Link href="/auth/register">Ücretsiz Başla</Link>
             </Button>
           </motion.div>
 
@@ -152,11 +154,11 @@ export default function Header() {
                 </button>
               ))}
               <div className="pt-4 space-y-3 border-t dark:border-slate-800">
-                <Button variant="ghost" className="w-full">
-                  Giriş Yap
+                <Button variant="ghost" asChild className="w-full">
+                  <Link href="/auth/login">Giriş Yap</Link>
                 </Button>
-                <Button className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white">
-                  Ücretsiz Başla
+                <Button asChild className="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white">
+                  <Link href="/auth/register">Ücretsiz Başla</Link>
                 </Button>
               </div>
             </div>

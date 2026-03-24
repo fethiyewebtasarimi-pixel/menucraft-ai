@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Sparkles, ArrowRight, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const stats = [
   { label: "10,000+ Restoran", value: "10K+" },
@@ -80,10 +81,13 @@ export default function Hero() {
             >
               <Button
                 size="lg"
+                asChild
                 className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-lg px-8 py-6 shadow-2xl shadow-amber-500/50"
               >
-                Ücretsiz Başla
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <Link href="/auth/register">
+                  Ücretsiz Başla
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
               </Button>
               <Button
                 size="lg"

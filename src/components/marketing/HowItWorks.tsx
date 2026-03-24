@@ -119,9 +119,9 @@ export default function HowItWorks() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg shadow-amber-500/30 transition-all">
+            <a href="/auth/register" className="inline-block bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg shadow-amber-500/30 transition-all">
               Hemen Başlayın - Ücretsiz
-            </button>
+            </a>
           </motion.div>
         </motion.div>
       </div>

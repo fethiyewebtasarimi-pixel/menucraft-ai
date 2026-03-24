@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { ArrowRight, Sparkles, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export default function CTA() {
   return (
@@ -93,11 +94,14 @@ export default function CTA() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 size="lg"
+                asChild
                 className="bg-white text-amber-600 hover:bg-slate-50 text-lg px-10 py-7 shadow-2xl font-bold group"
               >
-                <Sparkles className="mr-2 w-5 h-5" />
-                Ücretsiz Başla
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <Link href="/auth/register">
+                  <Sparkles className="mr-2 w-5 h-5" />
+                  Ücretsiz Başla
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
             </motion.div>
 

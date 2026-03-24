@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Check, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 const PLANS = [
   {
@@ -220,6 +221,7 @@ export default function Pricing() {
 
               {/* CTA Button */}
               <Button
+                asChild
                 className={cn(
                   "w-full mb-6",
                   plan.popular
@@ -228,7 +230,7 @@ export default function Pricing() {
                 )}
                 size="lg"
               >
-                {plan.cta}
+                <Link href="/auth/register">{plan.cta}</Link>
               </Button>
 
               {/* Features */}
