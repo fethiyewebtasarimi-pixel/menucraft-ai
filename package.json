@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "dotenv -e .env -o -- next dev",
-    "build": "prisma generate && dotenv -e .env -o -- next build",
+    "build": "prisma generate && next build",
     "postinstall": "prisma generate",
-    "start": "dotenv -e .env -o -- next start",
+    "start": "next start",
     "lint": "next lint",
     "db:migrate:dev": "dotenv -e .env -o -- npx prisma migrate dev",
     "db:migrate:deploy": "dotenv -e .env -o -- npx prisma migrate deploy",
