@@ -37,6 +37,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 const nextAuth = NextAuth({
   adapter: PrismaAdapter(prisma) as import("next-auth/adapters").Adapter,
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  trustHost: true,
   session: {
     strategy: "jwt",
   },

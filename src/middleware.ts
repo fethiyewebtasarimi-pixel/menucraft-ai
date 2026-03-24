@@ -1,5 +1,6 @@
-import { auth } from '@/lib/auth';
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
 function addSecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set('X-Frame-Options', 'DENY');
@@ -10,11 +11,34 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
   return response;
 }
 
-export default auth((req) => {
-  const { pathname } = req.nextUrl;
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
 
-  const isAuthenticated = !!req.auth;
-  const userRole = req.auth?.user?.role;
+  // Try NextAuth v5 cookie name first, then fall back to v4
+  let token = await getToken({
+    req: request,
+    secret,
+    salt: 'authjs.session-token',
+    cookieName: request.nextUrl.protocol === 'https:'
+      ? '__Secure-authjs.session-token'
+      : 'authjs.session-token',
+  });
+
+  // Fallback: try v4 cookie name
+  if (!token) {
+    token = await getToken({
+      req: request,
+      secret,
+      salt: 'next-auth.session-token',
+      cookieName: request.nextUrl.protocol === 'https:'
+        ? '__Secure-next-auth.session-token'
+        : 'next-auth.session-token',
+    });
+  }
+
+  const isAuthenticated = !!token;
+  const userRole = token?.role as string | undefined;
 
   // Define public routes that don't require authentication
   const publicRoutes = [
@@ -50,7 +74,7 @@ export default auth((req) => {
   if (isPublicRoute || isPublicApiRoute || isMenuRoute) {
     // If user is authenticated and tries to access auth pages, redirect to dashboard
     if (isAuthenticated && pathname.startsWith('/auth/')) {
-      return addSecurityHeaders(NextResponse.redirect(new URL('/dashboard', req.url)));
+      return addSecurityHeaders(NextResponse.redirect(new URL('/dashboard', request.url)));
     }
     return addSecurityHeaders(NextResponse.next());
   }
@@ -58,7 +82,7 @@ export default auth((req) => {
   // Protect dashboard routes
   if (pathname.startsWith('/dashboard')) {
     if (!isAuthenticated) {
-      const loginUrl = new URL('/auth/login', req.url);
+      const loginUrl = new URL('/auth/login', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
       return addSecurityHeaders(NextResponse.redirect(loginUrl));
     }
@@ -68,14 +92,14 @@ export default auth((req) => {
   // Protect admin routes
   if (pathname.startsWith('/admin')) {
     if (!isAuthenticated) {
-      const loginUrl = new URL('/auth/login', req.url);
+      const loginUrl = new URL('/auth/login', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
       return addSecurityHeaders(NextResponse.redirect(loginUrl));
     }
 
     // Check if user has ADMIN role
     if (userRole !== 'ADMIN') {
-      return addSecurityHeaders(NextResponse.redirect(new URL('/dashboard', req.url)));
+      return addSecurityHeaders(NextResponse.redirect(new URL('/dashboard', request.url)));
     }
 
     return addSecurityHeaders(NextResponse.next());
@@ -83,7 +107,7 @@ export default auth((req) => {
 
   // Default: allow the request
   return addSecurityHeaders(NextResponse.next());
-});
+}
 
 // Configure the matcher to specify which routes this middleware applies to
 export const config = {
