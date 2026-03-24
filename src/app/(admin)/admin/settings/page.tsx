@@ -32,7 +32,7 @@ export default function AdminSettingsPage() {
 
   const services: ServiceStatus[] = [
     {
-      name: 'Veritabani (PostgreSQL)',
+      name: 'Veritabanı (PostgreSQL)',
       icon: Database,
       status: 'online',
       description: 'Railway PostgreSQL - Aktif',
@@ -47,25 +47,25 @@ export default function AdminSettingsPage() {
       name: 'Email (Resend)',
       icon: Mail,
       status: 'online',
-      description: 'Email gonderim servisi',
+      description: 'Email gönderim servisi',
     },
     {
       name: 'Depolama (Cloudinary)',
       icon: Globe,
       status: 'online',
-      description: 'Resim yukleme servisi',
+      description: 'Resim yükleme servisi',
     },
     {
-      name: 'Kimlik Dogrulama (NextAuth)',
+      name: 'Kimlik Doğrulama (NextAuth)',
       icon: Shield,
       status: 'online',
       description: 'Google OAuth + Credentials',
     },
     {
-      name: 'Odeme (PayTR)',
+      name: 'Ödeme (PayTR)',
       icon: Key,
       status: 'online',
-      description: 'Odeme isleme servisi',
+      description: 'Ödeme işleme servisi',
     },
   ];
 
@@ -74,19 +74,19 @@ export default function AdminSettingsPage() {
     try {
       const res = await fetch('/api/admin/stats');
       if (res.ok) {
-        toast.success('Tum servisler calisiyor');
+        toast.success('Tüm servisler çalışıyor');
       } else {
-        toast.error('Bazi servislerde sorun var');
+        toast.error('Bazı servislerde sorun var');
       }
     } catch {
-      toast.error('Baglanti hatasi');
+      toast.error('Bağlantı hatası');
     } finally {
       setChecking(false);
     }
   };
 
   const envVars = [
-    { key: 'DATABASE_URL', label: 'Veritabani Baglantisi', sensitive: true },
+    { key: 'DATABASE_URL', label: 'Veritabanı Bağlantısı', sensitive: true },
     { key: 'NEXTAUTH_URL', label: 'Auth URL', sensitive: false },
     { key: 'NEXTAUTH_SECRET', label: 'Auth Secret', sensitive: true },
     { key: 'AUTH_SECRET', label: 'Auth Secret (v5)', sensitive: true },
@@ -114,9 +114,9 @@ export default function AdminSettingsPage() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <Settings className="h-8 w-8 text-red-600" />
-          Sistem Ayarlari
+          Sistem Ayarları
         </h1>
-        <p className="text-muted-foreground mt-1">Platform servisleri ve yapilandirma</p>
+        <p className="text-muted-foreground mt-1">Platform servisleri ve yapılandırma</p>
       </div>
 
       {/* Health Check */}
@@ -124,7 +124,7 @@ export default function AdminSettingsPage() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Servis Durumu</CardTitle>
-            <CardDescription>Bagli servislerin calisma durumlarini kontrol edin</CardDescription>
+            <CardDescription>Bağlı servislerin çalışma durumlarını kontrol edin</CardDescription>
           </div>
           <Button onClick={handleHealthCheck} disabled={checking} className="bg-red-600 hover:bg-red-700">
             <RefreshCw className={`h-4 w-4 mr-2 ${checking ? 'animate-spin' : ''}`} />
@@ -159,8 +159,8 @@ export default function AdminSettingsPage() {
       {/* Environment Variables */}
       <Card>
         <CardHeader>
-          <CardTitle>Ortam Degiskenleri</CardTitle>
-          <CardDescription>Yapilandirma degiskenleri (Railway uzerinden yonetilir)</CardDescription>
+          <CardTitle>Ortam Değişkenleri</CardTitle>
+          <CardDescription>Yapılandırma değişkenleri (Railway üzerinden yönetilir)</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -171,7 +171,7 @@ export default function AdminSettingsPage() {
                   <p className="text-xs text-muted-foreground">{env.label}</p>
                 </div>
                 <Badge variant={env.sensitive ? 'destructive' : 'secondary'}>
-                  {env.sensitive ? 'Gizli' : 'Gorunur'}
+                  {env.sensitive ? 'Gizli' : 'Görünür'}
                 </Badge>
               </div>
             ))}
@@ -193,7 +193,7 @@ export default function AdminSettingsPage() {
               </div>
               <Separator />
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Veritabani</span>
+                <span className="text-sm text-muted-foreground">Veritabanı</span>
                 <span className="text-sm font-medium">PostgreSQL (Prisma)</span>
               </div>
               <Separator />
@@ -214,7 +214,7 @@ export default function AdminSettingsPage() {
               </div>
               <Separator />
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Odeme</span>
+                <span className="text-sm text-muted-foreground">Ödeme</span>
                 <span className="text-sm font-medium">PayTR</span>
               </div>
               <Separator />
@@ -237,7 +237,7 @@ export default function AdminSettingsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-red-600" />
-            Guvenlik Ayarlari
+            Güvenlik Ayarları
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -251,21 +251,21 @@ export default function AdminSettingsPage() {
             </div>
             <div className="flex items-center justify-between p-3 rounded-lg border">
               <div>
-                <p className="text-sm font-medium">Guvenlik Headerlari</p>
+                <p className="text-sm font-medium">Güvenlik Headerları</p>
                 <p className="text-xs text-muted-foreground">CSP, HSTS, X-Frame-Options, XSS Protection</p>
               </div>
               <Badge className="bg-green-100 text-green-800">Aktif</Badge>
             </div>
             <div className="flex items-center justify-between p-3 rounded-lg border">
               <div>
-                <p className="text-sm font-medium">Sifre Politikasi</p>
-                <p className="text-xs text-muted-foreground">Min 8 karakter, buyuk/kucuk harf + rakam</p>
+                <p className="text-sm font-medium">Şifre Politikası</p>
+                <p className="text-xs text-muted-foreground">Min 8 karakter, büyük/küçük harf + rakam</p>
               </div>
               <Badge className="bg-green-100 text-green-800">Aktif</Badge>
             </div>
             <div className="flex items-center justify-between p-3 rounded-lg border">
               <div>
-                <p className="text-sm font-medium">JWT Oturum Yonetimi</p>
+                <p className="text-sm font-medium">JWT Oturum Yönetimi</p>
                 <p className="text-xs text-muted-foreground">Secure, HttpOnly cookies</p>
               </div>
               <Badge className="bg-green-100 text-green-800">Aktif</Badge>

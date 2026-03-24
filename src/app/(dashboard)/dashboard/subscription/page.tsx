@@ -72,8 +72,8 @@ export default function SubscriptionPage() {
 
   const statusLabels: Record<string, string> = {
     ACTIVE: 'Aktif',
-    PAST_DUE: 'Gecikmis',
-    CANCELLED: 'Iptal Edildi',
+    PAST_DUE: 'Gecikmiş',
+    CANCELLED: 'İptal Edildi',
     TRIALING: 'Deneme',
   };
 
@@ -97,7 +97,7 @@ export default function SubscriptionPage() {
       <motion.div variants={item}>
         <h1 className="text-3xl font-bold tracking-tight">Abonelik</h1>
         <p className="text-muted-foreground">
-          Planinizi yonetin ve fatura gecmisinizi goruntuleyin
+          Planınızı yönetin ve fatura geçmişinizi görüntüleyin
         </p>
       </motion.div>
 
@@ -112,12 +112,12 @@ export default function SubscriptionPage() {
                     const Icon = planIcons[currentPlan] || Sparkles;
                     return <Icon className="h-5 w-5 text-amber-600" />;
                   })()}
-                  Mevcut Planiniz: {currentPlanData?.name || currentPlan}
+                  Mevcut Planınız: {currentPlanData?.name || currentPlan}
                 </CardTitle>
                 <CardDescription>
                   {subscription?.currentPeriodEnd
-                    ? `Sonraki odeme: ${new Date(subscription.currentPeriodEnd).toLocaleDateString('tr-TR')}`
-                    : 'Ucretsiz plan'}
+                    ? `Sonraki ödeme: ${new Date(subscription.currentPeriodEnd).toLocaleDateString('tr-TR')}`
+                    : 'Ücretsiz plan'}
                 </CardDescription>
               </div>
               <Badge className="bg-gradient-to-r from-amber-500 to-orange-600">
@@ -128,17 +128,17 @@ export default function SubscriptionPage() {
           <CardContent className="space-y-6">
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Aylik Ucret</p>
+                <p className="text-sm text-muted-foreground">Aylık Ücret</p>
                 <p className="text-2xl font-bold">
                   {currentPlanData?.price === 0
-                    ? 'Ucretsiz'
+                    ? 'Ücretsiz'
                     : currentPlanData?.price === -1
-                    ? 'Ozel'
+                    ? 'Özel'
                     : `${currentPlanData?.price} TL`}
                 </p>
               </div>
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Plan Baslangic</p>
+                <p className="text-sm text-muted-foreground">Plan Başlangıç</p>
                 <p className="text-2xl font-bold">
                   {subscription?.createdAt
                     ? new Date(subscription.createdAt).toLocaleDateString('tr-TR', {
@@ -161,7 +161,7 @@ export default function SubscriptionPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-amber-600" />
-                  <span className="font-medium">AI Kredi Kullanimi</span>
+                  <span className="font-medium">AI Kredi Kullanımı</span>
                 </div>
                 <span className="text-sm text-muted-foreground">
                   {aiCreditsUsed} / {aiCreditsTotal} kredi
@@ -169,7 +169,7 @@ export default function SubscriptionPage() {
               </div>
               <Progress value={creditsPercentage} className="h-3" />
               <p className="text-xs text-muted-foreground">
-                Her ay basinda kredi limitiniz yenilenir. Kalan: {aiCreditsTotal - aiCreditsUsed} kredi
+                Her ay başında kredi limitiniz yenilenir. Kalan: {aiCreditsTotal - aiCreditsUsed} kredi
               </p>
             </div>
           </CardContent>
@@ -201,7 +201,7 @@ export default function SubscriptionPage() {
                   {isPopular && !isCurrent && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                       <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 px-4">
-                        En Populer
+                        En Popüler
                       </Badge>
                     </div>
                   )}
@@ -225,7 +225,7 @@ export default function SubscriptionPage() {
                     <CardDescription>{plan.description}</CardDescription>
                     <div className="pt-4">
                       {plan.price === 0 ? (
-                        <span className="text-4xl font-bold">Ucretsiz</span>
+                        <span className="text-4xl font-bold">Ücretsiz</span>
                       ) : (
                         <>
                           <span className="text-4xl font-bold">{plan.price} TL</span>
@@ -263,7 +263,7 @@ export default function SubscriptionPage() {
                         )}
                         variant={isPopular ? 'default' : 'outline'}
                       >
-                        {PLANS.indexOf(plan) < PLANS.findIndex((p) => p.slug === currentPlan) ? 'Dusur' : 'Yukselt'}
+                        {PLANS.indexOf(plan) < PLANS.findIndex((p) => p.slug === currentPlan) ? 'Düşür' : 'Yükselt'}
                         <ChevronRight className="h-4 w-4" />
                       </Button>
                     )}
@@ -281,16 +281,16 @@ export default function SubscriptionPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CreditCard className="h-5 w-5 text-amber-600" />
-              Odeme Yontemi
+              Ödeme Yöntemi
             </CardTitle>
             <CardDescription>
-              Kayitli odeme bilgilerinizi yonetin
+              Kayıtlı ödeme bilgilerinizi yönetin
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {currentPlan === 'FREE' ? (
               <p className="text-sm text-muted-foreground">
-                Ucretsiz planda odeme yontemi gerekmez. Yukseltme yaptiginizda odeme bilgilerinizi ekleyebilirsiniz.
+                Ücretsiz planda ödeme yöntemi gerekmez. Yükseltme yaptığınızda ödeme bilgilerinizi ekleyebilirsiniz.
               </p>
             ) : (
               <>
@@ -300,12 +300,12 @@ export default function SubscriptionPage() {
                       KART
                     </div>
                     <div>
-                      <p className="font-medium">Kayitli kart</p>
-                      <p className="text-sm text-muted-foreground">PayTR ile odeme</p>
+                      <p className="font-medium">Kayıtlı kart</p>
+                      <p className="text-sm text-muted-foreground">PayTR ile ödeme</p>
                     </div>
                   </div>
                   <Button variant="outline" size="sm">
-                    Guncelle
+                    Güncelle
                   </Button>
                 </div>
               </>
@@ -319,13 +319,13 @@ export default function SubscriptionPage() {
         <motion.div variants={item}>
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Aboneligi Iptal Et</AlertTitle>
+            <AlertTitle>Aboneliği İptal Et</AlertTitle>
             <AlertDescription className="flex items-center justify-between">
               <span>
-                Aboneliginizi iptal etmek istiyorsaniz, tum verileriniz korunacak ancak premium ozelliklere erisiniz sonlanacaktir.
+                Aboneliğinizi iptal etmek istiyorsanız, tüm verileriniz korunacak ancak premium özelliklere erişiniz sonlanacaktır.
               </span>
               <Button variant="destructive" size="sm">
-                Iptal Et
+                İptal Et
               </Button>
             </AlertDescription>
           </Alert>

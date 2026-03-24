@@ -87,12 +87,12 @@ export default function AdminUsersPage() {
       { id: editUser.id as string, data: updateData },
       {
         onSuccess: () => {
-          toast.success('Kullanici guncellendi');
+          toast.success('Kullanıcı güncellendi');
           setEditUser(null);
           setEditRole('');
           setEditPlan('');
         },
-        onError: () => toast.error('Guncelleme basarisiz'),
+        onError: () => toast.error('Güncelleme başarısız'),
       }
     );
   };
@@ -101,10 +101,10 @@ export default function AdminUsersPage() {
     if (!deleteUserId) return;
     deleteUser.mutate(deleteUserId, {
       onSuccess: () => {
-        toast.success('Kullanici silindi');
+        toast.success('Kullanıcı silindi');
         setDeleteUserId(null);
       },
-      onError: () => toast.error('Silme basarisiz'),
+      onError: () => toast.error('Silme başarısız'),
     });
   };
 
@@ -114,10 +114,10 @@ export default function AdminUsersPage() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <Users className="h-8 w-8 text-red-600" />
-          Kullanici Yonetimi
+          Kullanıcı Yönetimi
         </h1>
         <p className="text-muted-foreground mt-1">
-          Tum kullanicilari goruntuleyip yonet
+          Tüm kullanıcıları görüntüleyip yönet
         </p>
       </div>
 
@@ -128,7 +128,7 @@ export default function AdminUsersPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Isim veya email ile ara..."
+                placeholder="İsim veya email ile ara..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                 className="pl-9"
@@ -139,7 +139,7 @@ export default function AdminUsersPage() {
                 <SelectValue placeholder="Rol" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tum Roller</SelectItem>
+                <SelectItem value="all">Tüm Roller</SelectItem>
                 <SelectItem value="OWNER">Owner</SelectItem>
                 <SelectItem value="MANAGER">Manager</SelectItem>
                 <SelectItem value="STAFF">Staff</SelectItem>
@@ -151,7 +151,7 @@ export default function AdminUsersPage() {
                 <SelectValue placeholder="Plan" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tum Planlar</SelectItem>
+                <SelectItem value="all">Tüm Planlar</SelectItem>
                 <SelectItem value="FREE">Free</SelectItem>
                 <SelectItem value="STARTER">Starter</SelectItem>
                 <SelectItem value="PROFESSIONAL">Professional</SelectItem>
@@ -164,7 +164,7 @@ export default function AdminUsersPage() {
 
       {/* Stats */}
       <div className="text-sm text-muted-foreground">
-        Toplam {data?.pagination?.total || 0} kullanici bulundu
+        Toplam {data?.pagination?.total || 0} kullanıcı bulundu
       </div>
 
       {/* Users List */}
@@ -203,8 +203,8 @@ export default function AdminUsersPage() {
                         <p className="text-sm text-muted-foreground">{user.email as string}</p>
                         <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
                           <span>{(user._count as Record<string, number>)?.restaurants || 0} restoran</span>
-                          <span>Kayit: {new Date(user.createdAt as string).toLocaleDateString('tr-TR')}</span>
-                          {user.emailVerified ? <span className="text-green-600">Email Dogrulanmis</span> : null}
+                          <span>Kayıt: {new Date(user.createdAt as string).toLocaleDateString('tr-TR')}</span>
+                          {user.emailVerified ? <span className="text-green-600">Email Doğrulanmış</span> : null}
                         </div>
                       </div>
                     </div>
@@ -222,7 +222,7 @@ export default function AdminUsersPage() {
                           setEditPlan((user.subscription as Record<string, string>)?.plan || 'FREE');
                         }}>
                           <Edit className="h-4 w-4 mr-2" />
-                          Duzenle
+                          Düzenle
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -243,7 +243,7 @@ export default function AdminUsersPage() {
           {data?.users?.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
-                Kullanici bulunamadi
+                Kullanıcı bulunamadı
               </CardContent>
             </Card>
           )}
@@ -279,7 +279,7 @@ export default function AdminUsersPage() {
       <Dialog open={!!editUser} onOpenChange={() => setEditUser(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Kullanici Duzenle</DialogTitle>
+            <DialogTitle>Kullanıcıyı Düzenle</DialogTitle>
             <DialogDescription>
               {(editUser?.name as string)} - {(editUser?.email as string)}
             </DialogDescription>
@@ -315,7 +315,7 @@ export default function AdminUsersPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditUser(null)}>Iptal</Button>
+            <Button variant="outline" onClick={() => setEditUser(null)}>İptal</Button>
             <Button onClick={handleUpdateUser} disabled={updateUser.isPending}
               className="bg-red-600 hover:bg-red-700">
               {updateUser.isPending ? 'Kaydediliyor...' : 'Kaydet'}
@@ -328,14 +328,14 @@ export default function AdminUsersPage() {
       <Dialog open={!!deleteUserId} onOpenChange={() => setDeleteUserId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Kullaniciyi Sil</DialogTitle>
+            <DialogTitle>Kullanıcıyı Sil</DialogTitle>
             <DialogDescription>
-              Bu kullaniciyi silmek istediginizden emin misiniz? Bu islem geri alinamaz.
-              Kullanicinin tum restoranlari ve verileri de silinecektir.
+              Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+              Kullanıcının tüm restoranları ve verileri de silinecektir.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteUserId(null)}>Iptal</Button>
+            <Button variant="outline" onClick={() => setDeleteUserId(null)}>İptal</Button>
             <Button variant="destructive" onClick={handleDeleteUser} disabled={deleteUser.isPending}>
               {deleteUser.isPending ? 'Siliniyor...' : 'Evet, Sil'}
             </Button>

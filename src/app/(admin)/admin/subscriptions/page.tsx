@@ -50,8 +50,8 @@ const STATUS_COLORS: Record<string, string> = {
 
 const STATUS_LABELS: Record<string, string> = {
   ACTIVE: 'Aktif',
-  PAST_DUE: 'Suresi Gecmis',
-  CANCELLED: 'Iptal',
+  PAST_DUE: 'Süresi Geçmiş',
+  CANCELLED: 'İptal',
   TRIALING: 'Deneme',
 };
 
@@ -77,9 +77,9 @@ export default function AdminSubscriptionsPage() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <CreditCard className="h-8 w-8 text-red-600" />
-          Abonelik Yonetimi
+          Abonelik Yönetimi
         </h1>
-        <p className="text-muted-foreground mt-1">Kullanici planlari ve abonelik durumlarini yonet</p>
+        <p className="text-muted-foreground mt-1">Kullanıcı planları ve abonelik durumlarını yönet</p>
       </div>
 
       {/* Plan Summary */}
@@ -111,7 +111,7 @@ export default function AdminSubscriptionsPage() {
                 <SelectValue placeholder="Plan Filtrele" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tum Planlar</SelectItem>
+                <SelectItem value="all">Tüm Planlar</SelectItem>
                 <SelectItem value="FREE">Free</SelectItem>
                 <SelectItem value="STARTER">Starter</SelectItem>
                 <SelectItem value="PROFESSIONAL">Professional</SelectItem>
@@ -123,10 +123,10 @@ export default function AdminSubscriptionsPage() {
                 <SelectValue placeholder="Durum Filtrele" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tum Durumlar</SelectItem>
+                <SelectItem value="all">Tüm Durumlar</SelectItem>
                 <SelectItem value="ACTIVE">Aktif</SelectItem>
-                <SelectItem value="PAST_DUE">Suresi Gecmis</SelectItem>
-                <SelectItem value="CANCELLED">Iptal</SelectItem>
+                <SelectItem value="PAST_DUE">Süresi Geçmiş</SelectItem>
+                <SelectItem value="CANCELLED">İptal</SelectItem>
                 <SelectItem value="TRIALING">Deneme</SelectItem>
               </SelectContent>
             </Select>
@@ -189,7 +189,7 @@ export default function AdminSubscriptionsPage() {
                         <Progress value={aiPercentage} className="h-2" />
                         {sub.currentPeriodEnd ? (
                           <p className="text-xs text-muted-foreground">
-                            Bitis: {new Date(sub.currentPeriodEnd as string).toLocaleDateString('tr-TR')}
+                            Bitiş: {new Date(sub.currentPeriodEnd as string).toLocaleDateString('tr-TR')}
                           </p>
                         ) : null}
                       </div>
@@ -203,7 +203,7 @@ export default function AdminSubscriptionsPage() {
           {data?.subscriptions?.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
-                Abonelik bulunamadi
+                Abonelik bulunamadı
               </CardContent>
             </Card>
           )}

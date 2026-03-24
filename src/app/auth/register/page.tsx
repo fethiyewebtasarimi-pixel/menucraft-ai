@@ -31,14 +31,13 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterInput) => {
     if (!acceptedTerms) {
-      toast.error("Please accept the terms and conditions");
+      toast.error("Lütfen kullanım koşullarını kabul edin");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Register user
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -50,11 +49,11 @@ export default function RegisterPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        toast.error(result.error || "Registration failed");
+        toast.error(result.error || "Kayıt başarısız oldu");
         return;
       }
 
-      toast.success("Account created successfully!");
+      toast.success("Hesabınız oluşturuldu!");
 
       // Auto-login after registration
       const signInResult = await signIn("credentials", {
@@ -64,16 +63,15 @@ export default function RegisterPage() {
       });
 
       if (signInResult?.error) {
-        toast.error("Account created but login failed. Please sign in manually.");
+        toast.error("Hesap oluşturuldu fakat giriş yapılamadı. Lütfen manuel giriş yapın.");
         router.push("/auth/login");
         return;
       }
 
-      router.push("/dashboard");
-      router.refresh();
+      window.location.href = "/dashboard";
     } catch (error) {
       console.error("Registration error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Bir hata oluştu. Lütfen tekrar deneyin.");
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +83,7 @@ export default function RegisterPage() {
       await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
       console.error("Google sign-in error:", error);
-      toast.error("Failed to sign in with Google");
+      toast.error("Google ile kayıt başarısız oldu");
       setIsGoogleLoading(false);
     }
   };
@@ -98,10 +96,10 @@ export default function RegisterPage() {
     >
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Create your account
+          Hesap Oluşturun
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Start crafting amazing menus with AI
+          AI ile harika menüler oluşturmaya başlayın
         </p>
       </div>
 
@@ -109,14 +107,14 @@ export default function RegisterPage() {
         {/* Name Field */}
         <div className="space-y-2">
           <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">
-            Full name
+            Ad Soyad
           </Label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
               id="name"
               type="text"
-              placeholder="John Doe"
+              placeholder="Ahmet Yılmaz"
               className="pl-10"
               {...register("name")}
               disabled={isLoading || isGoogleLoading}
@@ -132,14 +130,14 @@ export default function RegisterPage() {
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">
-            Email address
+            E-posta adresi
           </Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
               id="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="ornek@email.com"
               className="pl-10"
               {...register("email")}
               disabled={isLoading || isGoogleLoading}
@@ -155,15 +153,15 @@ export default function RegisterPage() {
         {/* Phone Field (Optional) */}
         <div className="space-y-2">
           <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300">
-            Phone number{" "}
-            <span className="text-gray-400 text-xs">(optional)</span>
+            Telefon numarası{" "}
+            <span className="text-gray-400 text-xs">(isteğe bağlı)</span>
           </Label>
           <div className="relative">
             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
               id="phone"
               type="tel"
-              placeholder="+1 (555) 000-0000"
+              placeholder="+90 (555) 000 0000"
               className="pl-10"
               {...register("phone")}
               disabled={isLoading || isGoogleLoading}
@@ -182,7 +180,7 @@ export default function RegisterPage() {
             htmlFor="password"
             className="text-gray-700 dark:text-gray-300"
           >
-            Password
+            Şifre
           </Label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -208,7 +206,7 @@ export default function RegisterPage() {
             htmlFor="confirmPassword"
             className="text-gray-700 dark:text-gray-300"
           >
-            Confirm password
+            Şifre tekrar
           </Label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -241,22 +239,22 @@ export default function RegisterPage() {
             htmlFor="terms"
             className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed cursor-pointer"
           >
-            I agree to the{" "}
             <Link
               href="/terms"
               className="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 underline"
               target="_blank"
             >
-              Terms of Service
+              Kullanım Koşulları
             </Link>{" "}
-            and{" "}
+            ve{" "}
             <Link
               href="/privacy"
               className="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 underline"
               target="_blank"
             >
-              Privacy Policy
+              Gizlilik Politikası
             </Link>
+            &apos;nı kabul ediyorum
           </label>
         </div>
 
@@ -269,12 +267,12 @@ export default function RegisterPage() {
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating account...
+              Hesap oluşturuluyor...
             </>
           ) : (
             <>
               <Check className="mr-2 h-4 w-4" />
-              Create account
+              Kayıt Ol
             </>
           )}
         </Button>
@@ -286,7 +284,7 @@ export default function RegisterPage() {
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-              Or continue with
+              Veya şununla devam edin
             </span>
           </div>
         </div>
@@ -302,12 +300,12 @@ export default function RegisterPage() {
           {isGoogleLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Connecting...
+              Bağlanılıyor...
             </>
           ) : (
             <>
               <Chrome className="mr-2 h-5 w-5 text-blue-600" />
-              Sign up with Google
+              Google ile Kayıt Ol
             </>
           )}
         </Button>
@@ -316,12 +314,12 @@ export default function RegisterPage() {
       {/* Login Link */}
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Already have an account?{" "}
+          Zaten hesabınız var mı?{" "}
           <Link
             href="/auth/login"
             className="font-medium text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 transition-colors"
           >
-            Sign in
+            Giriş yapın
           </Link>
         </p>
       </div>

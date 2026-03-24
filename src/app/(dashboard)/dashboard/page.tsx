@@ -87,19 +87,19 @@ export default function DashboardPage() {
 
   const quickActions = [
     {
-      label: 'Menu Olustur',
+      label: 'Menü Oluştur',
       icon: Plus,
       href: '/dashboard/menu',
       variant: 'default' as const,
     },
     {
-      label: 'QR Kod Indir',
+      label: 'QR Kod İndir',
       icon: Download,
       href: '/dashboard/qr-codes',
       variant: 'outline' as const,
     },
     {
-      label: 'Siparis Yonet',
+      label: 'Sipariş Yönet',
       icon: ClipboardList,
       href: '/dashboard/orders',
       variant: 'outline' as const,
@@ -108,20 +108,20 @@ export default function DashboardPage() {
 
   const quickLinks = [
     {
-      title: 'Menu Duzenle',
-      description: 'Mevcut menulerinizi guncelleyin',
+      title: 'Menü Düzenle',
+      description: 'Mevcut menülerinizi güncelleyin',
       icon: Package,
       href: '/dashboard/menu',
     },
     {
-      title: 'Marka Tasarimi',
-      description: 'Menu gorunumunuzu ozellestirin',
+      title: 'Marka Tasarımı',
+      description: 'Menü görünümünüzü özelleştirin',
       icon: Sparkles,
       href: '/dashboard/branding',
     },
     {
-      title: 'Istatistikler',
-      description: 'Detayli analitik verileri gorun',
+      title: 'İstatistikler',
+      description: 'Detaylı analitik verileri görün',
       icon: TrendingUp,
       href: '/dashboard/analytics',
     },
@@ -137,10 +137,10 @@ export default function DashboardPage() {
       {/* Welcome Section */}
       <motion.div variants={item} className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">
-          Hos geldin, {user?.name?.split(' ')[0] || 'Kullanici'}!
+          Hoş geldin, {user?.name?.split(' ')[0] || 'Kullanıcı'}!
         </h1>
         <p className="text-muted-foreground">
-          Iste restoraninizin guncel durumu ve hizli erisim paneli.
+          İşte restoranınızın güncel durumu ve hızlı erişim paneli.
         </p>
       </motion.div>
 
@@ -181,7 +181,7 @@ export default function DashboardPage() {
         ) : (
           <>
             <StatsCard
-              title="Menu Goruntuleme"
+              title="Menü Görüntüleme"
               value={(analytics?.summary?.totalMenuViews || 0).toLocaleString('tr-TR')}
               change={menuViewsChange}
               icon={Eye}
@@ -195,7 +195,7 @@ export default function DashboardPage() {
               trend={qrScansChange >= 0 ? 'up' : 'down'}
             />
             <StatsCard
-              title="Siparis"
+              title="Sipariş"
               value={(analytics?.summary?.totalOrders || 0).toLocaleString('tr-TR')}
               change={ordersChange}
               icon={ShoppingBag}
@@ -217,7 +217,7 @@ export default function DashboardPage() {
         <motion.div variants={item}>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Populer Yemekler</CardTitle>
+              <CardTitle>Popüler Yemekler</CardTitle>
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/dashboard/analytics">
                   Detaylar
@@ -241,12 +241,12 @@ export default function DashboardPage() {
                         <div>
                           <p className="font-medium text-sm">{item.menuItem?.name || 'Bilinmeyen'}</p>
                           <p className="text-xs text-muted-foreground">
-                            {item.quantitySold} adet satildi
+                            {item.quantitySold} adet satıldı
                           </p>
                         </div>
                       </div>
                       <span className="text-sm font-semibold">
-                        {item.orderCount} siparis
+                        {item.orderCount} sipariş
                       </span>
                     </div>
                   ))}
@@ -257,13 +257,13 @@ export default function DashboardPage() {
                     <Package className="h-8 w-8 text-muted-foreground" />
                   </div>
                   <h3 className="font-semibold text-lg mb-2">
-                    Henuz veri yok
+                    Henüz veri yok
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Siparis verileri biriktikce populer yemekler burada listelencek
+                    Sipariş verileri biriktikçe popüler yemekler burada listelenecek
                   </p>
                   <Button variant="outline" asChild>
-                    <Link href="/dashboard/menu">Menuleri Goruntule</Link>
+                    <Link href="/dashboard/menu">Menüleri Görüntüle</Link>
                   </Button>
                 </div>
               )}
@@ -275,10 +275,10 @@ export default function DashboardPage() {
         <motion.div variants={item}>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Siparis Ozeti</CardTitle>
+              <CardTitle>Sipariş Özeti</CardTitle>
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/dashboard/orders">
-                  Tumunu Gor
+                  Tümünü Gör
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -294,12 +294,12 @@ export default function DashboardPage() {
                   {Object.entries(analytics.orderStatusDistribution).map(([status, count]) => {
                     const statusLabels: Record<string, string> = {
                       PENDING: 'Bekliyor',
-                      CONFIRMED: 'Onaylandi',
-                      PREPARING: 'Hazirlaniyor',
-                      READY: 'Hazir',
+                      CONFIRMED: 'Onaylandı',
+                      PREPARING: 'Hazırlanıyor',
+                      READY: 'Hazır',
                       SERVED: 'Servis Edildi',
-                      COMPLETED: 'Tamamlandi',
-                      CANCELLED: 'Iptal Edildi',
+                      COMPLETED: 'Tamamlandı',
+                      CANCELLED: 'İptal Edildi',
                     };
                     const statusColors: Record<string, string> = {
                       PENDING: 'bg-yellow-100 text-yellow-800',
@@ -321,7 +321,7 @@ export default function DashboardPage() {
                   })}
                   <div className="pt-3 border-t">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Ortalama siparis degeri</span>
+                      <span className="text-muted-foreground">Ortalama sipariş değeri</span>
                       <span className="font-semibold">
                         {formatPrice(analytics?.summary?.avgOrderValue || 0)}
                       </span>
@@ -334,13 +334,13 @@ export default function DashboardPage() {
                     <ShoppingBag className="h-8 w-8 text-muted-foreground" />
                   </div>
                   <h3 className="font-semibold text-lg mb-2">
-                    Henuz siparis yok
+                    Henüz sipariş yok
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Siparisler gelmeye basladiginda burada gorunecek
+                    Siparişler gelmeye başladığında burada görünecek
                   </p>
                   <Button variant="outline" asChild>
-                    <Link href="/dashboard/orders">Siparis Ayarlari</Link>
+                    <Link href="/dashboard/orders">Sipariş Ayarları</Link>
                   </Button>
                 </div>
               )}
@@ -351,7 +351,7 @@ export default function DashboardPage() {
 
       {/* Quick Links */}
       <motion.div variants={item}>
-        <h2 className="text-xl font-semibold mb-4">Hizli Erisim</h2>
+        <h2 className="text-xl font-semibold mb-4">Hızlı Erişim</h2>
         <div className="grid gap-4 md:grid-cols-3">
           {quickLinks.map((link) => {
             const Icon = link.icon;

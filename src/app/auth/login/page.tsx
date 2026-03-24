@@ -38,15 +38,15 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        toast.error("Invalid email or password");
+        toast.error("E-posta veya şifre hatalı");
         return;
       }
 
-      toast.success("Welcome back!");
+      toast.success("Hoş geldiniz!");
       window.location.href = "/dashboard";
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Bir hata oluştu. Lütfen tekrar deneyin.");
     } finally {
       setIsLoading(false);
     }
@@ -58,7 +58,7 @@ export default function LoginPage() {
       await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
       console.error("Google sign-in error:", error);
-      toast.error("Failed to sign in with Google");
+      toast.error("Google ile giriş başarısız oldu");
       setIsGoogleLoading(false);
     }
   };
@@ -71,10 +71,10 @@ export default function LoginPage() {
     >
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Welcome back
+          Hoş Geldiniz
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Sign in to your account to continue
+          Devam etmek için hesabınıza giriş yapın
         </p>
       </div>
 
@@ -82,14 +82,14 @@ export default function LoginPage() {
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">
-            Email address
+            E-posta adresi
           </Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
               id="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="ornek@email.com"
               className="pl-10"
               {...register("email")}
               disabled={isLoading || isGoogleLoading}
@@ -109,13 +109,13 @@ export default function LoginPage() {
               htmlFor="password"
               className="text-gray-700 dark:text-gray-300"
             >
-              Password
+              Şifre
             </Label>
             <Link
               href="/auth/forgot-password"
               className="text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 transition-colors"
             >
-              Forgot password?
+              Şifremi unuttum
             </Link>
           </div>
           <div className="relative">
@@ -145,10 +145,10 @@ export default function LoginPage() {
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Signing in...
+              Giriş yapılıyor...
             </>
           ) : (
-            "Sign in"
+            "Giriş Yap"
           )}
         </Button>
 
@@ -159,7 +159,7 @@ export default function LoginPage() {
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-              Or continue with
+              Veya şununla devam edin
             </span>
           </div>
         </div>
@@ -175,12 +175,12 @@ export default function LoginPage() {
           {isGoogleLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Connecting...
+              Bağlanılıyor...
             </>
           ) : (
             <>
               <Chrome className="mr-2 h-5 w-5 text-blue-600" />
-              Sign in with Google
+              Google ile Giriş Yap
             </>
           )}
         </Button>
@@ -189,12 +189,12 @@ export default function LoginPage() {
       {/* Register Link */}
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Don't have an account?{" "}
+          Hesabınız yok mu?{" "}
           <Link
             href="/auth/register"
             className="font-medium text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 transition-colors"
           >
-            Sign up for free
+            Ücretsiz kayıt olun
           </Link>
         </p>
       </div>

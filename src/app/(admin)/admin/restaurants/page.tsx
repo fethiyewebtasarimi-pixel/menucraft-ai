@@ -66,7 +66,7 @@ export default function AdminRestaurantsPage() {
       { id, isActive: !currentActive },
       {
         onSuccess: () => toast.success(currentActive ? 'Restoran deaktif edildi' : 'Restoran aktif edildi'),
-        onError: () => toast.error('Islem basarisiz'),
+        onError: () => toast.error('İşlem başarısız'),
       }
     );
   };
@@ -78,7 +78,7 @@ export default function AdminRestaurantsPage() {
         toast.success('Restoran silindi');
         setDeleteId(null);
       },
-      onError: () => toast.error('Silme basarisiz'),
+      onError: () => toast.error('Silme başarısız'),
     });
   };
 

@@ -46,7 +46,7 @@ export default function AdminAnalyticsPage() {
           <BarChart3 className="h-8 w-8 text-red-600" />
           Platform Analitik
         </h1>
-        <p className="text-muted-foreground mt-1">Detayli platform istatistikleri ve buyume metrikleri</p>
+        <p className="text-muted-foreground mt-1">Detaylı platform istatistikleri ve büyüme metrikleri</p>
       </div>
 
       {/* Period Stats */}
@@ -55,7 +55,7 @@ export default function AdminAnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Activity className="h-5 w-5 text-red-600" />
-              Son 30 Gun Ozeti
+              Son 30 Gün Özeti
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -67,7 +67,7 @@ export default function AdminAnalyticsPage() {
                   </div>
                 </div>
                 <p className="text-3xl font-bold">{last30.users || 0}</p>
-                <p className="text-sm text-muted-foreground">Yeni Kullanici</p>
+                <p className="text-sm text-muted-foreground">Yeni Kullanıcı</p>
                 <p className={`text-sm font-medium ${trends.users >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {trends.users >= 0 ? '+' : ''}{trends.users || 0}%
                 </p>
@@ -91,7 +91,7 @@ export default function AdminAnalyticsPage() {
                   </div>
                 </div>
                 <p className="text-3xl font-bold">{last30.orders || 0}</p>
-                <p className="text-sm text-muted-foreground">Yeni Siparis</p>
+                <p className="text-sm text-muted-foreground">Yeni Sipariş</p>
                 <p className={`text-sm font-medium ${trends.orders >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {trends.orders >= 0 ? '+' : ''}{trends.orders || 0}%
                 </p>
@@ -126,7 +126,7 @@ export default function AdminAnalyticsPage() {
             <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
               <div className="text-center p-4 bg-accent/50 rounded-lg">
                 <p className="text-3xl font-bold">{stats?.totalUsers || 0}</p>
-                <p className="text-sm text-muted-foreground">Kullanici</p>
+                <p className="text-sm text-muted-foreground">Kullanıcı</p>
               </div>
               <div className="text-center p-4 bg-accent/50 rounded-lg">
                 <p className="text-3xl font-bold">{stats?.totalRestaurants || 0}</p>
@@ -134,7 +134,7 @@ export default function AdminAnalyticsPage() {
               </div>
               <div className="text-center p-4 bg-accent/50 rounded-lg">
                 <p className="text-3xl font-bold">{stats?.totalOrders || 0}</p>
-                <p className="text-sm text-muted-foreground">Siparis</p>
+                <p className="text-sm text-muted-foreground">Sipariş</p>
               </div>
               <div className="text-center p-4 bg-accent/50 rounded-lg">
                 <p className="text-3xl font-bold">{formatPrice(stats?.totalRevenue || 0, 'TRY')}</p>
@@ -153,7 +153,7 @@ export default function AdminAnalyticsPage() {
       <motion.div variants={item}>
         <Card>
           <CardHeader>
-            <CardTitle>Gunluk Kayitlar (Son 30 Gun)</CardTitle>
+            <CardTitle>Günlük Kayıtlar (Son 30 Gün)</CardTitle>
           </CardHeader>
           <CardContent>
             {data?.dailySignups?.length > 0 ? (
@@ -167,14 +167,14 @@ export default function AdminAnalyticsPage() {
                       <div
                         className="w-full bg-gradient-to-t from-red-500 to-rose-400 rounded-t-sm min-h-[2px]"
                         style={{ height: `${Math.max(height, 2)}%` }}
-                        title={`${new Date(day.date).toLocaleDateString('tr-TR')}: ${day.count} kayit`}
+                        title={`${new Date(day.date).toLocaleDateString('tr-TR')}: ${day.count} kayıt`}
                       />
                     </div>
                   );
                 })}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-8">Henuz veri yok</p>
+              <p className="text-sm text-muted-foreground text-center py-8">Henüz veri yok</p>
             )}
           </CardContent>
         </Card>
@@ -185,7 +185,7 @@ export default function AdminAnalyticsPage() {
         <motion.div variants={item}>
           <Card>
             <CardHeader>
-              <CardTitle>Plan Dagilimi</CardTitle>
+              <CardTitle>Plan Dağılımı</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -215,7 +215,7 @@ export default function AdminAnalyticsPage() {
         <motion.div variants={item}>
           <Card>
             <CardHeader>
-              <CardTitle>Siparis Durum Dagilimi</CardTitle>
+              <CardTitle>Sipariş Durum Dağılımı</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -223,8 +223,8 @@ export default function AdminAnalyticsPage() {
                   const total = stats?.totalOrders || 1;
                   const percentage = Math.round((s._count.status / total) * 100);
                   const labels: Record<string, string> = {
-                    PENDING: 'Bekliyor', CONFIRMED: 'Onaylandi', PREPARING: 'Hazirlaniyor',
-                    READY: 'Hazir', SERVED: 'Servis Edildi', COMPLETED: 'Tamamlandi', CANCELLED: 'Iptal',
+                    PENDING: 'Bekliyor', CONFIRMED: 'Onaylandı', PREPARING: 'Hazırlanıyor',
+                    READY: 'Hazır', SERVED: 'Servis Edildi', COMPLETED: 'Tamamlandı', CANCELLED: 'İptal',
                   };
                   return (
                     <div key={s.status} className="space-y-1">

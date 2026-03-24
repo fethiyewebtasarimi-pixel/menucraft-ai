@@ -33,7 +33,7 @@ export default function AuthLayout({
             href="/"
             className="text-sm text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
           >
-            Back to home
+            Ana sayfaya dön
           </Link>
         </div>
       </div>

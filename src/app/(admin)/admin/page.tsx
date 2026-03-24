@@ -62,7 +62,7 @@ function StatCard({
                     {trend === 'up' && '+'}
                     {trendValue}%
                   </span>
-                  <span className="text-xs text-muted-foreground ml-1">son 30 gun</span>
+                  <span className="text-xs text-muted-foreground ml-1">son 30 gün</span>
                 </div>
               </div>
               <div className="rounded-lg p-3 bg-gradient-to-br from-red-500/10 to-rose-500/10 ring-1 ring-red-500/20">
@@ -88,12 +88,12 @@ const ORDER_STATUS_COLORS: Record<string, string> = {
 
 const ORDER_STATUS_LABELS: Record<string, string> = {
   PENDING: 'Bekliyor',
-  CONFIRMED: 'Onaylandi',
-  PREPARING: 'Hazirlaniyor',
-  READY: 'Hazir',
+  CONFIRMED: 'Onaylandı',
+  PREPARING: 'Hazırlanıyor',
+  READY: 'Hazır',
   SERVED: 'Servis Edildi',
-  COMPLETED: 'Tamamlandi',
-  CANCELLED: 'Iptal',
+  COMPLETED: 'Tamamlandı',
+  CANCELLED: 'İptal',
 };
 
 const PLAN_COLORS: Record<string, string> = {
@@ -122,13 +122,13 @@ export default function AdminDashboardPage() {
       {/* Header */}
       <motion.div variants={item}>
         <h1 className="text-3xl font-bold">Admin Paneli</h1>
-        <p className="text-muted-foreground mt-1">Platform genel bakis ve yonetim</p>
+        <p className="text-muted-foreground mt-1">Platform genel bakış ve yönetim</p>
       </motion.div>
 
       {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Toplam Kullanici"
+          title="Toplam Kullanıcı"
           value={stats?.totalUsers || 0}
           trend={trends.users >= 0 ? 'up' : 'down'}
           trendValue={Math.abs(trends.users || 0)}
@@ -144,7 +144,7 @@ export default function AdminDashboardPage() {
           href="/admin/restaurants"
         />
         <StatCard
-          title="Toplam Siparis"
+          title="Toplam Sipariş"
           value={stats?.totalOrders || 0}
           trend={trends.orders >= 0 ? 'up' : 'down'}
           trendValue={Math.abs(trends.orders || 0)}
@@ -166,9 +166,9 @@ export default function AdminDashboardPage() {
         <motion.div variants={item}>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg">Son Kayit Olan Kullanicilar</CardTitle>
+              <CardTitle className="text-lg">Son Kayıt Olan Kullanıcılar</CardTitle>
               <Link href="/admin/users" className="text-sm text-red-600 hover:underline flex items-center gap-1">
-                Tumunu Gor <ArrowUpRight className="h-3 w-3" />
+                Tümünü Gör <ArrowUpRight className="h-3 w-3" />
               </Link>
             </CardHeader>
             <CardContent>
@@ -198,7 +198,7 @@ export default function AdminDashboardPage() {
                   </div>
                 ))}
                 {(!data?.recentUsers || data.recentUsers.length === 0) && (
-                  <p className="text-sm text-muted-foreground text-center py-4">Henuz kullanici yok</p>
+                  <p className="text-sm text-muted-foreground text-center py-4">Henüz kullanıcı yok</p>
                 )}
               </div>
             </CardContent>
@@ -209,9 +209,9 @@ export default function AdminDashboardPage() {
         <motion.div variants={item}>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg">Son Siparisler</CardTitle>
+              <CardTitle className="text-lg">Son Siparişler</CardTitle>
               <Link href="/admin/orders" className="text-sm text-red-600 hover:underline flex items-center gap-1">
-                Tumunu Gor <ArrowUpRight className="h-3 w-3" />
+                Tümünü Gör <ArrowUpRight className="h-3 w-3" />
               </Link>
             </CardHeader>
             <CardContent>
@@ -235,7 +235,7 @@ export default function AdminDashboardPage() {
                   </div>
                 ))}
                 {(!data?.recentOrders || data.recentOrders.length === 0) && (
-                  <p className="text-sm text-muted-foreground text-center py-4">Henuz siparis yok</p>
+                  <p className="text-sm text-muted-foreground text-center py-4">Henüz sipariş yok</p>
                 )}
               </div>
             </CardContent>
@@ -246,7 +246,7 @@ export default function AdminDashboardPage() {
         <motion.div variants={item}>
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Plan Dagilimi</CardTitle>
+              <CardTitle className="text-lg">Plan Dağılımı</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -257,7 +257,7 @@ export default function AdminDashboardPage() {
                     <div key={p.plan} className="space-y-1">
                       <div className="flex justify-between text-sm">
                         <span className="font-medium">{p.plan}</span>
-                        <span className="text-muted-foreground">{p._count.plan} kullanici ({percentage}%)</span>
+                        <span className="text-muted-foreground">{p._count.plan} kullanıcı ({percentage}%)</span>
                       </div>
                       <div className="h-2 bg-accent rounded-full overflow-hidden">
                         <div
@@ -277,9 +277,9 @@ export default function AdminDashboardPage() {
         <motion.div variants={item}>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg">En Populer Restoranlar</CardTitle>
+              <CardTitle className="text-lg">En Popüler Restoranlar</CardTitle>
               <Link href="/admin/restaurants" className="text-sm text-red-600 hover:underline flex items-center gap-1">
-                Tumunu Gor <ArrowUpRight className="h-3 w-3" />
+                Tümünü Gör <ArrowUpRight className="h-3 w-3" />
               </Link>
             </CardHeader>
             <CardContent>
@@ -292,11 +292,11 @@ export default function AdminDashboardPage() {
                       </span>
                       <div>
                         <p className="text-sm font-medium">{r.name as string}</p>
-                        <p className="text-xs text-muted-foreground">{r.city as string || 'Belirtilmemis'}</p>
+                        <p className="text-xs text-muted-foreground">{r.city as string || 'Belirtilmemiş'}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium">{(r._count as Record<string, number>)?.orders || 0} siparis</p>
+                      <p className="text-sm font-medium">{(r._count as Record<string, number>)?.orders || 0} sipariş</p>
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                         {(r._count as Record<string, number>)?.reviews || 0} yorum
@@ -305,7 +305,7 @@ export default function AdminDashboardPage() {
                   </div>
                 ))}
                 {(!data?.topRestaurants || data.topRestaurants.length === 0) && (
-                  <p className="text-sm text-muted-foreground text-center py-4">Henuz restoran yok</p>
+                  <p className="text-sm text-muted-foreground text-center py-4">Henüz restoran yok</p>
                 )}
               </div>
             </CardContent>
@@ -317,7 +317,7 @@ export default function AdminDashboardPage() {
       <motion.div variants={item}>
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Siparis Durum Dagilimi</CardTitle>
+            <CardTitle className="text-lg">Sipariş Durum Dağılımı</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-3">

@@ -27,13 +27,13 @@ export function AdminHeader() {
     const breadcrumbs = [{ label: 'Admin', href: '/admin' }];
 
     const pathMap: Record<string, string> = {
-      admin: 'Genel Bakis',
-      users: 'Kullanicilar',
+      admin: 'Genel Bakış',
+      users: 'Kullanıcılar',
       restaurants: 'Restoranlar',
-      orders: 'Siparisler',
+      orders: 'Siparişler',
       subscriptions: 'Abonelikler',
       analytics: 'Analitik',
-      settings: 'Sistem Ayarlari',
+      settings: 'Sistem Ayarları',
       reviews: 'Yorumlar',
     };
 
@@ -108,7 +108,7 @@ export function AdminHeader() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/dashboard">Dashboard&apos;a Don</Link>
+              <Link href="/dashboard">Panele Dön</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/dashboard/settings">Profilim</Link>
@@ -118,7 +118,7 @@ export function AdminHeader() {
               onClick={() => signOut()}
               className="text-destructive focus:text-destructive"
             >
-              Cikis Yap
+              Çıkış Yap
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

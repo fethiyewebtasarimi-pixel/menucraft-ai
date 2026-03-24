@@ -36,17 +36,17 @@ interface NavItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { label: 'Genel Bakis', href: '/admin', icon: LayoutDashboard },
-  { label: 'Kullanicilar', href: '/admin/users', icon: Users },
+  { label: 'Genel Bakış', href: '/admin', icon: LayoutDashboard },
+  { label: 'Kullanıcılar', href: '/admin/users', icon: Users },
   { label: 'Restoranlar', href: '/admin/restaurants', icon: Store },
-  { label: 'Siparisler', href: '/admin/orders', icon: ShoppingBag },
+  { label: 'Siparişler', href: '/admin/orders', icon: ShoppingBag },
   { label: 'Abonelikler', href: '/admin/subscriptions', icon: CreditCard },
   { label: 'Yorumlar', href: '/admin/reviews', icon: MessageSquare },
   { label: 'Analitik', href: '/admin/analytics', icon: BarChart3 },
 ];
 
 const bottomNavItems: NavItem[] = [
-  { label: 'Sistem Ayarlari', href: '/admin/settings', icon: Settings },
+  { label: 'Sistem Ayarları', href: '/admin/settings', icon: Settings },
 ];
 
 export function AdminSidebar() {
@@ -146,7 +146,7 @@ export function AdminSidebar() {
                 whileHover={{ x: 2 }}
               >
                 <ArrowLeft className="h-4 w-4" />
-                {sidebarOpen && <span>Dashboard&apos;a Don</span>}
+                {sidebarOpen && <span>Panele Dön</span>}
               </motion.div>
             </Link>
           </div>
