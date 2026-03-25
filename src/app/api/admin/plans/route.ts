@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { createAuditLog } from "@/lib/audit";
@@ -56,8 +57,8 @@ export async function PUT(req: NextRequest) {
 
     const config = await prisma.systemConfig.upsert({
       where: { key: PLAN_CONFIG_KEY },
-      update: { value: plans as any },
-      create: { key: PLAN_CONFIG_KEY, value: plans as any },
+      update: { value: plans as Prisma.InputJsonValue },
+      create: { key: PLAN_CONFIG_KEY, value: plans as Prisma.InputJsonValue },
     });
 
     await createAuditLog({

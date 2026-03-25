@@ -2,16 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateQRCodeDataURL } from "@/lib/qrcode";
-import { z } from "zod";
+import { qrCodeSchema } from "@/lib/validations/qr-code";
 import { randomBytes } from "crypto";
-
-const qrCodeSchema = z.object({
-  name: z.string().min(1, "Name is required").max(200),
-  tableId: z.string().optional(),
-  styleType: z.enum(["CLASSIC", "ROUNDED", "DOTS"]).optional(),
-  colorPrimary: z.string().max(20).optional(),
-  colorBackground: z.string().max(20).optional(),
-});
 
 /**
  * Generate unique QR code string

@@ -2,17 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { aiLimiter } from "@/lib/rate-limit";
+import { generateDescriptionSchema } from "@/lib/validations/ai";
 import OpenAI from "openai";
-import { z } from "zod";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
-
-const generateDescriptionSchema = z.object({
-  menuItemName: z.string().min(1, "Menu item name is required"),
-  language: z.enum(["tr", "en"]).default("tr"),
-  tone: z.enum(["casual", "formal", "appetizing"]).default("appetizing"),
 });
 
 /**

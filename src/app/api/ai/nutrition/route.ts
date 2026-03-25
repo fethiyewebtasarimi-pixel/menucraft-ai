@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { aiLimiter } from "@/lib/rate-limit";
+import { nutritionSchema } from "@/lib/validations/ai";
 import OpenAI from "openai";
-import { z } from "zod";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
-
-const nutritionSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().optional(),
-  ingredients: z.array(z.string()).default([]),
 });
 
 /**
@@ -26,9 +21,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 });
     }
 
+    const { success } = await aiLimiter.limit(session.user.id);
+    if (!success) {
+      return NextResponse.json({ error: "Çok fazla istek" }, { status: 429 });
+    }
+
     // Check AI credits
     const subscription = await prisma.subscription.findUnique({
-      where: { userId: session.user.id as string },
+      where: { userId: session.user.id },
     });
 
     if (subscription) {
@@ -111,7 +111,7 @@ Değerler gerçekçi ve ortalama bir Türk restoran porsiyonuna uygun olsun.`;
     // Increment AI credits used
     if (subscription) {
       await prisma.subscription.update({
-        where: { userId: session.user.id as string },
+        where: { userId: session.user.id },
         data: { aiCreditsUsed: { increment: 1 } },
       });
     }

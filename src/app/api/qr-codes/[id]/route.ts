@@ -1,16 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { z } from "zod";
-
-const updateQRCodeSchema = z.object({
-  name: z.string().min(1).optional(),
-  tableId: z.string().nullable().optional(),
-  styleType: z.enum(["CLASSIC", "ROUNDED", "DOTS"]).optional(),
-  colorPrimary: z.string().optional(),
-  colorBackground: z.string().optional(),
-  isActive: z.boolean().optional(),
-});
+import { updateQRCodeSchema } from "@/lib/validations/qr-code";
 
 /**
  * PATCH /api/qr-codes/[id]

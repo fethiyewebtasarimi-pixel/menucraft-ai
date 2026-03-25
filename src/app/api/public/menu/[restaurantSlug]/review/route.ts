@@ -2,14 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { publicLimiter, getClientIp } from "@/lib/rate-limit";
 import { notifyNewReview } from "@/lib/notifications";
-import { z } from "zod";
-
-const createReviewSchema = z.object({
-  customerName: z.string().min(1, "Name is required").max(200),
-  customerEmail: z.string().max(255).email("Invalid email").optional(),
-  rating: z.number().int().min(1).max(5, "Rating must be between 1 and 5"),
-  comment: z.string().max(2000).optional(),
-});
+import { createReviewSchema } from "@/lib/validations/review";
 
 /**
  * POST /api/public/menu/[restaurantSlug]/review

@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { aiLimiter } from "@/lib/rate-limit";
+import { visionAnalyzeSchema } from "@/lib/validations/ai";
 import { getVisionModel, toGeminiImage } from "@/lib/gemini";
-import { z } from "zod";
-
-const requestSchema = z.object({
-  image: z.string().min(1),
-  mimeType: z.string().default("image/jpeg"),
-});
 
 /**
  * POST /api/ai/vision-analyze
@@ -21,9 +17,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 });
     }
 
+    const { success } = await aiLimiter.limit(session.user.id);
+    if (!success) {
+      return NextResponse.json({ error: "Çok fazla istek" }, { status: 429 });
+    }
+
     // Check AI credits
     const subscription = await prisma.subscription.findUnique({
-      where: { userId: session.user.id as string },
+      where: { userId: session.user.id },
     });
 
     if (subscription && subscription.aiCreditsUsed >= subscription.aiCredits) {
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const parsed = requestSchema.safeParse(body);
+    const parsed = visionAnalyzeSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -100,7 +101,7 @@ Değerler gerçekçi ve ortalama bir Türk restoran porsiyonuna uygun olsun. Emi
     // Increment AI credits
     if (subscription) {
       await prisma.subscription.update({
-        where: { userId: session.user.id as string },
+        where: { userId: session.user.id },
         data: { aiCreditsUsed: { increment: 1 } },
       });
     }

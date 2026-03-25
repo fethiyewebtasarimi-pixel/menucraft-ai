@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { z } from "zod";
-
-const tableSchema = z.object({
-  number: z.string().min(1, "Table number is required"),
-  name: z.string().optional(),
-  capacity: z.number().int().positive().optional(),
-  status: z.enum(["AVAILABLE", "OCCUPIED", "RESERVED"]).optional(),
-});
+import { tableSchema } from "@/lib/validations/table";
 
 /**
  * GET /api/restaurants/[id]/tables
