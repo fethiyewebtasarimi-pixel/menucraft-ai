@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Upload,
   Loader2,
@@ -110,10 +110,13 @@ export function MenuItemForm({
   categories,
   onSuccess,
 }: MenuItemFormProps) {
+  const queryClient = useQueryClient();
   const [imagePreview, setImagePreview] = useState<string | null>(
     initialData?.image || null
   );
   const [ingredientInput, setIngredientInput] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [showCategoryInput, setShowCategoryInput] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [visionLoading, setVisionLoading] = useState(false);
   const [enhanceLoading, setEnhanceLoading] = useState(false);
@@ -161,6 +164,38 @@ export function MenuItemForm({
 
   const selectedAllergens = form.watch("allergens") || [];
   const ingredients = form.watch("ingredients") || [];
+
+  const addCategoryMutation = useMutation({
+    mutationFn: async (name: string) => {
+      const response = await fetch(`/api/restaurants/${restaurantId}/categories`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || "Kategori eklenemedi");
+      }
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["categories", restaurantId] });
+      toast.success("Kategori eklendi");
+      setNewCategoryName("");
+      setShowCategoryInput(false);
+      // Auto-select the new category
+      form.setValue("categoryId", data.id);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleAddCategory = () => {
+    const name = newCategoryName.trim();
+    if (!name) return;
+    addCategoryMutation.mutate(name);
+  };
 
   const mutation = useMutation({
     mutationFn: async (data: MenuItemFormData) => {
@@ -423,20 +458,62 @@ export function MenuItemForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Kategori *</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Kategori seçin" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {showCategoryInput ? (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Kategori adı..."
+                        value={newCategoryName}
+                        onChange={(e) => setNewCategoryName(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddCategory())}
+                        autoFocus
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={handleAddCategory}
+                        disabled={!newCategoryName.trim() || addCategoryMutation.isPending}
+                        className="shrink-0"
+                      >
+                        {addCategoryMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Ekle"}
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => { setShowCategoryInput(false); setNewCategoryName(""); }}
+                        className="shrink-0 px-2"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Kategori seçin" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        onClick={() => setShowCategoryInput(true)}
+                        title="Yeni kategori ekle"
+                        className="shrink-0"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
