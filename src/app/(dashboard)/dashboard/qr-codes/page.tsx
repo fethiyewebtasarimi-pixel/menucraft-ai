@@ -761,6 +761,9 @@ export default function QRCodesPage() {
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                Bir masaya bağlarsanız, o masadan gelen siparişler ve garson çağrıları otomatik takip edilir.
+              </p>
             </div>
 
             {/* QR Style Selection */}
