@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { publicLimiter, getClientIp } from "@/lib/rate-limit";
+import { notifyNewReview } from "@/lib/notifications";
 import { z } from "zod";
 
 const createReviewSchema = z.object({
@@ -52,6 +53,14 @@ export async function POST(
         isPublished: false, // Requires restaurant owner approval
       },
     });
+
+    // Send notification to restaurant owner (non-blocking)
+    notifyNewReview(
+      restaurant.userId,
+      restaurant.name,
+      validatedData.rating,
+      validatedData.customerName
+    );
 
     return NextResponse.json(
       {

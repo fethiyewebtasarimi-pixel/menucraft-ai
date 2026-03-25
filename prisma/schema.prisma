@@ -21,9 +21,10 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts     Account[]
-  restaurants  Restaurant[]
-  subscription Subscription?
+  accounts      Account[]
+  restaurants   Restaurant[]
+  subscription  Subscription?
+  notifications Notification[]
 }
 
 enum UserRole {
@@ -538,4 +539,32 @@ model SocialLink {
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   @@index([restaurantId])
+}
+
+// ====================
+// NOTIFICATIONS
+// ====================
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  data      Json?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isRead])
+}
+
+enum NotificationType {
+  NEW_ORDER
+  ORDER_STATUS
+  NEW_REVIEW
+  SYSTEM
+  SUBSCRIPTION
 }

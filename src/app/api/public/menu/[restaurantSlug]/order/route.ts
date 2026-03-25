@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { createOrderSchema } from "@/lib/validations/order";
 import { generateOrderNumber } from "@/lib/utils";
 import { publicLimiter, getClientIp } from "@/lib/rate-limit";
+import { notifyNewOrder } from "@/lib/notifications";
 
 /**
  * POST /api/public/menu/[restaurantSlug]/order
@@ -188,6 +189,14 @@ export async function POST(
 
       return newOrder;
     });
+
+    // Send notification to restaurant owner (non-blocking)
+    notifyNewOrder(
+      restaurant.userId,
+      orderNumber,
+      restaurant.name,
+      totalAmount
+    );
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {
