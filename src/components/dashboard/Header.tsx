@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -86,6 +86,21 @@ export function Header() {
 
   const notifications: Notification[] = notifData?.notifications || [];
   const notificationCount: number = notifData?.unreadCount || 0;
+  const prevUnreadRef = useRef(notificationCount);
+
+  // Play sound when new WAITER_CALL notification arrives
+  useEffect(() => {
+    if (notificationCount > prevUnreadRef.current) {
+      const hasNewWaiterCall = notifications.some(
+        (n) => n.type === 'WAITER_CALL' && !n.isRead
+      );
+      if (hasNewWaiterCall) {
+        const audio = new Audio('/sounds/waiter-call.mp3');
+        audio.play().catch(() => {});
+      }
+    }
+    prevUnreadRef.current = notificationCount;
+  }, [notificationCount, notifications]);
 
   const markAllReadMutation = useMutation({
     mutationFn: async () => {
