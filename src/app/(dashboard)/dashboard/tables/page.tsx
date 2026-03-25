@@ -17,6 +17,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -356,6 +357,9 @@ export default function TablesPage() {
             <DialogTitle>
               {editingTable ? "Masa Düzenle" : "Yeni Masa Ekle"}
             </DialogTitle>
+            <DialogDescription>
+              {editingTable ? "Masa bilgilerini güncelleyin." : "Restoranınıza yeni bir masa ekleyin."}
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">

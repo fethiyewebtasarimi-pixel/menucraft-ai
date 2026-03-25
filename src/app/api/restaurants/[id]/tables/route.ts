@@ -109,7 +109,7 @@ export async function POST(
     const table = await prisma.table.create({
       data: {
         ...validatedData,
-        number: parseInt(validatedData.number),
+        number: validatedData.number,
         restaurantId: params.id,
       },
       include: {

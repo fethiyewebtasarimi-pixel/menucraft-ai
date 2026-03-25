@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
+import { useRestaurants } from "@/hooks/useRestaurant";
 
 interface OrderItem {
   id: string;
@@ -63,7 +64,7 @@ const statusConfig = {
   },
   completed: {
     label: "Tamamlandı",
-    color: "bg-accent0",
+    color: "bg-gray-500",
     icon: CheckCircle,
     nextStatus: null,
     nextLabel: null,
@@ -75,7 +76,8 @@ export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState("all");
   const [soundEnabled, setSoundEnabled] = useState(true);
 
-  const restaurantId = "current-restaurant-id";
+  const { data: restaurants } = useRestaurants();
+  const restaurantId = restaurants?.[0]?.id;
 
   const { data: orders, isLoading } = useQuery<Order[]>({
     queryKey: ["orders", restaurantId],
@@ -85,6 +87,7 @@ export default function OrdersPage() {
       return response.json();
     },
     refetchInterval: 5000, // Poll every 5 seconds for new orders
+    enabled: !!restaurantId,
   });
 
   const updateOrderMutation = useMutation({

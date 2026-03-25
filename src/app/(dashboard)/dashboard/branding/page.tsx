@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useRestaurants } from '@/hooks/useRestaurant';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Palette,
   Type,
@@ -112,6 +114,9 @@ const fontOptions = [
 
 export default function BrandingPage() {
   const [loading, setLoading] = useState(false);
+  const { data: restaurants } = useRestaurants();
+  const restaurantId = restaurants?.[0]?.id;
+  const queryClient = useQueryClient();
 
   const form = useForm<BrandingFormData>({
     resolver: zodResolver(brandingSchema),
@@ -127,13 +132,50 @@ export default function BrandingPage() {
     },
   });
 
+  // Load existing branding data
+  useEffect(() => {
+    if (!restaurantId) return;
+    fetch(`/api/restaurants/${restaurantId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.branding) {
+          form.reset({
+            primaryColor: data.branding.primaryColor || '#f59e0b',
+            secondaryColor: data.branding.secondaryColor || '#ea580c',
+            accentColor: data.branding.accentColor || '#eab308',
+            fontFamily: data.branding.fontFamily || 'inter',
+            menuLayout: data.branding.menuLayout || 'GRID',
+            headerStyle: data.branding.headerStyle || 'MODERN',
+            showLogo: data.branding.showLogo ?? true,
+            showCoverImage: data.branding.showCover ?? true,
+          });
+        }
+      })
+      .catch(() => {});
+  }, [restaurantId, form]);
+
   const watchedValues = form.watch();
 
   const onSubmit = async (data: BrandingFormData) => {
+    if (!restaurantId) return;
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch(`/api/restaurants/${restaurantId}/branding`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          primaryColor: data.primaryColor,
+          secondaryColor: data.secondaryColor,
+          accentColor: data.accentColor,
+          fontFamily: data.fontFamily,
+          menuLayout: data.menuLayout,
+          headerStyle: data.headerStyle,
+          showLogo: data.showLogo,
+          showCover: data.showCoverImage,
+        }),
+      });
+      if (!res.ok) throw new Error('Failed to save');
+      queryClient.invalidateQueries({ queryKey: ['restaurants'] });
       toast.success('Marka ayarları kaydedildi');
     } catch (error) {
       toast.error('Bir hata oluştu');

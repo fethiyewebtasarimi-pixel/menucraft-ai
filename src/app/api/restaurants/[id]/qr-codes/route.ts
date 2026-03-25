@@ -154,8 +154,8 @@ export async function POST(
     const qrDataUrl = await generateQRCodeDataURL(menuUrl, {
       width: 400,
       color: {
-        dark: validatedData.colorPrimary || "#000000",
-        light: validatedData.colorBackground || "#FFFFFF",
+        dark: validatedData.foregroundColor || "#000000",
+        light: validatedData.backgroundColor || "#FFFFFF",
       },
     });
 

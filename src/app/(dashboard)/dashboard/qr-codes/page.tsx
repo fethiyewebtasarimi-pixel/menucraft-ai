@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus,
   Download,
-  Edit,
   Trash2,
   MoreVertical,
   Copy,
@@ -26,6 +25,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -49,21 +49,30 @@ import {
 import { toast } from "sonner";
 import { useRestaurants } from "@/hooks/useRestaurant";
 
-interface QRCode {
+interface QRCodeTable {
   id: string;
-  tableNumber: string;
-  tableName?: string;
-  scanCount: number;
+  number: number;
+  name?: string;
+}
+
+interface QRCodeData {
+  id: string;
+  code: string;
+  tableId?: string;
+  table?: QRCodeTable | null;
+  scans: number;
   style: string;
   foregroundColor: string;
   backgroundColor: string;
-  qrCodeUrl: string;
+  isActive: boolean;
   createdAt: string;
+  qrDataUrl?: string;
+  menuUrl?: string;
 }
 
 interface Table {
   id: string;
-  number: string;
+  number: number;
   name?: string;
 }
 
@@ -72,7 +81,7 @@ export default function QRCodesPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [deleteQRId, setDeleteQRId] = useState<string | null>(null);
   const [selectedTable, setSelectedTable] = useState<string>("");
-  const [qrStyle, setQrStyle] = useState("classic");
+  const [qrStyle, setQrStyle] = useState("CLASSIC");
   const [foregroundColor, setForegroundColor] = useState("#000000");
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
 
@@ -80,7 +89,7 @@ export default function QRCodesPage() {
   const restaurant = restaurants?.[0];
   const restaurantId = restaurant?.id;
 
-  const { data: qrCodes, isLoading: qrLoading } = useQuery<QRCode[]>({
+  const { data: qrCodes, isLoading: qrLoading } = useQuery<QRCodeData[]>({
     queryKey: ["qr-codes", restaurantId],
     queryFn: async () => {
       const response = await fetch(`/api/restaurants/${restaurantId}/qr-codes`);
@@ -106,20 +115,21 @@ export default function QRCodesPage() {
       style: string;
       foregroundColor: string;
       backgroundColor: string;
-      name: string;
     }) => {
       const response = await fetch(`/api/restaurants/${restaurantId}/qr-codes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: data.name,
           tableId: data.tableId || undefined,
-          styleType: data.style === "modern" ? "ROUNDED" : data.style === "dots" || data.style === "rounded" ? "DOTS" : "CLASSIC",
-          colorPrimary: data.foregroundColor,
-          colorBackground: data.backgroundColor,
+          style: data.style,
+          foregroundColor: data.foregroundColor,
+          backgroundColor: data.backgroundColor,
         }),
       });
-      if (!response.ok) throw new Error("QR kod oluşturulamadı");
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || "QR kod oluşturulamadı");
+      }
       return response.json();
     },
     onSuccess: () => {
@@ -128,8 +138,8 @@ export default function QRCodesPage() {
       setIsCreateDialogOpen(false);
       resetForm();
     },
-    onError: () => {
-      toast.error("QR kod oluşturulamadı");
+    onError: (error: Error) => {
+      toast.error(error.message || "QR kod oluşturulamadı");
     },
   });
 
@@ -148,22 +158,48 @@ export default function QRCodesPage() {
     },
   });
 
-  const handleDownload = async (qrCode: QRCode, format: "png" | "svg") => {
+  const handleDownload = async (qr: QRCodeData, format: "png" | "svg") => {
     try {
-      const response = await fetch(
-        `/api/qr-codes/${qrCode.id}/download?format=${format}`
-      );
-      if (!response.ok) throw new Error("Download failed");
+      const menuUrl = `${window.location.origin}/menu/${restaurant?.slug}?qr=${qr.code}`;
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `qr-table-${qrCode.tableNumber}.${format}`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      if (format === "png") {
+        // Generate QR code as canvas and download
+        const { default: QRCodeLib } = await import("qrcode");
+        const dataUrl = await QRCodeLib.toDataURL(menuUrl, {
+          width: 1024,
+          color: {
+            dark: qr.foregroundColor || "#000000",
+            light: qr.backgroundColor || "#ffffff",
+          },
+        });
+
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = `qr-${qr.table ? `masa-${qr.table.number}` : qr.code.slice(0, 8)}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else {
+        const { default: QRCodeLib } = await import("qrcode");
+        const svgString = await QRCodeLib.toString(menuUrl, {
+          type: "svg",
+          width: 1024,
+          color: {
+            dark: qr.foregroundColor || "#000000",
+            light: qr.backgroundColor || "#ffffff",
+          },
+        });
+
+        const blob = new Blob([svgString], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `qr-${qr.table ? `masa-${qr.table.number}` : qr.code.slice(0, 8)}.svg`;
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
 
       toast.success(`QR kod ${format.toUpperCase()} olarak indirildi`);
     } catch (error) {
@@ -171,16 +207,8 @@ export default function QRCodesPage() {
     }
   };
 
-  const [qrName, setQrName] = useState("");
-
   const handleCreateQR = () => {
-    if (!qrName.trim()) {
-      toast.error("Lütfen QR kod için bir isim girin");
-      return;
-    }
-
     createQRMutation.mutate({
-      name: qrName.trim(),
       tableId: selectedTable || undefined,
       style: qrStyle,
       foregroundColor,
@@ -189,20 +217,30 @@ export default function QRCodesPage() {
   };
 
   const resetForm = () => {
-    setQrName("");
     setSelectedTable("");
-    setQrStyle("classic");
+    setQrStyle("CLASSIC");
     setForegroundColor("#000000");
     setBackgroundColor("#ffffff");
   };
 
   const qrStyles = [
-    { id: "classic", name: "Klasik", preview: "squares" },
-    { id: "modern", name: "Modern", preview: "rounded" },
-    { id: "rounded", name: "Yuvarlak", preview: "dots" },
-    { id: "dots", name: "Noktalı", preview: "dots-small" },
-    { id: "branded", name: "Markalı", preview: "logo" },
+    { id: "CLASSIC", name: "Klasik" },
+    { id: "MODERN", name: "Modern" },
+    { id: "ROUNDED", name: "Yuvarlak" },
+    { id: "DOTS", name: "Noktalı" },
+    { id: "BRANDED", name: "Markalı" },
   ];
+
+  const getQRLabel = (qr: QRCodeData) => {
+    if (qr.table) {
+      return `Masa ${qr.table.number}${qr.table.name ? ` - ${qr.table.name}` : ""}`;
+    }
+    return `QR Kod`;
+  };
+
+  const getMenuUrl = (qr: QRCodeData) => {
+    return `${window.location.origin}/menu/${restaurant?.slug}?qr=${qr.code}`;
+  };
 
   if (qrLoading) {
     return (
@@ -230,15 +268,6 @@ export default function QRCodesPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button
-            variant="outline"
-            onClick={() => {
-              /* Bulk create logic */
-            }}
-          >
-            <Grid3x3 className="w-4 h-4 mr-2" />
-            Toplu Oluştur
-          </Button>
           <Button onClick={() => setIsCreateDialogOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Yeni QR Oluştur
@@ -310,11 +339,11 @@ export default function QRCodesPage() {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="font-semibold text-foreground">
-                      Masa {qr.tableNumber}
+                      {getQRLabel(qr)}
                     </h3>
-                    {qr.tableName && (
-                      <p className="text-sm text-muted-foreground">{qr.tableName}</p>
-                    )}
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {qr.code.slice(0, 12)}...
+                    </p>
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -333,7 +362,7 @@ export default function QRCodesPage() {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
-                          navigator.clipboard.writeText(qr.qrCodeUrl);
+                          navigator.clipboard.writeText(getMenuUrl(qr));
                           toast.success("Link kopyalandı");
                         }}
                       >
@@ -354,27 +383,19 @@ export default function QRCodesPage() {
                 {/* QR Code Preview */}
                 <div className="bg-muted/50 rounded-lg p-4 sm:p-6 mb-4 flex items-center justify-center">
                   <div className="w-32 h-32 bg-card rounded p-2">
-                    {/* Placeholder QR pattern */}
                     <svg viewBox="0 0 100 100" className="w-full h-full">
                       <rect width="100" height="100" fill={qr.backgroundColor} />
                       <g fill={qr.foregroundColor}>
                         <rect x="5" y="5" width="20" height="20" />
                         <rect x="75" y="5" width="20" height="20" />
                         <rect x="5" y="75" width="20" height="20" />
-                        {[...Array(100)].map((_, i) => {
-                          if (Math.random() > 0.5) {
-                            return (
-                              <rect
-                                key={i}
-                                x={(i % 10) * 8 + 30}
-                                y={Math.floor(i / 10) * 8 + 30}
-                                width="6"
-                                height="6"
-                              />
-                            );
-                          }
-                          return null;
-                        })}
+                        <rect x="35" y="35" width="30" height="30" />
+                        <rect x="30" y="10" width="5" height="5" />
+                        <rect x="40" y="10" width="5" height="5" />
+                        <rect x="50" y="10" width="5" height="5" />
+                        <rect x="60" y="10" width="5" height="5" />
+                        <rect x="30" y="20" width="5" height="5" />
+                        <rect x="50" y="20" width="5" height="5" />
                       </g>
                     </svg>
                   </div>
@@ -383,11 +404,17 @@ export default function QRCodesPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Tarama:</span>
-                    <Badge variant="secondary">{qr.scanCount}</Badge>
+                    <Badge variant="secondary">{qr.scans}</Badge>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Stil:</span>
                     <Badge variant="outline">{qr.style}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Durum:</span>
+                    <Badge variant={qr.isActive ? "default" : "secondary"}>
+                      {qr.isActive ? "Aktif" : "Pasif"}
+                    </Badge>
                   </div>
                 </div>
               </motion.div>
@@ -401,22 +428,12 @@ export default function QRCodesPage() {
         <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>Yeni QR Kod Oluştur</DialogTitle>
+            <DialogDescription>
+              Menünüz için yeni bir QR kod oluşturun. Opsiyonel olarak bir masaya bağlayabilirsiniz.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6">
-            {/* QR Code Name */}
-            <div className="space-y-2">
-              <Label>QR Kod Adı *</Label>
-              <Input
-                value={qrName}
-                onChange={(e) => setQrName(e.target.value)}
-                placeholder="Örn: Ana Menü, Bahçe Masaları, Teras"
-              />
-              <p className="text-xs text-muted-foreground">
-                QR kodu tanımlamak için bir isim verin
-              </p>
-            </div>
-
             {/* Table Selection (Optional) */}
             <div className="space-y-2">
               <Label>Masa Bağlantısı (Opsiyonel)</Label>
@@ -529,7 +546,7 @@ export default function QRCodesPage() {
             </Button>
             <Button
               onClick={handleCreateQR}
-              disabled={createQRMutation.isPending || !qrName.trim()}
+              disabled={createQRMutation.isPending}
             >
               {createQRMutation.isPending ? "Oluşturuluyor..." : "Oluştur"}
             </Button>

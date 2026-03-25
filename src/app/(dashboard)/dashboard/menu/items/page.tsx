@@ -41,6 +41,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -56,6 +57,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { MenuItemForm } from "@/components/dashboard/MenuItemForm";
 import { toast } from "sonner";
+import { useRestaurants } from "@/hooks/useRestaurant";
 
 interface MenuItem {
   id: string;
@@ -86,8 +88,8 @@ export default function MenuItemsPage() {
   const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
   const itemsPerPage = 10;
 
-  // Mock restaurant ID
-  const restaurantId = "current-restaurant-id";
+  const { data: restaurants } = useRestaurants();
+  const restaurantId = restaurants?.[0]?.id;
 
   const { data: items, isLoading: itemsLoading } = useQuery<MenuItem[]>({
     queryKey: ["menu-items", restaurantId],
@@ -96,6 +98,7 @@ export default function MenuItemsPage() {
       if (!response.ok) throw new Error("Failed to fetch items");
       return response.json();
     },
+    enabled: !!restaurantId,
   });
 
   const { data: categories } = useQuery<Category[]>({
@@ -105,6 +108,7 @@ export default function MenuItemsPage() {
       if (!response.ok) throw new Error("Failed to fetch categories");
       return response.json();
     },
+    enabled: !!restaurantId,
   });
 
   const toggleItemMutation = useMutation({
@@ -526,9 +530,10 @@ export default function MenuItemsPage() {
         <DialogContent className="max-w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Yeni Yemek Ekle</DialogTitle>
+            <DialogDescription>Menünüze yeni bir yemek ekleyin.</DialogDescription>
           </DialogHeader>
           <MenuItemForm
-            restaurantId={restaurantId}
+            restaurantId={restaurantId || ""}
             categories={categories || []}
             onSuccess={handleFormSuccess}
           />
@@ -540,10 +545,11 @@ export default function MenuItemsPage() {
         <DialogContent className="max-w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Yemeği Düzenle</DialogTitle>
+            <DialogDescription>Yemek bilgilerini güncelleyin.</DialogDescription>
           </DialogHeader>
           <MenuItemForm
             initialData={editingItem || undefined}
-            restaurantId={restaurantId}
+            restaurantId={restaurantId || ""}
             categories={categories || []}
             onSuccess={handleFormSuccess}
           />

@@ -27,6 +27,7 @@ import {
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
+import { useRestaurants } from "@/hooks/useRestaurant";
 
 interface Review {
   id: string;
@@ -55,27 +56,41 @@ export default function ReviewsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [deleteReviewId, setDeleteReviewId] = useState<string | null>(null);
 
-  const restaurantId = "current-restaurant-id";
+  const { data: restaurants } = useRestaurants();
+  const restaurantId = restaurants?.[0]?.id;
 
-  const { data: stats, isLoading: statsLoading } = useQuery<RatingStats>({
-    queryKey: ["review-stats", restaurantId],
-    queryFn: async () => {
-      const response = await fetch(
-        `/api/restaurants/${restaurantId}/reviews/stats`
-      );
-      if (!response.ok) throw new Error("Failed to fetch stats");
-      return response.json();
-    },
-  });
-
-  const { data: reviews, isLoading: reviewsLoading } = useQuery<Review[]>({
+  // Reviews API returns { reviews, stats, pagination } in one call
+  const { data: reviewsData, isLoading: reviewsLoading } = useQuery<{
+    reviews: Review[];
+    stats: {
+      averageRating: number;
+      totalReviews: number;
+      ratingDistribution: Record<number, number>;
+    };
+  }>({
     queryKey: ["reviews", restaurantId],
     queryFn: async () => {
       const response = await fetch(`/api/restaurants/${restaurantId}/reviews`);
       if (!response.ok) throw new Error("Failed to fetch reviews");
       return response.json();
     },
+    enabled: !!restaurantId,
   });
+
+  const reviews = reviewsData?.reviews;
+  const stats: RatingStats | undefined = reviewsData?.stats
+    ? {
+        average: reviewsData.stats.averageRating,
+        total: reviewsData.stats.totalReviews,
+        distribution: {
+          1: reviewsData.stats.ratingDistribution[1] || 0,
+          2: reviewsData.stats.ratingDistribution[2] || 0,
+          3: reviewsData.stats.ratingDistribution[3] || 0,
+          4: reviewsData.stats.ratingDistribution[4] || 0,
+          5: reviewsData.stats.ratingDistribution[5] || 0,
+        },
+      }
+    : undefined;
 
   const togglePublishMutation = useMutation({
     mutationFn: async ({
@@ -109,7 +124,6 @@ export default function ReviewsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reviews", restaurantId] });
-      queryClient.invalidateQueries({ queryKey: ["review-stats", restaurantId] });
       toast.success("Yorum silindi");
       setDeleteReviewId(null);
     },
@@ -148,7 +162,7 @@ export default function ReviewsPage() {
     );
   };
 
-  const isLoading = statsLoading || reviewsLoading;
+  const isLoading = reviewsLoading;
 
   if (isLoading) {
     return (

@@ -44,14 +44,9 @@ export async function PATCH(
     const body = await req.json();
     const validatedData = tableSchema.partial().parse(body);
 
-    const updateData: any = { ...validatedData };
-    if (validatedData.number) {
-      updateData.number = parseInt(validatedData.number);
-    }
-
     const table = await prisma.table.update({
       where: { id: params.id },
-      data: updateData,
+      data: validatedData,
       include: {
         _count: {
           select: {
