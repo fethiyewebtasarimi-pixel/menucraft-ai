@@ -137,7 +137,7 @@ export function AdminSidebar() {
                   transition={{ delay: 0.1 }}
                 >
                   <span className="text-lg font-bold bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
-                    Admin Panel
+                    Yönetici Paneli
                   </span>
                 </motion.div>
               )}

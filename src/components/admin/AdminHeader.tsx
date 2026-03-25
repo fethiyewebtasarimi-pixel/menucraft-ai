@@ -84,7 +84,7 @@ export function AdminHeader() {
         {/* Admin Badge */}
         <Badge variant="destructive" className="gap-1">
           <Shield className="h-3 w-3" />
-          Admin
+          Yönetici
         </Badge>
 
         {/* User Menu */}

@@ -203,7 +203,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
             <button
               onClick={onClose}
               className="absolute top-4 right-4 z-10 p-2 rounded-full bg-card/90 dark:bg-gray-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-colors shadow-lg"
-              aria-label="Close"
+              aria-label="Kapat"
             >
               <X className="w-6 h-6" />
             </button>
@@ -519,7 +519,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       className="p-3 rounded-lg bg-muted/50 dark:bg-gray-800 hover:bg-muted dark:hover:bg-gray-700 transition-colors"
-                      aria-label="Decrease quantity"
+                      aria-label="Adeti azalt"
                     >
                       <Minus className="w-5 h-5" />
                     </button>
@@ -529,7 +529,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                     <button
                       onClick={() => setQuantity(quantity + 1)}
                       className="p-3 rounded-lg bg-muted/50 dark:bg-gray-800 hover:bg-muted dark:hover:bg-gray-700 transition-colors"
-                      aria-label="Increase quantity"
+                      aria-label="Adeti artır"
                     >
                       <Plus className="w-5 h-5" />
                     </button>

@@ -136,7 +136,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                   onClick={handleAddToCart}
                   className="flex-shrink-0 p-1.5 rounded-full transition-colors hover:bg-muted/50 dark:hover:bg-gray-800"
                   style={{ color: accentColor }}
-                  aria-label="Add to cart"
+                  aria-label="Sepete ekle"
                 >
                   <Plus className="w-5 h-5" />
                 </button>

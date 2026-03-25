@@ -15,7 +15,7 @@ export default function DashboardError({
       <AlertTriangle className="h-12 w-12 text-yellow-500 mb-4" />
       <h2 className="text-xl font-semibold mb-2">Bir hata oluştu</h2>
       <p className="text-muted-foreground mb-4">
-        Dashboard yüklenirken bir sorun oluştu. Lütfen tekrar deneyin.
+        Kontrol paneli yüklenirken bir sorun oluştu. Lütfen tekrar deneyin.
       </p>
       <Button onClick={reset} variant="outline">
         Tekrar Dene

@@ -67,7 +67,7 @@ const Cart: React.FC<CartProps> = ({
             onClick={() => setIsOpen(true)}
             className="fixed bottom-6 right-6 z-40 p-4 rounded-full shadow-2xl text-white"
             style={{ backgroundColor: accentColor }}
-            aria-label="Open cart"
+            aria-label="Sepeti aç"
           >
             <ShoppingCart className="w-6 h-6" />
             <motion.div
@@ -116,7 +116,7 @@ const Cart: React.FC<CartProps> = ({
                 <button
                   onClick={() => setIsOpen(false)}
                   className="p-2 rounded-full hover:bg-white/20 transition-colors"
-                  aria-label="Close cart"
+                  aria-label="Sepeti kapat"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -187,7 +187,7 @@ const Cart: React.FC<CartProps> = ({
                                     )
                                   }
                                   className="p-1 rounded bg-card dark:bg-gray-700 hover:bg-muted/50 dark:hover:bg-gray-600 transition-colors"
-                                  aria-label="Decrease quantity"
+                                  aria-label="Adeti azalt"
                                 >
                                   <Minus className="w-4 h-4" />
                                 </button>
@@ -199,7 +199,7 @@ const Cart: React.FC<CartProps> = ({
                                     onUpdateQuantity(item.id, item.quantity + 1)
                                   }
                                   className="p-1 rounded bg-card dark:bg-gray-700 hover:bg-muted/50 dark:hover:bg-gray-600 transition-colors"
-                                  aria-label="Increase quantity"
+                                  aria-label="Adeti artır"
                                 >
                                   <Plus className="w-4 h-4" />
                                 </button>
@@ -218,7 +218,7 @@ const Cart: React.FC<CartProps> = ({
                           <button
                             onClick={() => onRemoveItem(item.id)}
                             className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex-shrink-0 h-fit"
-                            aria-label="Remove item"
+                            aria-label="Ürünü kaldır"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>

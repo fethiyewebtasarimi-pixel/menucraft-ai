@@ -90,7 +90,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               exit={{ opacity: 0 }}
               onClick={() => scroll("left")}
               className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-card dark:bg-gray-900 shadow-lg rounded-full p-2 hover:bg-accent dark:hover:bg-gray-800 transition-colors"
-              aria-label="Scroll left"
+              aria-label="Sola kaydır"
             >
               <ChevronLeft className="w-5 h-5" />
             </motion.button>
@@ -156,7 +156,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               exit={{ opacity: 0 }}
               onClick={() => scroll("right")}
               className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-card dark:bg-gray-900 shadow-lg rounded-full p-2 hover:bg-accent dark:hover:bg-gray-800 transition-colors"
-              aria-label="Scroll right"
+              aria-label="Sağa kaydır"
             >
               <ChevronRight className="w-5 h-5" />
             </motion.button>

@@ -112,7 +112,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({ restaurant, branding }) => {
       label: "Instagram",
     },
     { icon: Twitter, url: restaurant.socialMedia?.twitter, label: "Twitter" },
-    { icon: Globe, url: restaurant.website, label: "Website" },
+    { icon: Globe, url: restaurant.website, label: "Web Sitesi" },
   ].filter((link) => link.url);
 
   if (headerStyle === "MINIMAL") {

@@ -235,7 +235,7 @@ export default function OnboardingPage() {
                 transition={{ delay: 0.4 }}
                 className="text-lg text-muted-foreground max-w-md mx-auto"
               >
-                Restoranınızı dijitale taşıyalım. Birlikte müthiş bir dijital
+                Restoranınızı dijitale taşıyalım. Birlikte muhteşem bir dijital
                 menü deneyimi oluşturalım.
               </motion.p>
             </div>
@@ -655,7 +655,7 @@ export default function OnboardingPage() {
                 onClick={() => router.push("/dashboard")}
                 className="gap-2 min-w-[200px]"
               >
-                Panele Git
+                Kontrol Paneline Git
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </motion.div>

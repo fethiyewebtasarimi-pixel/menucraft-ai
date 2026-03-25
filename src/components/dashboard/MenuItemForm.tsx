@@ -176,7 +176,7 @@ export function MenuItemForm({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save menu item");
+        throw new Error("Menü öğesi kaydedilemedi");
       }
 
       return response.json();

@@ -55,7 +55,7 @@ type BrandingFormData = z.infer<typeof brandingSchema>;
 const menuLayouts = [
   {
     value: 'GRID',
-    label: 'Grid',
+    label: 'Izgara',
     description: 'Kartlar halinde düzenlenmiş görünüm',
     icon: Grid3x3,
   },
@@ -97,7 +97,7 @@ const headerStyles = [
   },
   {
     value: 'HERO',
-    label: 'Hero',
+    label: 'Ana Görsel',
     description: 'Büyük görsel arka plan',
   },
 ];

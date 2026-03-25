@@ -66,7 +66,7 @@ const TEMPLATES: Record<Template, { name: string; description: string }> = {
   modern: { name: "Modern", description: "Temiz çizgiler, büyük görseller" },
   classic: { name: "Klasik", description: "Geleneksel restoran menüsü" },
   minimal: { name: "Minimal", description: "Sade ve şık" },
-  elegant: { name: "Elegant", description: "Lüks ve sofistike" },
+  elegant: { name: "Zarif", description: "Lüks ve sofistike" },
 };
 
 export default function PrintMenuPage() {

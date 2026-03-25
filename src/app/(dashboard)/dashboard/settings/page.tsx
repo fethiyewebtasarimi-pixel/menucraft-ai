@@ -50,7 +50,7 @@ import {
 
 const profileSchema = z.object({
   name: z.string().min(2, 'İsim en az 2 karakter olmalı'),
-  email: z.string().email('Geçerli bir email adresi girin'),
+  email: z.string().email('Geçerli bir e-posta adresi girin'),
   phone: z.string().optional(),
 });
 
@@ -562,7 +562,7 @@ export default function SettingsPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>E-posta</FormLabel>
                           <FormControl>
                             <Input
                               type="email"

@@ -59,6 +59,21 @@ const PLAN_COLORS: Record<string, string> = {
   ENTERPRISE: 'bg-primary/10 text-primary',
 };
 
+const ROLE_LABELS: Record<string, string> = {
+  OWNER: 'Sahip',
+  ADMIN: 'Yönetici',
+  MANAGER: 'Yönetici',
+  STAFF: 'Personel',
+  USER: 'Kullanıcı',
+};
+
+const PLAN_LABELS: Record<string, string> = {
+  FREE: 'Ücretsiz',
+  STARTER: 'Başlangıç',
+  PROFESSIONAL: 'Profesyonel',
+  ENTERPRISE: 'Kurumsal',
+};
+
 export default function AdminUsersPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -147,9 +162,9 @@ export default function AdminUsersPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tüm Roller</SelectItem>
-                <SelectItem value="OWNER">Owner</SelectItem>
-                <SelectItem value="MANAGER">Manager</SelectItem>
-                <SelectItem value="STAFF">Staff</SelectItem>
+                <SelectItem value="OWNER">Sahip</SelectItem>
+                <SelectItem value="MANAGER">Yönetici</SelectItem>
+                <SelectItem value="STAFF">Personel</SelectItem>
                 <SelectItem value="ADMIN">Admin</SelectItem>
               </SelectContent>
             </Select>
@@ -159,10 +174,10 @@ export default function AdminUsersPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tüm Planlar</SelectItem>
-                <SelectItem value="FREE">Free</SelectItem>
-                <SelectItem value="STARTER">Starter</SelectItem>
-                <SelectItem value="PROFESSIONAL">Professional</SelectItem>
-                <SelectItem value="ENTERPRISE">Enterprise</SelectItem>
+                <SelectItem value="FREE">Ücretsiz</SelectItem>
+                <SelectItem value="STARTER">Başlangıç</SelectItem>
+                <SelectItem value="PROFESSIONAL">Profesyonel</SelectItem>
+                <SelectItem value="ENTERPRISE">Kurumsal</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -200,10 +215,10 @@ export default function AdminUsersPage() {
                       <div>
                         <div className="flex items-center gap-2">
                           <p className="font-semibold">{user.name as string}</p>
-                          <Badge className={ROLE_COLORS[user.role as string]}>{user.role as string}</Badge>
+                          <Badge className={ROLE_COLORS[user.role as string]}>{ROLE_LABELS[user.role as string] || user.role as string}</Badge>
                           {(user.subscription as Record<string, string>) && (
                             <Badge className={PLAN_COLORS[(user.subscription as Record<string, string>).plan]}>
-                              {(user.subscription as Record<string, string>).plan}
+                              {PLAN_LABELS[(user.subscription as Record<string, string>).plan] || (user.subscription as Record<string, string>).plan}
                             </Badge>
                           )}
                         </div>
@@ -211,7 +226,7 @@ export default function AdminUsersPage() {
                         <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
                           <span>{(user._count as Record<string, number>)?.restaurants || 0} restoran</span>
                           <span>Kayıt: {new Date(user.createdAt as string).toLocaleDateString('tr-TR')}</span>
-                          {user.emailVerified ? <span className="text-green-600">Email Doğrulanmış</span> : null}
+                          {user.emailVerified ? <span className="text-green-600">E-posta Doğrulanmış</span> : null}
                         </div>
                       </div>
                     </div>
@@ -299,9 +314,9 @@ export default function AdminUsersPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="OWNER">Owner</SelectItem>
-                  <SelectItem value="MANAGER">Manager</SelectItem>
-                  <SelectItem value="STAFF">Staff</SelectItem>
+                  <SelectItem value="OWNER">Sahip</SelectItem>
+                  <SelectItem value="MANAGER">Yönetici</SelectItem>
+                  <SelectItem value="STAFF">Personel</SelectItem>
                   <SelectItem value="ADMIN">Admin</SelectItem>
                 </SelectContent>
               </Select>
@@ -313,10 +328,10 @@ export default function AdminUsersPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="FREE">Free</SelectItem>
-                  <SelectItem value="STARTER">Starter</SelectItem>
-                  <SelectItem value="PROFESSIONAL">Professional</SelectItem>
-                  <SelectItem value="ENTERPRISE">Enterprise</SelectItem>
+                  <SelectItem value="FREE">Ücretsiz</SelectItem>
+                  <SelectItem value="STARTER">Başlangıç</SelectItem>
+                  <SelectItem value="PROFESSIONAL">Profesyonel</SelectItem>
+                  <SelectItem value="ENTERPRISE">Kurumsal</SelectItem>
                 </SelectContent>
               </Select>
             </div>

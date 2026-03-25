@@ -4,11 +4,11 @@ export const APP_DESCRIPTION =
 
 export const CURRENCIES = [
   { value: "TRY", label: "Türk Lirası (₺)", symbol: "₺" },
-  { value: "USD", label: "US Dollar ($)", symbol: "$" },
+  { value: "USD", label: "Amerikan Doları ($)", symbol: "$" },
   { value: "EUR", label: "Euro (€)", symbol: "€" },
-  { value: "GBP", label: "British Pound (£)", symbol: "£" },
-  { value: "AED", label: "UAE Dirham (د.إ)", symbol: "د.إ" },
-  { value: "SAR", label: "Saudi Riyal (﷼)", symbol: "﷼" },
+  { value: "GBP", label: "İngiliz Sterlini (£)", symbol: "£" },
+  { value: "AED", label: "BAE Dirhemi (د.إ)", symbol: "د.إ" },
+  { value: "SAR", label: "Suudi Riyali (﷼)", symbol: "﷼" },
 ];
 
 export const LANGUAGES = [
