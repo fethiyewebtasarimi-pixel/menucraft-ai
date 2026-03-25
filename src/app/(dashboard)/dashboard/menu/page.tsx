@@ -104,7 +104,7 @@ export default function MenuManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto px-4 py-4 sm:p-6 space-y-6">
         <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
@@ -118,24 +118,27 @@ export default function MenuManagementPage() {
   const isEmpty = !menus || menus.length === 0;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto px-4 py-4 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Menü Yönetimi</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Menü Yönetimi</h1>
           <p className="text-muted-foreground mt-1">
             Menülerinizi oluşturun, düzenleyin ve yönetin
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           <Button
             onClick={() => router.push("/dashboard/menu/ai-create")}
-            className="bg-primary hover:bg-primary/90 text-white"
+            className="bg-primary hover:bg-primary/90 text-white flex-1 sm:flex-none"
           >
             <Sparkles className="w-4 h-4 mr-2" />
             AI ile Oluştur
           </Button>
-          <Button onClick={() => router.push("/dashboard/menu/items")}>
+          <Button
+            onClick={() => router.push("/dashboard/menu/items")}
+            className="flex-1 sm:flex-none"
+          >
             <Plus className="w-4 h-4 mr-2" />
             Yeni Menü Oluştur
           </Button>
@@ -152,7 +155,7 @@ export default function MenuManagementPage() {
             exit={{ opacity: 0, y: -20 }}
             className="flex flex-col items-center justify-center py-20"
           >
-            <div className="relative w-64 h-64 mb-6">
+            <div className="relative w-40 h-40 sm:w-64 sm:h-64 mb-6">
               <svg
                 viewBox="0 0 200 200"
                 className="w-full h-full text-muted-foreground/70"
@@ -183,11 +186,11 @@ export default function MenuManagementPage() {
               Hemen ilk menünüzü oluşturun veya AI'ın menü fotoğrafınızı analiz ederek
               otomatik oluşturmasını sağlayın.
             </p>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto px-4 sm:px-0">
               <Button
                 onClick={() => router.push("/dashboard/menu/ai-create")}
                 size="lg"
-                className="bg-primary hover:bg-primary/90 text-white"
+                className="bg-primary hover:bg-primary/90 text-white w-full sm:w-auto"
               >
                 <Sparkles className="w-5 h-5 mr-2" />
                 AI ile Oluştur
@@ -196,6 +199,7 @@ export default function MenuManagementPage() {
                 onClick={() => router.push("/dashboard/menu/items")}
                 size="lg"
                 variant="outline"
+                className="w-full sm:w-auto"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Manuel Oluştur
@@ -217,7 +221,7 @@ export default function MenuManagementPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-card rounded-lg border border-border p-6 hover:shadow-lg transition-shadow"
+                className="bg-card rounded-lg border border-border p-4 sm:p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">

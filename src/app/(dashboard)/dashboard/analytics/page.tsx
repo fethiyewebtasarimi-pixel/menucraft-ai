@@ -122,16 +122,16 @@ export default function AnalyticsPage() {
       animate="show"
     >
       {/* Header */}
-      <motion.div variants={item} className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <motion.div variants={item} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analitik</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Analitik</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Restoranınızın performans istatistikleri
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 w-full sm:w-auto">
           <Select value={dateRange} onValueChange={setDateRange}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <Calendar className="mr-2 h-4 w-4" />
               <SelectValue />
             </SelectTrigger>
@@ -152,7 +152,7 @@ export default function AnalyticsPage() {
       {/* Stats Cards */}
       <motion.div
         variants={item}
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
       >
         <StatsCard
           title="Menü Görüntüleme"
@@ -204,7 +204,7 @@ export default function AnalyticsPage() {
         </motion.div>
       ) : (
         <>
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
             {/* Daily Trend */}
             <motion.div variants={item}>
               <Card>
@@ -327,21 +327,21 @@ export default function AnalyticsPage() {
 
                       return (
                         <div key={topItem.menuItem?.id || index} className="space-y-2">
-                          <div className="flex items-center justify-between text-sm">
-                            <div className="flex items-center gap-3">
-                              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-primary/10 to-primary/80/10 text-primary font-semibold text-xs">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 text-sm">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-primary/10 to-primary/80/10 text-primary font-semibold text-xs">
                                 #{index + 1}
                               </div>
-                              <div>
-                                <span className="font-medium">{topItem.menuItem?.name || 'Bilinmeyen'}</span>
+                              <div className="min-w-0">
+                                <span className="font-medium truncate block">{topItem.menuItem?.name || 'Bilinmeyen'}</span>
                                 {topItem.menuItem?.category?.name && (
-                                  <span className="text-xs text-muted-foreground ml-2">
+                                  <span className="text-xs text-muted-foreground">
                                     ({topItem.menuItem.category.name})
                                   </span>
                                 )}
                               </div>
                             </div>
-                            <div className="flex items-center gap-4 text-muted-foreground">
+                            <div className="flex items-center gap-4 text-muted-foreground pl-11 sm:pl-0 flex-shrink-0">
                               <span className="flex items-center gap-1">
                                 <ShoppingBag className="h-3 w-3" />
                                 {topItem.quantitySold} adet

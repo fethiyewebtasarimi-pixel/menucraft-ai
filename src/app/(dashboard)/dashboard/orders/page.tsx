@@ -125,7 +125,7 @@ export default function OrdersPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto px-4 py-4 sm:p-6 space-y-4 sm:space-y-6">
         <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
@@ -139,23 +139,23 @@ export default function OrdersPage() {
   const isEmpty = !orders || orders.length === 0;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto px-4 py-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Sipariş Yönetimi</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Sipariş Yönetimi</h1>
           <p className="text-muted-foreground mt-1">
             {orderCounts.pending} bekleyen sipariş
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-card rounded-lg border px-4 py-2">
+          <div className="flex items-center gap-2 bg-card rounded-lg border px-3 py-1.5 sm:px-4 sm:py-2">
             {soundEnabled ? (
-              <Bell className="w-5 h-5 text-muted-foreground" />
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
             ) : (
-              <BellOff className="w-5 h-5 text-muted-foreground/70" />
+              <BellOff className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground/70" />
             )}
-            <Label htmlFor="sound-toggle" className="text-sm font-medium cursor-pointer">
+            <Label htmlFor="sound-toggle" className="text-xs sm:text-sm font-medium cursor-pointer">
               Bildirim Sesi
             </Label>
             <Switch
@@ -168,43 +168,49 @@ export default function OrdersPage() {
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 lg:w-auto">
-          <TabsTrigger value="all" className="relative">
-            Tümü
-            {orderCounts.all > 0 && (
-              <Badge className="ml-2" variant="secondary">
-                {orderCounts.all}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="pending" className="relative">
-            Bekleyen
-            {orderCounts.pending > 0 && (
-              <Badge className="ml-2 bg-yellow-500">{orderCounts.pending}</Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="preparing">
-            Hazırlanıyor
-            {orderCounts.preparing > 0 && (
-              <Badge className="ml-2 bg-blue-500">{orderCounts.preparing}</Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="ready">
-            Hazır
-            {orderCounts.ready > 0 && (
-              <Badge className="ml-2 bg-green-500">{orderCounts.ready}</Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="completed">
-            Tamamlanan
-            {orderCounts.completed > 0 && (
-              <Badge className="ml-2" variant="secondary">
-                {orderCounts.completed}
-              </Badge>
-            )}
-          </TabsTrigger>
-        </TabsList>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+        <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+          <TabsList className="inline-flex w-auto min-w-full sm:min-w-0">
+            <TabsTrigger value="all" className="relative text-xs sm:text-sm">
+              <span className="sm:hidden">Tümü</span>
+              <span className="hidden sm:inline">Tümü</span>
+              {orderCounts.all > 0 && (
+                <Badge className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs" variant="secondary">
+                  {orderCounts.all}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="pending" className="relative text-xs sm:text-sm">
+              <span className="sm:hidden">Bekleyen</span>
+              <span className="hidden sm:inline">Bekleyen</span>
+              {orderCounts.pending > 0 && (
+                <Badge className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs bg-yellow-500">{orderCounts.pending}</Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="preparing" className="text-xs sm:text-sm">
+              <span className="sm:hidden">Hazırl.</span>
+              <span className="hidden sm:inline">Hazırlanıyor</span>
+              {orderCounts.preparing > 0 && (
+                <Badge className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs bg-blue-500">{orderCounts.preparing}</Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="ready" className="text-xs sm:text-sm">
+              Hazır
+              {orderCounts.ready > 0 && (
+                <Badge className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs bg-green-500">{orderCounts.ready}</Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="completed" className="text-xs sm:text-sm">
+              <span className="sm:hidden">Biten</span>
+              <span className="hidden sm:inline">Tamamlanan</span>
+              {orderCounts.completed > 0 && (
+                <Badge className="ml-1.5 sm:ml-2 text-[10px] sm:text-xs" variant="secondary">
+                  {orderCounts.completed}
+                </Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value={activeTab} className="space-y-4">
           <AnimatePresence mode="wait">
@@ -269,23 +275,23 @@ export default function OrdersPage() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
-                      className="bg-card rounded-lg border border-border p-6 hover:shadow-md transition-shadow"
+                      className="bg-card rounded-lg border border-border p-4 sm:p-6 hover:shadow-md transition-shadow"
                     >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-4">
-                          <div className={`p-3 rounded-lg ${config.color} bg-opacity-10`}>
-                            <StatusIcon className={`w-6 h-6 ${config.color.replace('bg-', 'text-')}`} />
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                          <div className={`p-2 sm:p-3 rounded-lg ${config.color} bg-opacity-10 flex-shrink-0`}>
+                            <StatusIcon className={`w-5 h-5 sm:w-6 sm:h-6 ${config.color.replace('bg-', 'text-')}`} />
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <h3 className="text-lg font-semibold text-foreground">
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h3 className="text-base sm:text-lg font-semibold text-foreground">
                                 Sipariş #{order.orderNumber}
                               </h3>
                               <Badge className={config.color}>
                                 {config.label}
                               </Badge>
                             </div>
-                            <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
+                            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground mt-1">
                               <span>Masa {order.tableNumber}</span>
                               <span>•</span>
                               <span>
@@ -297,8 +303,8 @@ export default function OrdersPage() {
                             </div>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-foreground">
+                        <div className="text-left sm:text-right pl-10 sm:pl-0">
+                          <p className="text-xl sm:text-2xl font-bold text-foreground">
                             ₺{order.totalAmount.toFixed(2)}
                           </p>
                         </div>
