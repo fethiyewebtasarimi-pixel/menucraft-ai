@@ -4,7 +4,7 @@ import { Restaurant } from '@prisma/client';
 // Types
 export interface CreateRestaurantInput {
   name: string;
-  slug: string;
+  slug?: string;
   description?: string;
   logo?: string;
   bannerImage?: string;

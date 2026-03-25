@@ -29,14 +29,14 @@ export function Header() {
   const { toggleSidebar, sidebarOpen } = useUIStore();
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
-  const [notificationCount] = useState(3);
+  const [notificationCount] = useState(0);
 
   const getBreadcrumbs = () => {
     const segments = pathname?.split('/').filter(Boolean) || [];
     const breadcrumbs = [{ label: 'Ana Sayfa', href: '/dashboard' }];
 
     const pathMap: Record<string, string> = {
-      dashboard: 'Dashboard',
+      dashboard: 'Genel Bakış',
       menu: 'Menüler',
       menus: 'Menüler',
       'qr-codes': 'QR Kodlar',

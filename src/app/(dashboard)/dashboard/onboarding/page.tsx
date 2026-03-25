@@ -30,18 +30,18 @@ import Image from "next/image";
 import confetti from "canvas-confetti";
 
 const STEPS = [
-  { id: "welcome", label: "Hosgeldin", icon: Sparkles },
+  { id: "welcome", label: "Hoş Geldin", icon: Sparkles },
   { id: "info", label: "Bilgiler", icon: Store },
   { id: "logo", label: "Logo", icon: Camera },
   { id: "theme", label: "Tema", icon: Palette },
-  { id: "done", label: "Hazir", icon: CheckCircle2 },
+  { id: "done", label: "Hazır", icon: CheckCircle2 },
 ];
 
 const THEME_PRESETS = [
   { name: "Mor Zarafet", primary: "#8b5cf6", secondary: "#f5f3ff", accent: "#c4b5fd" },
   { name: "Okyanus", primary: "#0ea5e9", secondary: "#f0f9ff", accent: "#7dd3fc" },
-  { name: "Zumrut", primary: "#10b981", secondary: "#ecfdf5", accent: "#6ee7b7" },
-  { name: "Gul", primary: "#f43f5e", secondary: "#fff1f2", accent: "#fda4af" },
+  { name: "Zümrüt", primary: "#10b981", secondary: "#ecfdf5", accent: "#6ee7b7" },
+  { name: "Gül", primary: "#f43f5e", secondary: "#fff1f2", accent: "#fda4af" },
   { name: "Turuncu", primary: "#f97316", secondary: "#fff7ed", accent: "#fdba74" },
   { name: "Koyu", primary: "#1e293b", secondary: "#f8fafc", accent: "#64748b" },
 ];
@@ -89,7 +89,7 @@ export default function OnboardingPage() {
 
   const nextStep = () => {
     if (currentStep === 1 && !formData.name.trim()) {
-      toast.error("Restoran adi zorunludur");
+      toast.error("Restoran adı zorunludur");
       return;
     }
     setDirection(1);
@@ -107,7 +107,7 @@ export default function OnboardingPage() {
       if (!file) return;
 
       if (file.size > 5 * 1024 * 1024) {
-        toast.error("Dosya boyutu 5MB'dan kucuk olmali");
+        toast.error("Dosya boyutu 5MB'dan küçük olmalı");
         return;
       }
 
@@ -154,7 +154,6 @@ export default function OnboardingPage() {
         address: formData.address.trim() || undefined,
         website: formData.website.trim() || undefined,
         logo: logoUrl,
-        slug: "",
       });
 
       setDirection(1);
@@ -169,7 +168,7 @@ export default function OnboardingPage() {
         });
       }, 300);
     } catch {
-      toast.error("Restoran olusturulurken bir hata olustu");
+      toast.error("Restoran oluşturulurken bir hata oluştu");
     } finally {
       setIsUploading(false);
     }
@@ -224,7 +223,7 @@ export default function OnboardingPage() {
                 transition={{ delay: 0.3 }}
                 className="text-4xl font-bold tracking-tight"
               >
-                Hos geldin,{" "}
+                Hoş geldin,{" "}
                 <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                   {user?.name?.split(" ")[0] || ""}
                 </span>
@@ -236,8 +235,8 @@ export default function OnboardingPage() {
                 transition={{ delay: 0.4 }}
                 className="text-lg text-muted-foreground max-w-md mx-auto"
               >
-                Restoraninizi dijitale tasiyalim. Birlikte muhtesem bir dijital
-                menu deneyimi olusturalim.
+                Restoranınızı dijitale taşıyalım. Birlikte müthiş bir dijital
+                menü deneyimi oluşturalım.
               </motion.p>
             </div>
 
@@ -248,9 +247,9 @@ export default function OnboardingPage() {
               className="flex items-center justify-center gap-6 text-sm text-muted-foreground"
             >
               {[
-                "AI ile menu olustur",
-                "QR kod ile paylasim",
-                "Siparis takibi",
+                "AI ile menü oluştur",
+                "QR kod ile paylaşım",
+                "Sipariş takibi",
               ].map((feature, i) => (
                 <motion.div
                   key={feature}
@@ -289,11 +288,11 @@ export default function OnboardingPage() {
               <div className="space-y-2">
                 <Label htmlFor="name" className="flex items-center gap-2">
                   <Store className="w-4 h-4 text-primary" />
-                  Restoran Adi *
+                  Restoran Adı *
                 </Label>
                 <Input
                   id="name"
-                  placeholder="Ornegin: Lezzet Duragi"
+                  placeholder="Örneğin: Lezzet Durağı"
                   value={formData.name}
                   onChange={(e) => updateField("name", e.target.value)}
                   className="h-12"
@@ -301,10 +300,10 @@ export default function OnboardingPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Aciklama</Label>
+                <Label htmlFor="description">Açıklama</Label>
                 <Textarea
                   id="description"
-                  placeholder="Restoraninizi kisa bir cumleyle tanitin..."
+                  placeholder="Restoranınızı kısa bir cümleyle tanıtın..."
                   value={formData.description}
                   onChange={(e) => updateField("description", e.target.value)}
                   rows={3}
@@ -386,7 +385,7 @@ export default function OnboardingPage() {
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold">Restoran Logosu</h2>
               <p className="text-muted-foreground mt-1">
-                Logonuzu yukleyin veya sonra ekleyin
+                Logonuzu yükleyin veya sonra ekleyin
               </p>
             </div>
 
@@ -404,7 +403,7 @@ export default function OnboardingPage() {
                     <>
                       <Image
                         src={formData.logo}
-                        alt="Logo preview"
+                        alt="Logo önizleme"
                         fill
                         className="object-cover"
                       />
@@ -418,9 +417,9 @@ export default function OnboardingPage() {
                         <Upload className="w-8 h-8 text-primary" />
                       </div>
                       <div className="text-center">
-                        <p className="text-sm font-medium">Logo Yukle</p>
+                        <p className="text-sm font-medium">Logo Yükle</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          PNG, JPG - Max 5MB
+                          PNG, JPG - Maks. 5MB
                         </p>
                       </div>
                     </div>
@@ -450,13 +449,13 @@ export default function OnboardingPage() {
                     }}
                     className="text-destructive"
                   >
-                    Logoyu Kaldir
+                    Logoyu Kaldır
                   </Button>
                 </motion.div>
               )}
 
               <p className="text-center text-sm text-muted-foreground mt-6">
-                Logo yuklemek zorunlu degil. Daha sonra ayarlardan ekleyebilirsiniz.
+                Logo yüklemek zorunlu değil. Daha sonra ayarlardan ekleyebilirsiniz.
               </p>
             </div>
           </motion.div>
@@ -474,9 +473,9 @@ export default function OnboardingPage() {
             className="space-y-6"
           >
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold">Tema Secimi</h2>
+              <h2 className="text-2xl font-bold">Tema Seçimi</h2>
               <p className="text-muted-foreground mt-1">
-                Menunuz icin bir renk secin
+                Menünüz için bir renk seçin
               </p>
             </div>
 
@@ -527,7 +526,7 @@ export default function OnboardingPage() {
               })}
             </div>
 
-            {/* Live Preview Card */}
+            {/* Canlı Önizleme */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -535,7 +534,7 @@ export default function OnboardingPage() {
               className="max-w-sm mx-auto mt-8"
             >
               <p className="text-xs text-muted-foreground text-center mb-3">
-                Onizleme
+                Önizleme
               </p>
               <div
                 className="rounded-2xl border overflow-hidden shadow-lg"
@@ -546,7 +545,7 @@ export default function OnboardingPage() {
                   style={{ backgroundColor: formData.primaryColor }}
                 >
                   <span className="text-white font-semibold text-sm">
-                    {formData.name || "Restoran Adi"}
+                    {formData.name || "Restoran Adı"}
                   </span>
                 </div>
                 <div className="p-4 space-y-3">
@@ -621,7 +620,7 @@ export default function OnboardingPage() {
                 transition={{ delay: 0.3 }}
                 className="text-4xl font-bold tracking-tight"
               >
-                Harika, hazirsin!
+                Harika, hazırsın!
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -632,7 +631,7 @@ export default function OnboardingPage() {
                 <span className="font-semibold text-foreground">
                   {formData.name}
                 </span>{" "}
-                basariyla olusturuldu. Simdi menunuzu olusturmaya baslayabilirsiniz.
+                başarıyla oluşturuldu. Şimdi menünüzü oluşturmaya başlayabilirsiniz.
               </motion.p>
             </div>
 
@@ -648,7 +647,7 @@ export default function OnboardingPage() {
                 className="gap-2 min-w-[200px]"
               >
                 <Sparkles className="w-5 h-5" />
-                AI ile Menu Olustur
+                AI ile Menü Oluştur
               </Button>
               <Button
                 size="lg"
@@ -656,7 +655,7 @@ export default function OnboardingPage() {
                 onClick={() => router.push("/dashboard")}
                 className="gap-2 min-w-[200px]"
               >
-                Dashboard'a Git
+                Panele Git
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </motion.div>
@@ -672,10 +671,10 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col">
-      {/* Progress Bar */}
+      {/* İlerleme Çubuğu */}
       <div className="sticky top-16 z-20 bg-background/95 backdrop-blur border-b">
         <div className="container max-w-3xl mx-auto px-4 py-4">
-          {/* Step indicators */}
+          {/* Adım göstergeleri */}
           <div className="flex items-center justify-between mb-3">
             {STEPS.map((step, i) => {
               const Icon = step.icon;
@@ -726,7 +725,7 @@ export default function OnboardingPage() {
             })}
           </div>
 
-          {/* Progress bar */}
+          {/* İlerleme çubuğu */}
           <div className="h-1 bg-muted rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-primary rounded-full"
@@ -738,14 +737,14 @@ export default function OnboardingPage() {
         </div>
       </div>
 
-      {/* Content */}
+      {/* İçerik */}
       <div className="flex-1 container max-w-3xl mx-auto px-4 py-8">
         <AnimatePresence mode="wait" custom={direction}>
           {renderStep()}
         </AnimatePresence>
       </div>
 
-      {/* Footer Navigation */}
+      {/* Alt Navigasyon */}
       {currentStep < STEPS.length - 1 && (
         <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t">
           <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -773,11 +772,11 @@ export default function OnboardingPage() {
                 {isUploading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Olusturuluyor...
+                    Oluşturuluyor...
                   </>
                 ) : (
                   <>
-                    Restorani Olustur
+                    Restoranı Oluştur
                     <Sparkles className="w-4 h-4" />
                   </>
                 )}

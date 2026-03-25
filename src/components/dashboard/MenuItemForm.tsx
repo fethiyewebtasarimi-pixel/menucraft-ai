@@ -492,7 +492,7 @@ export function MenuItemForm({
                         <div className="space-y-4">
                           <img
                             src={imagePreview}
-                            alt="Preview"
+                            alt="Önizleme"
                             className="max-h-64 mx-auto rounded-lg"
                           />
                           <div className="flex items-center justify-center gap-2 flex-wrap">

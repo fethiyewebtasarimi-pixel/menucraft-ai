@@ -73,7 +73,6 @@ export const useUIStore = create<UIStore>()(
       partialize: (state) => ({
         theme: state.theme,
         locale: state.locale,
-        sidebarOpen: state.sidebarOpen,
       }),
       onRehydrateStorage: () => (state) => {
         // Apply theme on rehydration

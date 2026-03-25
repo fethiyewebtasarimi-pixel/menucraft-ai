@@ -21,7 +21,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   maxSize = 5,
   accept = "image/jpeg,image/png,image/webp,image/jpg",
   className = "",
-  label = "Upload Image",
+  label = "Görsel Yükle",
   aspectRatio = "16/9",
 }) => {
   const [preview, setPreview] = useState<string | undefined>(currentImage);
@@ -34,13 +34,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     // Check file type
     const acceptedTypes = accept.split(",").map((type) => type.trim());
     if (!acceptedTypes.some((type) => file.type.match(type))) {
-      return "Invalid file type. Please upload an image.";
+      return "Geçersiz dosya türü. Lütfen bir görsel yükleyin.";
     }
 
     // Check file size
     const maxSizeBytes = maxSize * 1024 * 1024;
     if (file.size > maxSizeBytes) {
-      return `File size must be less than ${maxSize}MB`;
+      return `Dosya boyutu ${maxSize}MB'dan küçük olmalıdır`;
     }
 
     return null;
@@ -71,7 +71,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         setPreview(uploadedUrl);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to upload image");
+      setError(err instanceof Error ? err.message : "Görsel yüklenirken hata oluştu");
       setPreview(currentImage);
     } finally {
       setIsUploading(false);
@@ -155,7 +155,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <>
               <Image
                 src={preview}
-                alt="Preview"
+                alt="Önizleme"
                 fill
                 className="object-cover"
               />
@@ -169,7 +169,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     handleClick();
                   }}
                   className="p-3 rounded-full bg-card text-foreground shadow-lg hover:bg-muted/50 transition-colors"
-                  aria-label="Change image"
+                  aria-label="Görseli değiştir"
                 >
                   <Upload className="w-5 h-5" />
                 </motion.button>
@@ -182,7 +182,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     handleRemove();
                   }}
                   className="p-3 rounded-full bg-red-500 text-white shadow-lg hover:bg-red-600 transition-colors"
-                  aria-label="Remove image"
+                  aria-label="Görseli kaldır"
                 >
                   <X className="w-5 h-5" />
                 </motion.button>
@@ -195,7 +195,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 <>
                   <Loader2 className="w-12 h-12 text-primary animate-spin mb-3" />
                   <p className="text-sm font-medium text-foreground/80 dark:text-foreground/80">
-                    Uploading...
+                    Yükleniyor...
                   </p>
                 </>
               ) : (
@@ -204,10 +204,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     <ImageIcon className="w-8 h-8 text-primary dark:text-primary" />
                   </div>
                   <p className="text-sm font-medium text-foreground/80 dark:text-foreground/80 mb-1">
-                    Click to upload or drag and drop
+                    Yüklemek için tıklayın veya sürükleyip bırakın
                   </p>
                   <p className="text-xs text-muted-foreground dark:text-muted-foreground">
-                    PNG, JPG, WEBP up to {maxSize}MB
+                    PNG, JPG, WEBP - Maks. {maxSize}MB
                   </p>
                 </>
               )}
@@ -251,7 +251,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
       {/* Help Text */}
       <p className="mt-2 text-xs text-muted-foreground dark:text-muted-foreground">
-        Recommended aspect ratio: {aspectRatio}. Maximum file size: {maxSize}MB
+        Önerilen en-boy oranı: {aspectRatio}. Maksimum dosya boyutu: {maxSize}MB
       </p>
     </div>
   );
