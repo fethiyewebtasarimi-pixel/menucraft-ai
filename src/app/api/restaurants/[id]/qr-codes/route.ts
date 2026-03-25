@@ -61,7 +61,23 @@ export async function GET(
       },
     });
 
-    return NextResponse.json(qrCodes);
+    // Generate QR code data URLs for each code
+    const qrCodesWithImages = await Promise.all(
+      qrCodes.map(async (qr) => {
+        const menuUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/menu/${restaurant.slug}?qr=${qr.code}`;
+        const qrDataUrl = await generateQRCodeDataURL(menuUrl, {
+          width: 400,
+          color: {
+            dark: qr.foregroundColor || "#000000",
+            light: qr.backgroundColor || "#FFFFFF",
+          },
+          errorCorrectionLevel: "H",
+        });
+        return { ...qr, qrDataUrl, menuUrl };
+      })
+    );
+
+    return NextResponse.json(qrCodesWithImages);
   } catch (error) {
     console.error("[QR_CODES_GET]", error);
     return NextResponse.json(
@@ -157,6 +173,7 @@ export async function POST(
         dark: validatedData.foregroundColor || "#000000",
         light: validatedData.backgroundColor || "#FFFFFF",
       },
+      errorCorrectionLevel: "H",
     });
 
     return NextResponse.json({ ...qrCode, qrDataUrl, menuUrl }, { status: 201 });
