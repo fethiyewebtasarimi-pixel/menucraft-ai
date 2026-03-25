@@ -3,6 +3,7 @@ import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { restaurantSchema } from "@/lib/validations/restaurant";
 import { slugify, generateOrderNumber } from "@/lib/utils";
+import { resolveEffectivePlan, getLimit } from "@/lib/feature-gate";
 
 /**
  * GET /api/restaurants
@@ -78,22 +79,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check plan limits
+    // Check plan limits using feature gate
+    const effectivePlan = resolveEffectivePlan(user.subscription);
+    const maxRestaurants = getLimit(effectivePlan, "maxRestaurants");
+
     const restaurantCount = await prisma.restaurant.count({
       where: { userId: session.user.id },
     });
 
-    const maxRestaurants = user.subscription?.plan === "ENTERPRISE"
-      ? 999
-      : user.subscription?.plan === "PROFESSIONAL"
-      ? 5
-      : user.subscription?.plan === "STARTER"
-      ? 1
-      : 1; // FREE plan
-
     if (restaurantCount >= maxRestaurants) {
       return NextResponse.json(
-        { error: `You have reached the maximum number of restaurants (${maxRestaurants}) for your plan` },
+        { error: `Planınızdaki maksimum restoran sayısına (${maxRestaurants}) ulaştınız` },
         { status: 403 }
       );
     }

@@ -62,13 +62,19 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create FREE subscription for new user
+    // Create subscription with 7-day PROFESSIONAL trial
+    const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await prisma.subscription.create({
       data: {
         userId: user.id,
         plan: "FREE",
-        status: "ACTIVE",
+        status: "TRIALING",
+        trialPlan: "PROFESSIONAL",
+        trialEndsAt: trialEnd,
         currentPeriodStart: new Date(),
+        currentPeriodEnd: trialEnd,
+        aiCredits: 200,
+        aiCreditsUsed: 0,
       },
     });
 

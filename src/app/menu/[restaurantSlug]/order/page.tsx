@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   ShoppingBag,
@@ -44,10 +44,36 @@ export default function OrderPage({
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [allowedOrderTypes, setAllowedOrderTypes] = useState<OrderType[]>(["DINE_IN", "TAKEAWAY", "DELIVERY"]);
 
   const currency = "₺";
   const accentColor = "#f59e0b";
   const TAX_RATE = 0.1; // 10% KDV
+
+  // Fetch allowed order types from public API
+  useEffect(() => {
+    async function fetchFeatures() {
+      try {
+        const res = await fetch(`/api/public/menu/${params.restaurantSlug}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.features) {
+            if (!data.features.orderingEnabled) {
+              router.push(`/menu/${params.restaurantSlug}`);
+              return;
+            }
+            if (data.features.allowedOrderTypes?.length > 0) {
+              setAllowedOrderTypes(data.features.allowedOrderTypes);
+              setOrderType(data.features.allowedOrderTypes[0]);
+            }
+          }
+        }
+      } catch {
+        // Silently fail, show all types as fallback
+      }
+    }
+    fetchFeatures();
+  }, [params.restaurantSlug, router]);
 
   // Map Zustand store items to display format
   const cartItems: CartItemDisplay[] = cartStore.items.map((item) => ({
@@ -194,8 +220,8 @@ export default function OrderPage({
                 <h2 className="text-xl font-bold mb-4 text-foreground dark:text-white">
                   Sipariş Tipi
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {orderTypes.map((type) => {
+                <div className={`grid grid-cols-1 ${allowedOrderTypes.length === 1 ? '' : allowedOrderTypes.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-3`}>
+                  {orderTypes.filter((t) => allowedOrderTypes.includes(t.type)).map((type) => {
                     const Icon = type.icon;
                     const isSelected = orderType === type.type;
                     return (

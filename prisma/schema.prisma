@@ -108,6 +108,7 @@ model Restaurant {
   branding     Branding?
   workingHours WorkingHour[]
   socialLinks  SocialLink[]
+  waiterCalls  WaiterCall[]
 
   @@index([userId])
 }
@@ -313,9 +314,10 @@ model Table {
   capacity     Int     @default(4)
   isActive     Boolean @default(true)
 
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  qrCodes    QRCode[]
-  orders     Order[]
+  restaurant  Restaurant   @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  qrCodes     QRCode[]
+  orders      Order[]
+  waiterCalls WaiterCall[]
 
   @@index([restaurantId])
 }
@@ -438,6 +440,8 @@ model Subscription {
   userId             String    @unique
   plan               PlanType  @default(FREE)
   status             SubStatus @default(ACTIVE)
+  trialPlan          PlanType?
+  trialEndsAt        DateTime?
   paytrMerchantOid   String?
   currentPeriodStart DateTime?
   currentPeriodEnd   DateTime?
@@ -567,4 +571,29 @@ enum NotificationType {
   NEW_REVIEW
   SYSTEM
   SUBSCRIPTION
+  WAITER_CALL
+}
+
+// ==================== WAITER CALL ====================
+
+model WaiterCall {
+  id             String            @id @default(cuid())
+  restaurantId   String
+  tableId        String
+  tableNumber    Int
+  status         WaiterCallStatus  @default(PENDING)
+  createdAt      DateTime          @default(now())
+  acknowledgedAt DateTime?
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  table      Table      @relation(fields: [tableId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+  @@index([tableId, createdAt])
+}
+
+enum WaiterCallStatus {
+  PENDING
+  ACKNOWLEDGED
+  DISMISSED
 }

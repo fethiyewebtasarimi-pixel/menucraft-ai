@@ -119,6 +119,8 @@ export type PlanLimits = {
   languages: number;
   customQR: boolean;
   ordering: boolean;
+  orderTypes: ("DINE_IN" | "TAKEAWAY" | "DELIVERY")[];
+  waiterCall: boolean;
   analytics: boolean;
   watermark: boolean;
 };
@@ -128,32 +130,38 @@ export const PLAN_LIMITS: Record<string, PlanLimits> = {
     maxRestaurants: 1,
     maxMenus: 1,
     maxItems: 20,
-    aiCredits: 5,
+    aiCredits: 3,
     languages: 1,
     customQR: false,
     ordering: false,
+    orderTypes: [],
+    waiterCall: false,
     analytics: false,
     watermark: true,
   },
   STARTER: {
     maxRestaurants: 1,
     maxMenus: 3,
-    maxItems: 999999,
+    maxItems: 100,
     aiCredits: 50,
     languages: 2,
     customQR: true,
     ordering: true,
+    orderTypes: ["DINE_IN"],
+    waiterCall: true,
     analytics: false,
     watermark: false,
   },
   PROFESSIONAL: {
-    maxRestaurants: 3,
+    maxRestaurants: 5,
     maxMenus: 999999,
     maxItems: 999999,
     aiCredits: 200,
     languages: 999999,
     customQR: true,
     ordering: true,
+    orderTypes: ["DINE_IN", "TAKEAWAY", "DELIVERY"],
+    waiterCall: true,
     analytics: true,
     watermark: false,
   },
@@ -165,6 +173,8 @@ export const PLAN_LIMITS: Record<string, PlanLimits> = {
     languages: 999999,
     customQR: true,
     ordering: true,
+    orderTypes: ["DINE_IN", "TAKEAWAY", "DELIVERY"],
+    waiterCall: true,
     analytics: true,
     watermark: false,
   },

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-type NotificationType = "NEW_ORDER" | "ORDER_STATUS" | "NEW_REVIEW" | "SYSTEM" | "SUBSCRIPTION";
+type NotificationType = "NEW_ORDER" | "ORDER_STATUS" | "NEW_REVIEW" | "SYSTEM" | "SUBSCRIPTION" | "WAITER_CALL";
 
 interface CreateNotificationInput {
   userId: string;
@@ -46,6 +46,26 @@ export async function notifyNewOrder(
     title: "Yeni Sipariş",
     message: `${restaurantName} için #${orderNumber} numaralı yeni sipariş alındı. Tutar: ₺${total.toFixed(2)}`,
     data: { orderNumber, restaurantName, total },
+  });
+}
+
+/**
+ * Create notification when a new review is posted
+ */
+/**
+ * Create notification when waiter is called
+ */
+export async function notifyWaiterCall(
+  userId: string,
+  restaurantName: string,
+  tableNumber: number
+) {
+  return createNotification({
+    userId,
+    type: "WAITER_CALL",
+    title: "Garson Çağrısı!",
+    message: `${restaurantName} - Masa ${tableNumber} garson çağırıyor!`,
+    data: { restaurantName, tableNumber, urgent: true },
   });
 }
 

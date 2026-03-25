@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { menuItemSchema } from "@/lib/validations/menu";
+import { resolveEffectivePlan, getLimit } from "@/lib/feature-gate";
 
 /**
  * GET /api/restaurants/[id]/items
@@ -127,27 +128,22 @@ export async function POST(
       );
     }
 
-    // Check plan limits
+    // Check plan limits using feature gate
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
       include: { subscription: true },
     });
 
+    const effectivePlan = resolveEffectivePlan(user?.subscription ?? null);
+    const maxItems = getLimit(effectivePlan, "maxItems");
+
     const menuItemsCount = await prisma.menuItem.count({
       where: { restaurantId: params.id },
     });
 
-    const maxItems = user?.subscription?.plan === "ENTERPRISE"
-      ? 999999
-      : user?.subscription?.plan === "PROFESSIONAL"
-      ? 500
-      : user?.subscription?.plan === "STARTER"
-      ? 100
-      : 20; // FREE plan
-
     if (menuItemsCount >= maxItems) {
       return NextResponse.json(
-        { error: `You have reached the maximum number of menu items (${maxItems}) for your plan` },
+        { error: `Planınızdaki maksimum yemek sayısına (${maxItems}) ulaştınız` },
         { status: 403 }
       );
     }

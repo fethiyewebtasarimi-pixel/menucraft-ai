@@ -8,6 +8,7 @@ import {
   Menu,
   Search,
   Bell,
+  BellRing,
   ChevronRight,
   ShoppingBag,
   MessageSquare,
@@ -50,6 +51,7 @@ const NOTIFICATION_ICONS: Record<string, typeof ShoppingBag> = {
   NEW_REVIEW: MessageSquare,
   SUBSCRIPTION: CreditCard,
   SYSTEM: Info,
+  WAITER_CALL: BellRing,
 };
 
 function timeAgo(dateStr: string): string {
@@ -78,8 +80,8 @@ export function Header() {
       if (!res.ok) return { notifications: [], unreadCount: 0 };
       return res.json();
     },
-    refetchInterval: 30000,
-    staleTime: 15000,
+    refetchInterval: 10000,
+    staleTime: 5000,
   });
 
   const notifications: Notification[] = notifData?.notifications || [];
@@ -249,6 +251,7 @@ export function Header() {
                         notif.type === 'NEW_REVIEW' && 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
                         notif.type === 'SYSTEM' && 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
                         notif.type === 'SUBSCRIPTION' && 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
+                        notif.type === 'WAITER_CALL' && 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 animate-pulse',
                       )}>
                         <Icon className="h-4 w-4" />
                       </div>

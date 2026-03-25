@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { checkAndExpireTrial } from "@/lib/trial";
 import { z } from "zod";
 
 /**
@@ -17,6 +18,9 @@ export async function GET() {
         { status: 401 }
       );
     }
+
+    // Check and expire trial if needed (lazy evaluation)
+    await checkAndExpireTrial(session.user.id);
 
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Search, Star, MapPin, Phone, Mail, ChevronUp, Loader2, Filter, X } from "lucide-react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Search, Star, MapPin, Phone, Mail, ChevronUp, Loader2, Filter, X, BellRing } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import MenuHeader from "@/components/menu/MenuHeader";
@@ -77,6 +78,17 @@ interface Restaurant {
   subscription?: {
     plan: string;
   };
+  features?: {
+    orderingEnabled: boolean;
+    allowedOrderTypes: string[];
+    waiterCallEnabled: boolean;
+    watermark: boolean;
+  };
+  table?: {
+    id: string;
+    number: number;
+    name: string | null;
+  } | null;
 }
 
 interface CartItem {
@@ -110,6 +122,10 @@ export default function MenuPage({
     rating: 5,
     comment: "",
   });
+  const [waiterCallCooldown, setWaiterCallCooldown] = useState(false);
+
+  const searchParams = useSearchParams();
+  const qrCode = searchParams.get("qr");
 
   // Zustand cart store
   const cartStore = useCartStore();
@@ -144,13 +160,16 @@ export default function MenuPage({
   const fetchMenuData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/public/menu/${params.restaurantSlug}`
-      );
+      const url = qrCode
+        ? `/api/public/menu/${params.restaurantSlug}?qr=${qrCode}`
+        : `/api/public/menu/${params.restaurantSlug}`;
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
-        setRestaurant(data.restaurant);
-        setCategories(data.categories);
+        // API returns flat structure with features and table info
+        const { features, table, categories: cats, ...restData } = data;
+        setRestaurant({ ...restData, features, table } as Restaurant);
+        setCategories(cats || data.categories || []);
       }
     } catch (error) {
       console.error("Failed to fetch menu data:", error);
@@ -158,6 +177,37 @@ export default function MenuPage({
       setLoading(false);
     }
   };
+
+  const handleCallWaiter = useCallback(async () => {
+    if (!restaurant?.table?.id || waiterCallCooldown) return;
+
+    try {
+      const res = await fetch(
+        `/api/public/menu/${params.restaurantSlug}/waiter-call`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tableId: restaurant.table.id }),
+        }
+      );
+
+      if (res.status === 429) {
+        toast.error("Lütfen 2 dakika bekleyin");
+        return;
+      }
+
+      if (!res.ok) {
+        toast.error("Garson çağrılamadı");
+        return;
+      }
+
+      toast.success("Garson çağrıldı! Birazdan masanıza gelecek.");
+      setWaiterCallCooldown(true);
+      setTimeout(() => setWaiterCallCooldown(false), 120000); // 2 min cooldown
+    } catch {
+      toast.error("Bir hata oluştu");
+    }
+  }, [restaurant?.table?.id, waiterCallCooldown, params.restaurantSlug]);
 
   const scrollToCategory = (categoryId: string | null) => {
     setActiveCategory(categoryId);
@@ -649,16 +699,41 @@ export default function MenuPage({
         accentColor={accentColor}
       />
 
-      {/* Cart */}
-      <Cart
-        items={cartItems}
-        currency="₺"
-        accentColor={accentColor}
-        restaurantSlug={params.restaurantSlug}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveItem={handleRemoveItem}
-        onClearCart={handleClearCart}
-      />
+      {/* Cart - only show if ordering is enabled */}
+      {restaurant?.features?.orderingEnabled && (
+        <Cart
+          items={cartItems}
+          currency="₺"
+          accentColor={accentColor}
+          restaurantSlug={params.restaurantSlug}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={handleRemoveItem}
+          onClearCart={handleClearCart}
+        />
+      )}
+
+      {/* Garson Çağır Button */}
+      {restaurant?.features?.waiterCallEnabled && restaurant?.table && (
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleCallWaiter}
+          disabled={waiterCallCooldown}
+          className={`fixed bottom-6 left-6 z-40 flex items-center gap-2 px-4 py-3 rounded-full shadow-2xl font-medium text-sm transition-colors ${
+            waiterCallCooldown
+              ? "bg-gray-400 text-white cursor-not-allowed"
+              : "bg-red-500 hover:bg-red-600 text-white"
+          }`}
+          aria-label="Garson çağır"
+        >
+          <BellRing className="w-5 h-5" />
+          <span className="hidden sm:inline">
+            {waiterCallCooldown ? "Garson Çağrıldı" : "Garson Çağır"}
+          </span>
+        </motion.button>
+      )}
 
       {/* Scroll to Top */}
       <AnimatePresence>
@@ -671,7 +746,7 @@ export default function MenuPage({
             whileTap={{ scale: 0.9 }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="fixed bottom-24 left-6 z-40 p-3 rounded-full shadow-2xl bg-gray-900 dark:bg-white text-white dark:text-gray-900"
-            aria-label="Scroll to top"
+            aria-label="Sayfanın başına git"
           >
             <ChevronUp className="w-6 h-6" />
           </motion.button>

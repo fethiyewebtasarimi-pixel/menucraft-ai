@@ -108,13 +108,20 @@ const nextAuth = NextAuth({
             include: { subscription: true },
           });
 
-          // Create FREE subscription for new OAuth users
+          // Create trial subscription for new OAuth users
           if (existingUser && !existingUser.subscription) {
+            const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
             await prisma.subscription.create({
               data: {
                 userId: existingUser.id,
                 plan: "FREE",
-                status: "ACTIVE",
+                status: "TRIALING",
+                trialPlan: "PROFESSIONAL",
+                trialEndsAt: trialEnd,
+                currentPeriodStart: new Date(),
+                currentPeriodEnd: trialEnd,
+                aiCredits: 200,
+                aiCreditsUsed: 0,
               },
             });
           }
@@ -148,13 +155,20 @@ const nextAuth = NextAuth({
   },
   events: {
     async createUser({ user }) {
-      // Create FREE subscription for new users
+      // Create trial subscription for new users
       try {
+        const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
         await prisma.subscription.create({
           data: {
             userId: user.id!,
             plan: "FREE",
-            status: "ACTIVE",
+            status: "TRIALING",
+            trialPlan: "PROFESSIONAL",
+            trialEndsAt: trialEnd,
+            currentPeriodStart: new Date(),
+            currentPeriodEnd: trialEnd,
+            aiCredits: 200,
+            aiCreditsUsed: 0,
           },
         });
       } catch (error) {

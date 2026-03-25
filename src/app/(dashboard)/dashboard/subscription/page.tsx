@@ -31,6 +31,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useUserProfile } from '@/hooks/useSubscription';
 import { PLANS } from '@/constants';
+import { Clock, Trophy } from 'lucide-react';
 
 const container = {
   hidden: { opacity: 0 },
@@ -65,10 +66,16 @@ export default function SubscriptionPage() {
   const { data: profile, isLoading } = useUserProfile();
 
   const subscription = profile?.subscription;
+  const isTrialing = subscription?.status === 'TRIALING' && subscription?.trialPlan;
+  const effectivePlan = isTrialing ? (subscription?.trialPlan || 'FREE') : (subscription?.plan || 'FREE');
   const currentPlan = subscription?.plan || 'FREE';
   const aiCreditsUsed = subscription?.aiCreditsUsed || 0;
   const aiCreditsTotal = subscription?.aiCredits || 25;
   const creditsPercentage = aiCreditsTotal > 0 ? (aiCreditsUsed / aiCreditsTotal) * 100 : 0;
+
+  const trialDaysRemaining = isTrialing && subscription?.trialEndsAt
+    ? Math.max(0, Math.ceil((new Date(subscription.trialEndsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null;
 
   const statusLabels: Record<string, string> = {
     ACTIVE: 'Aktif',
@@ -77,6 +84,7 @@ export default function SubscriptionPage() {
     TRIALING: 'Deneme',
   };
 
+  const effectivePlanData = PLANS.find((p) => p.slug === effectivePlan);
   const currentPlanData = PLANS.find((p) => p.slug === currentPlan);
 
   if (isLoading) {
@@ -101,6 +109,44 @@ export default function SubscriptionPage() {
         </p>
       </motion.div>
 
+      {/* Trial Banner */}
+      {isTrialing && trialDaysRemaining !== null && (
+        <motion.div variants={item}>
+          <Alert className={cn(
+            'border-2',
+            trialDaysRemaining <= 1
+              ? 'border-red-500 bg-red-50 dark:bg-red-950/20'
+              : 'border-violet-500 bg-violet-50 dark:bg-violet-950/20'
+          )}>
+            <Trophy className={cn('h-5 w-5', trialDaysRemaining <= 1 ? 'text-red-600' : 'text-violet-600')} />
+            <AlertTitle className="text-base font-semibold">
+              Professional Deneme Sürümü
+            </AlertTitle>
+            <AlertDescription className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <Clock className={cn('h-4 w-4', trialDaysRemaining <= 1 ? 'text-red-500' : 'text-violet-500')} />
+                <span className="text-sm">
+                  {trialDaysRemaining === 0
+                    ? 'Deneme süreniz bugün sona eriyor!'
+                    : `Kalan süre: ${trialDaysRemaining} gün`}
+                </span>
+              </div>
+              <Button
+                size="sm"
+                className={cn(
+                  'w-full sm:w-auto',
+                  trialDaysRemaining <= 1
+                    ? 'bg-red-600 hover:bg-red-700'
+                    : 'bg-violet-600 hover:bg-violet-700'
+                )}
+              >
+                Planı Yükselt
+              </Button>
+            </AlertDescription>
+          </Alert>
+        </motion.div>
+      )}
+
       {/* Current Plan */}
       <motion.div variants={item}>
         <Card className="border-2 border-primary/50 bg-gradient-to-br from-primary/5 to-primary/5">
@@ -109,18 +155,30 @@ export default function SubscriptionPage() {
               <div>
                 <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                   {(() => {
-                    const Icon = planIcons[currentPlan] || Sparkles;
+                    const Icon = planIcons[effectivePlan as string] || Sparkles;
                     return <Icon className="h-5 w-5 text-primary flex-shrink-0" />;
                   })()}
-                  Mevcut Planınız: {currentPlanData?.name || currentPlan}
+                  Mevcut Planınız: {effectivePlanData?.name || effectivePlan}
+                  {isTrialing && (
+                    <Badge variant="outline" className="ml-2 border-violet-500 text-violet-600">
+                      Deneme
+                    </Badge>
+                  )}
                 </CardTitle>
                 <CardDescription className="text-xs sm:text-sm">
-                  {subscription?.currentPeriodEnd
+                  {isTrialing
+                    ? `Deneme süresi: ${subscription?.trialEndsAt ? new Date(subscription.trialEndsAt).toLocaleDateString('tr-TR') : ''} tarihine kadar`
+                    : subscription?.currentPeriodEnd
                     ? `Sonraki ödeme: ${new Date(subscription.currentPeriodEnd).toLocaleDateString('tr-TR')}`
                     : 'Ücretsiz plan'}
                 </CardDescription>
               </div>
-              <Badge className="bg-gradient-to-r from-primary to-primary/80 w-fit">
+              <Badge className={cn(
+                'w-fit',
+                isTrialing
+                  ? 'bg-gradient-to-r from-violet-500 to-purple-600'
+                  : 'bg-gradient-to-r from-primary to-primary/80'
+              )}>
                 {statusLabels[subscription?.status || 'ACTIVE']}
               </Badge>
             </div>

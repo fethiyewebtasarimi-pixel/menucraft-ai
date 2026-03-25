@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { Header } from '@/components/dashboard/Header';
+import { TrialBanner } from '@/components/dashboard/TrialBanner';
 import { useUIStore } from '@/stores/uiStore';
 import { useAuth } from '@/hooks/useAuth';
 import { useRestaurants } from '@/hooks/useRestaurant';
@@ -69,6 +70,7 @@ export default function DashboardLayout({
       >
         {/* Header */}
         <Header />
+        <TrialBanner />
 
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto bg-background">

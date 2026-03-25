@@ -4,6 +4,7 @@ import { createOrderSchema } from "@/lib/validations/order";
 import { generateOrderNumber } from "@/lib/utils";
 import { publicLimiter, getClientIp } from "@/lib/rate-limit";
 import { notifyNewOrder } from "@/lib/notifications";
+import { resolveEffectivePlan, hasFeature, isOrderTypeAllowed } from "@/lib/feature-gate";
 
 /**
  * POST /api/public/menu/[restaurantSlug]/order
@@ -34,8 +35,31 @@ export async function POST(
       );
     }
 
+    // Check restaurant owner's plan for ordering feature
+    const owner = await prisma.user.findUnique({
+      where: { id: restaurant.userId },
+      include: { subscription: true },
+    });
+
+    const effectivePlan = resolveEffectivePlan(owner?.subscription ?? null);
+
+    if (!hasFeature(effectivePlan, "ordering")) {
+      return NextResponse.json(
+        { error: "Bu restoran için online sipariş aktif değil" },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const validatedData = createOrderSchema.parse(body);
+
+    // Check if the specific order type is allowed for this plan
+    if (!isOrderTypeAllowed(effectivePlan, validatedData.type)) {
+      return NextResponse.json(
+        { error: "Bu sipariş tipi mevcut planda desteklenmiyor" },
+        { status: 403 }
+      );
+    }
 
     // Validate all menu items exist and calculate totals
     const menuItemIds = validatedData.items.map((item) => item.menuItemId);
