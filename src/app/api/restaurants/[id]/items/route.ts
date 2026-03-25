@@ -168,8 +168,9 @@ export async function POST(
     console.error("[MENU_ITEMS_POST]", error);
 
     if (error instanceof Error && error.name === "ZodError") {
+      console.error("[MENU_ITEMS_POST] Validation details:", JSON.stringify(error, null, 2));
       return NextResponse.json(
-        { error: "Invalid input data", details: error },
+        { error: "Geçersiz veri", details: (error as any).issues || error },
         { status: 400 }
       );
     }

@@ -9,26 +9,36 @@ export const categorySchema = z.object({
   isActive: z.boolean().default(true),
 });
 
+// Transform: convert 0 or empty to null/undefined for optional number fields
+const optionalPositiveNumber = z.coerce.number().optional().nullable()
+  .transform(val => (val === 0 || val === null || val === undefined) ? undefined : val);
+
+// Tags can arrive as comma-separated string or array
+const tagsField = z.union([
+  z.array(z.string().max(100)),
+  z.string().transform(val => val ? val.split(",").map(s => s.trim()).filter(Boolean) : []),
+]).default([]);
+
 export const menuItemSchema = z.object({
   categoryId: z.string().min(1, "Kategori seçimi gereklidir"),
   name: z.string().min(1, "Yemek adı gereklidir").max(200, "Yemek adı en fazla 200 karakter olabilir"),
   nameTranslations: z.record(z.string(), z.string()).optional(),
   description: z.string().max(2000, "Açıklama en fazla 2000 karakter olabilir").optional(),
   descriptionTranslations: z.record(z.string(), z.string()).optional(),
-  price: z.number().positive("Fiyat pozitif olmalıdır"),
-  discountPrice: z.number().positive().optional().nullable(),
+  price: z.coerce.number().nonnegative("Fiyat 0'dan küçük olamaz"),
+  discountPrice: optionalPositiveNumber,
   image: z.string().max(500).optional(),
-  calories: z.number().int().positive().optional().nullable(),
-  protein: z.number().positive().optional().nullable(),
-  carbs: z.number().positive().optional().nullable(),
-  fat: z.number().positive().optional().nullable(),
-  fiber: z.number().positive().optional().nullable(),
-  sugar: z.number().positive().optional().nullable(),
-  sodium: z.number().positive().optional().nullable(),
+  calories: optionalPositiveNumber,
+  protein: optionalPositiveNumber,
+  carbs: optionalPositiveNumber,
+  fat: optionalPositiveNumber,
+  fiber: optionalPositiveNumber,
+  sugar: optionalPositiveNumber,
+  sodium: optionalPositiveNumber,
   servingSize: z.string().max(200).optional().nullable(),
   ingredients: z.array(z.string().max(200)).default([]),
   nutritionVerified: z.boolean().default(false),
-  prepTime: z.number().int().positive().optional().nullable(),
+  prepTime: optionalPositiveNumber,
   isVegan: z.boolean().default(false),
   isVegetarian: z.boolean().default(false),
   isGlutenFree: z.boolean().default(false),
@@ -37,7 +47,7 @@ export const menuItemSchema = z.object({
   isNew: z.boolean().default(false),
   isChefRecommended: z.boolean().default(false),
   allergens: z.array(z.string().max(100)).default([]),
-  tags: z.array(z.string().max(100)).default([]),
+  tags: tagsField,
   sortOrder: z.number().int().default(0),
   isActive: z.boolean().default(true),
   isAvailable: z.boolean().default(true),

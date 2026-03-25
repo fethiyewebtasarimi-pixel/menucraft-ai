@@ -211,7 +211,8 @@ export function MenuItemForm({
       });
 
       if (!response.ok) {
-        throw new Error("Menü öğesi kaydedilemedi");
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || "Menü öğesi kaydedilemedi");
       }
 
       return response.json();
@@ -222,8 +223,8 @@ export function MenuItemForm({
       );
       onSuccess();
     },
-    onError: () => {
-      toast.error("Bir hata oluştu. Lütfen tekrar deneyin.");
+    onError: (error: Error) => {
+      toast.error(error.message || "Bir hata oluştu. Lütfen tekrar deneyin.");
     },
   });
 
