@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     if (!user) {
       return NextResponse.json({
         success: true,
-        message: "If an account exists with this email, a reset link has been sent.",
+        message: "Bu e-posta adresine kayıtlı bir hesap varsa, sıfırlama bağlantısı gönderildi.",
       });
     }
 
@@ -58,17 +58,17 @@ export async function POST(req: NextRequest) {
     // Send reset email
     await sendEmail({
       to: email,
-      subject: "Sifre Sifirlama Talebi",
+      subject: "Şifre Sıfırlama Talebi",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Sifre Sifirlama</h2>
+          <h2>Şifre Sıfırlama</h2>
           <p>Merhaba ${user.name},</p>
-          <p>Sifrenizi sifirlamak icin asagidaki linke tiklayin:</p>
-          <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #f59e0b; color: white; text-decoration: none; border-radius: 8px; margin: 16px 0;">
-            Sifremi Sifirla
+          <p>Şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayın:</p>
+          <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background-color: #8b5cf6; color: white; text-decoration: none; border-radius: 8px; margin: 16px 0;">
+            Şifremi Sıfırla
           </a>
-          <p>Bu link 1 saat icinde gecerliligini yitirecektir.</p>
-          <p>Eger bu islemi siz yapmadiyseniz, bu e-postayi gormezden gelebilirsiniz.</p>
+          <p>Bu bağlantı 1 saat içinde geçerliliğini yitirecektir.</p>
+          <p>Eğer bu işlemi siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.</p>
           <hr />
           <p style="font-size: 12px; color: #666;">MenuCraft AI</p>
         </div>
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "If an account exists with this email, a reset link has been sent.",
+      message: "Bu e-posta adresine kayıtlı bir hesap varsa, sıfırlama bağlantısı gönderildi.",
     });
   } catch (error) {
     console.error("[FORGOT_PASSWORD]", error);

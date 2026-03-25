@@ -28,7 +28,7 @@ export default function AdminLayout({
       <div className="flex h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-red-600 border-t-transparent" />
-          <p className="text-sm text-muted-foreground">Admin paneli yukleniyor...</p>
+          <p className="text-sm text-muted-foreground">Admin paneli yükleniyor...</p>
         </div>
       </div>
     );

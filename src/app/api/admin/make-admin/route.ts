@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
     if (existingAdmin) {
       return NextResponse.json(
-        { error: "Admin kullanici zaten mevcut. Bu endpoint sadece ilk admin olusturmak icindir." },
+        { error: "Admin kullanıcı zaten mevcut. Bu endpoint sadece ilk admin oluşturmak içindir." },
         { status: 403 }
       );
     }

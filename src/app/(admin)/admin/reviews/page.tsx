@@ -45,10 +45,10 @@ export default function AdminReviewsPage() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <MessageSquare className="h-8 w-8 text-red-600" />
-          Yorum Yonetimi
+          Yorum Yönetimi
         </h1>
         <p className="text-muted-foreground mt-1">
-          Tum platform yorumlarini goruntuleyip yonet
+          Tüm platform yorumlarını görüntüleyip yönet
           {data?.averageRating ? ` - Ortalama: ${Number(data.averageRating).toFixed(1)}/5` : ''}
         </p>
       </div>
@@ -62,12 +62,12 @@ export default function AdminReviewsPage() {
                 <SelectValue placeholder="Puan" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tum Puanlar</SelectItem>
-                <SelectItem value="5">5 Yildiz</SelectItem>
-                <SelectItem value="4">4 Yildiz</SelectItem>
-                <SelectItem value="3">3 Yildiz</SelectItem>
-                <SelectItem value="2">2 Yildiz</SelectItem>
-                <SelectItem value="1">1 Yildiz</SelectItem>
+                <SelectItem value="all">Tüm Puanlar</SelectItem>
+                <SelectItem value="5">5 Yıldız</SelectItem>
+                <SelectItem value="4">4 Yıldız</SelectItem>
+                <SelectItem value="3">3 Yıldız</SelectItem>
+                <SelectItem value="2">2 Yıldız</SelectItem>
+                <SelectItem value="1">1 Yıldız</SelectItem>
               </SelectContent>
             </Select>
             <Select value={publishedFilter} onValueChange={(v) => { setPublishedFilter(v === 'all' ? '' : v); setPage(1); }}>
@@ -75,8 +75,8 @@ export default function AdminReviewsPage() {
                 <SelectValue placeholder="Durum" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tumunu Goster</SelectItem>
-                <SelectItem value="true">Yayinlanmis</SelectItem>
+                <SelectItem value="all">Tümünü Göster</SelectItem>
+                <SelectItem value="true">Yayınlanmış</SelectItem>
                 <SelectItem value="false">Gizli</SelectItem>
               </SelectContent>
             </Select>
@@ -131,7 +131,7 @@ export default function AdminReviewsPage() {
           {data?.reviews?.length === 0 && (
             <Card>
               <CardContent className="p-8 text-center text-muted-foreground">
-                Yorum bulunamadi
+                Yorum bulunamadı
               </CardContent>
             </Card>
           )}

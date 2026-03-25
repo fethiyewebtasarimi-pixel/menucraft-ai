@@ -72,7 +72,7 @@ export async function GET(
           new Date(o.createdAt).toLocaleDateString("tr-TR"),
         ]);
         csv = toCSV(headers, rows);
-        filename = `siparisler_${new Date().toISOString().slice(0, 10)}.csv`;
+        filename = `siparişler_${new Date().toISOString().slice(0, 10)}.csv`;
         break;
       }
 

@@ -116,7 +116,7 @@ export default function AdminRestaurantsPage() {
                 <SelectValue placeholder="Durum" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tum Durumlar</SelectItem>
+                <SelectItem value="all">Tüm Durumlar</SelectItem>
                 <SelectItem value="active">Aktif</SelectItem>
                 <SelectItem value="inactive">Pasif</SelectItem>
               </SelectContent>
@@ -152,7 +152,7 @@ export default function AdminRestaurantsPage() {
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        /{restaurant.slug as string} - {(restaurant.city as string) || 'Sehir belirtilmemis'}
+                        /{restaurant.slug as string} - {(restaurant.city as string) || 'Şehir belirtilmemiş'}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
                         Sahip: {(restaurant.user as Record<string, string>)?.name} ({(restaurant.user as Record<string, string>)?.email})
@@ -161,11 +161,11 @@ export default function AdminRestaurantsPage() {
                       <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <UtensilsCrossed className="h-3 w-3" />
-                          {(restaurant._count as Record<string, number>)?.menuItems || 0} urun
+                          {(restaurant._count as Record<string, number>)?.menuItems || 0} ürün
                         </span>
                         <span className="flex items-center gap-1">
                           <ShoppingBag className="h-3 w-3" />
-                          {(restaurant._count as Record<string, number>)?.orders || 0} siparis
+                          {(restaurant._count as Record<string, number>)?.orders || 0} sipariş
                         </span>
                         <span className="flex items-center gap-1">
                           <Star className="h-3 w-3" />
@@ -180,7 +180,7 @@ export default function AdminRestaurantsPage() {
                           {(restaurant._count as Record<string, number>)?.qrCodes || 0} QR
                         </span>
                         <span>
-                          Olusturulma: {new Date(restaurant.createdAt as string).toLocaleDateString('tr-TR')}
+                          Oluşturulma: {new Date(restaurant.createdAt as string).toLocaleDateString('tr-TR')}
                         </span>
                       </div>
                     </div>
@@ -195,7 +195,7 @@ export default function AdminRestaurantsPage() {
                         <DropdownMenuItem asChild>
                           <a href={`/menu/${restaurant.slug}`} target="_blank" rel="noopener">
                             <ExternalLink className="h-4 w-4 mr-2" />
-                            Menuyu Gor
+                            Menüyü Gör
                           </a>
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleToggle(restaurant.id as string, restaurant.isActive as boolean)}>
@@ -253,7 +253,7 @@ export default function AdminRestaurantsPage() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteId(null)}>Iptal</Button>
+            <Button variant="outline" onClick={() => setDeleteId(null)}>İptal</Button>
             <Button variant="destructive" onClick={handleDelete} disabled={deleteRestaurant.isPending}>
               {deleteRestaurant.isPending ? 'Siliniyor...' : 'Evet, Sil'}
             </Button>
