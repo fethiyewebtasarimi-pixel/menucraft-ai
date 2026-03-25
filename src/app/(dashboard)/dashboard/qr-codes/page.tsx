@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -13,6 +13,7 @@ import {
   Printer,
   ExternalLink,
   Palette,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -80,6 +81,50 @@ interface Table {
   name?: string;
 }
 
+// QR Style definitions with qr-code-styling options
+const QR_STYLES = [
+  {
+    id: "CLASSIC",
+    name: "Klasik",
+    description: "Standart kare modüller",
+    dotsType: "square" as const,
+    cornersSquareType: "square" as const,
+    cornersDotType: "square" as const,
+  },
+  {
+    id: "ROUNDED",
+    name: "Yuvarlak",
+    description: "Yumuşak yuvarlak köşeler",
+    dotsType: "rounded" as const,
+    cornersSquareType: "extra-rounded" as const,
+    cornersDotType: "dot" as const,
+  },
+  {
+    id: "DOTS",
+    name: "Nokta",
+    description: "Dairesel nokta deseni",
+    dotsType: "dots" as const,
+    cornersSquareType: "dot" as const,
+    cornersDotType: "dot" as const,
+  },
+  {
+    id: "MODERN",
+    name: "Modern",
+    description: "Şık modern tasarım",
+    dotsType: "classy-rounded" as const,
+    cornersSquareType: "extra-rounded" as const,
+    cornersDotType: "dot" as const,
+  },
+  {
+    id: "BRANDED",
+    name: "Zarif",
+    description: "Profesyonel kurumsal stil",
+    dotsType: "classy" as const,
+    cornersSquareType: "square" as const,
+    cornersDotType: "square" as const,
+  },
+];
+
 // Pre-defined color themes for QR codes
 const COLOR_PRESETS = [
   { name: "Klasik", fg: "#000000", bg: "#FFFFFF", accent: "#000000" },
@@ -92,15 +137,210 @@ const COLOR_PRESETS = [
   { name: "Zarif", fg: "#292524", bg: "#fafaf9", accent: "#78716c" },
 ];
 
+/**
+ * Generate a styled QR code using qr-code-styling
+ * Returns a data URL (PNG)
+ */
+async function generateStyledQR(
+  url: string,
+  opts: {
+    fg: string;
+    bg: string;
+    style: (typeof QR_STYLES)[number];
+    width?: number;
+  }
+): Promise<string> {
+  const { default: QRCodeStyling } = await import("qr-code-styling");
+  const qr = new QRCodeStyling({
+    width: opts.width || 400,
+    height: opts.width || 400,
+    data: url,
+    margin: 12,
+    qrOptions: {
+      errorCorrectionLevel: "H",
+    },
+    dotsOptions: {
+      type: opts.style.dotsType,
+      color: opts.fg,
+    },
+    cornersSquareOptions: {
+      type: opts.style.cornersSquareType,
+      color: opts.fg,
+    },
+    cornersDotOptions: {
+      type: opts.style.cornersDotType,
+      color: opts.fg,
+    },
+    backgroundOptions: {
+      color: opts.bg,
+    },
+    imageOptions: {
+      crossOrigin: "anonymous",
+      margin: 8,
+    },
+  });
+
+  const rawData = await qr.getRawData("png");
+  if (!rawData) throw new Error("QR generation failed");
+  // qr-code-styling returns Blob in browser, Buffer in Node
+  const blob: Blob = rawData instanceof Blob
+    ? rawData
+    : new Blob([new Uint8Array(rawData as unknown as ArrayBuffer)], { type: "image/png" });
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
+ * Live QR Preview component that renders in real-time
+ */
+function QRPreview({
+  fg,
+  bg,
+  style,
+  containerRef,
+}: {
+  fg: string;
+  bg: string;
+  style: (typeof QR_STYLES)[number];
+  containerRef?: React.RefObject<HTMLDivElement | null>;
+}) {
+  const innerRef = useRef<HTMLDivElement>(null);
+  const qrRef = useRef<InstanceType<typeof import("qr-code-styling").default> | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function render() {
+      const container = containerRef?.current || innerRef.current;
+      if (!container) return;
+
+      const { default: QRCodeStyling } = await import("qr-code-styling");
+
+      if (cancelled) return;
+
+      // Clear previous
+      container.innerHTML = "";
+
+      const qr = new QRCodeStyling({
+        width: 200,
+        height: 200,
+        data: "https://menucraft.ai/preview",
+        margin: 8,
+        qrOptions: {
+          errorCorrectionLevel: "H",
+        },
+        dotsOptions: {
+          type: style.dotsType,
+          color: fg,
+        },
+        cornersSquareOptions: {
+          type: style.cornersSquareType,
+          color: fg,
+        },
+        cornersDotOptions: {
+          type: style.cornersDotType,
+          color: fg,
+        },
+        backgroundOptions: {
+          color: bg,
+        },
+      });
+
+      qrRef.current = qr;
+      qr.append(container);
+    }
+
+    render();
+    return () => { cancelled = true; };
+  }, [fg, bg, style, containerRef]);
+
+  if (containerRef) return null;
+  return <div ref={innerRef} className="flex items-center justify-center" />;
+}
+
+/**
+ * Mini QR preview for style selector thumbnails
+ */
+function MiniQRPreview({
+  style,
+  fg,
+  bg,
+  isSelected,
+}: {
+  style: (typeof QR_STYLES)[number];
+  fg: string;
+  bg: string;
+  isSelected: boolean;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function render() {
+      const container = containerRef.current;
+      if (!container) return;
+
+      const { default: QRCodeStyling } = await import("qr-code-styling");
+
+      if (cancelled) return;
+
+      container.innerHTML = "";
+
+      const qr = new QRCodeStyling({
+        width: 56,
+        height: 56,
+        data: "DEMO",
+        margin: 3,
+        qrOptions: { errorCorrectionLevel: "L" },
+        dotsOptions: { type: style.dotsType, color: fg },
+        cornersSquareOptions: { type: style.cornersSquareType, color: fg },
+        cornersDotOptions: { type: style.cornersDotType, color: fg },
+        backgroundOptions: { color: bg },
+      });
+
+      qr.append(container);
+    }
+
+    render();
+    return () => { cancelled = true; };
+  }, [style, fg, bg]);
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center gap-1.5 p-2 rounded-xl border-2 cursor-pointer transition-all hover:scale-105",
+        isSelected
+          ? "border-primary shadow-lg bg-primary/5"
+          : "border-border hover:border-primary/30"
+      )}
+    >
+      <div
+        ref={containerRef}
+        className="w-14 h-14 rounded-lg overflow-hidden flex items-center justify-center"
+        style={{ backgroundColor: bg }}
+      />
+      <span className="text-[10px] font-semibold text-muted-foreground leading-tight">
+        {style.name}
+      </span>
+    </div>
+  );
+}
+
 export default function QRCodesPage() {
   const queryClient = useQueryClient();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [deleteQRId, setDeleteQRId] = useState<string | null>(null);
   const [selectedTable, setSelectedTable] = useState<string>("");
   const [selectedPreset, setSelectedPreset] = useState(0);
+  const [selectedStyleIndex, setSelectedStyleIndex] = useState(1); // default: Yuvarlak
   const [foregroundColor, setForegroundColor] = useState("#000000");
   const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
-  const printRef = useRef<HTMLDivElement>(null);
+  const previewContainerRef = useRef<HTMLDivElement>(null);
 
   const { data: restaurants } = useRestaurants();
   const restaurant = restaurants?.[0];
@@ -129,6 +369,7 @@ export default function QRCodesPage() {
   const createQRMutation = useMutation({
     mutationFn: async (data: {
       tableId?: string;
+      style: string;
       foregroundColor: string;
       backgroundColor: string;
     }) => {
@@ -137,7 +378,7 @@ export default function QRCodesPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tableId: data.tableId || undefined,
-          style: "MODERN",
+          style: data.style,
           foregroundColor: data.foregroundColor,
           backgroundColor: data.backgroundColor,
         }),
@@ -150,7 +391,7 @@ export default function QRCodesPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["qr-codes", restaurantId] });
-      toast.success("QR kod oluşturuldu");
+      toast.success("QR kod oluşturuldu!");
       setIsCreateDialogOpen(false);
       resetForm();
     },
@@ -174,34 +415,78 @@ export default function QRCodesPage() {
     },
   });
 
+  // Generate styled QR for download/print using qr-code-styling
+  const generateStyledDataUrl = useCallback(
+    async (qr: QRCodeData, width = 600): Promise<string> => {
+      const menuUrl =
+        qr.menuUrl ||
+        `${window.location.origin}/menu/${restaurant?.slug}?qr=${qr.code}`;
+      const styleObj =
+        QR_STYLES.find((s) => s.id === qr.style) || QR_STYLES[1];
+      return generateStyledQR(menuUrl, {
+        fg: qr.foregroundColor || "#000000",
+        bg: qr.backgroundColor || "#FFFFFF",
+        style: styleObj,
+        width,
+      });
+    },
+    [restaurant?.slug]
+  );
+
   const handleDownloadPNG = async (qr: QRCodeData) => {
-    if (!qr.qrDataUrl) return;
-    const a = document.createElement("a");
-    a.href = qr.qrDataUrl;
-    a.download = `qr-${qr.table ? `masa-${qr.table.number}` : qr.code.slice(0, 8)}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    toast.success("QR kod PNG olarak indirildi");
+    try {
+      toast.info("QR kod hazırlanıyor...");
+      const dataUrl = await generateStyledDataUrl(qr, 1024);
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `qr-${qr.table ? `masa-${qr.table.number}` : qr.code.slice(0, 8)}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      toast.success("QR kod PNG olarak indirildi");
+    } catch {
+      toast.error("İndirme başarısız");
+    }
   };
 
   const handleDownloadSVG = async (qr: QRCodeData) => {
     try {
-      const { default: QRCodeLib } = await import("qrcode");
-      const menuUrl = qr.menuUrl || `${window.location.origin}/menu/${restaurant?.slug}?qr=${qr.code}`;
-      const svgString = await QRCodeLib.toString(menuUrl, {
-        type: "svg",
+      toast.info("SVG hazırlanıyor...");
+      const menuUrl =
+        qr.menuUrl ||
+        `${window.location.origin}/menu/${restaurant?.slug}?qr=${qr.code}`;
+      const styleObj =
+        QR_STYLES.find((s) => s.id === qr.style) || QR_STYLES[1];
+      const { default: QRCodeStyling } = await import("qr-code-styling");
+      const qrCode = new QRCodeStyling({
         width: 1024,
-        margin: 2,
-        errorCorrectionLevel: "H",
-        color: {
-          dark: qr.foregroundColor || "#000000",
-          light: qr.backgroundColor || "#ffffff",
+        height: 1024,
+        data: menuUrl,
+        margin: 16,
+        qrOptions: { errorCorrectionLevel: "H" },
+        dotsOptions: {
+          type: styleObj.dotsType,
+          color: qr.foregroundColor || "#000000",
+        },
+        cornersSquareOptions: {
+          type: styleObj.cornersSquareType,
+          color: qr.foregroundColor || "#000000",
+        },
+        cornersDotOptions: {
+          type: styleObj.cornersDotType,
+          color: qr.foregroundColor || "#000000",
+        },
+        backgroundOptions: {
+          color: qr.backgroundColor || "#FFFFFF",
         },
       });
 
-      const blob = new Blob([svgString], { type: "image/svg+xml" });
-      const url = URL.createObjectURL(blob);
+      const svgRaw = await qrCode.getRawData("svg");
+      if (!svgRaw) throw new Error("SVG generation failed");
+      const svgBlob: Blob = svgRaw instanceof Blob
+        ? svgRaw
+        : new Blob([new Uint8Array(svgRaw as unknown as ArrayBuffer)], { type: "image/svg+xml" });
+      const url = URL.createObjectURL(svgBlob);
       const a = document.createElement("a");
       a.href = url;
       a.download = `qr-${qr.table ? `masa-${qr.table.number}` : qr.code.slice(0, 8)}.svg`;
@@ -215,95 +500,112 @@ export default function QRCodesPage() {
     }
   };
 
-  const handlePrint = (qr: QRCodeData) => {
-    if (!qr.qrDataUrl) return;
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
+  const handlePrint = async (qr: QRCodeData) => {
+    try {
+      const dataUrl = await generateStyledDataUrl(qr, 600);
+      const printWindow = window.open("", "_blank");
+      if (!printWindow) return;
 
-    const label = qr.table ? `Masa ${qr.table.number}${qr.table.name ? ` - ${qr.table.name}` : ""}` : "Menü";
+      const label = qr.table
+        ? `Masa ${qr.table.number}${qr.table.name ? ` - ${qr.table.name}` : ""}`
+        : "Menü";
 
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>QR Kod - ${label}</title>
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #fff; }
-          .card {
-            width: 350px;
-            text-align: center;
-            padding: 40px 30px;
-            border: 2px solid #e5e7eb;
-            border-radius: 24px;
-          }
-          .restaurant-name {
-            font-size: 22px;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 6px;
-          }
-          .table-label {
-            font-size: 16px;
-            font-weight: 500;
-            color: #6b7280;
-            margin-bottom: 24px;
-          }
-          .qr-wrapper {
-            background: #fff;
-            border-radius: 16px;
-            padding: 16px;
-            display: inline-block;
-            margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-          }
-          .qr-wrapper img {
-            width: 220px;
-            height: 220px;
-            display: block;
-          }
-          .scan-text {
-            font-size: 15px;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 6px;
-          }
-          .url-text {
-            font-size: 11px;
-            color: #9ca3af;
-          }
-          .powered {
-            font-size: 10px;
-            color: #d1d5db;
-            margin-top: 20px;
-          }
-          @media print {
-            body { background: #fff; }
-            .card { border: none; box-shadow: none; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="card">
-          <div class="restaurant-name">${restaurant?.name || "Restoran"}</div>
-          <div class="table-label">${label}</div>
-          <div class="qr-wrapper">
-            <img src="${qr.qrDataUrl}" alt="QR Code" />
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>QR Kod - ${label}</title>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f9fafb; }
+            .card {
+              width: 380px;
+              text-align: center;
+              padding: 48px 36px;
+              background: white;
+              border-radius: 24px;
+              box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            }
+            .restaurant-name {
+              font-size: 24px;
+              font-weight: 700;
+              color: #111;
+              margin-bottom: 4px;
+            }
+            .table-label {
+              font-size: 16px;
+              font-weight: 500;
+              color: #6b7280;
+              margin-bottom: 28px;
+            }
+            .qr-wrapper {
+              border-radius: 20px;
+              padding: 16px;
+              display: inline-block;
+              margin-bottom: 28px;
+              background: ${qr.backgroundColor || "#fff"};
+              border: 1px solid rgba(0,0,0,0.06);
+            }
+            .qr-wrapper img {
+              width: 240px;
+              height: 240px;
+              display: block;
+              border-radius: 8px;
+            }
+            .scan-text {
+              font-size: 15px;
+              font-weight: 600;
+              color: #374151;
+              margin-bottom: 4px;
+            }
+            .sub-text {
+              font-size: 13px;
+              color: #9ca3af;
+              margin-bottom: 4px;
+            }
+            .powered {
+              font-size: 10px;
+              color: #d1d5db;
+              margin-top: 24px;
+              letter-spacing: 0.5px;
+              text-transform: uppercase;
+            }
+            @media print {
+              body { background: #fff; }
+              .card { box-shadow: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <div class="restaurant-name">${restaurant?.name || "Restoran"}</div>
+            <div class="table-label">${label}</div>
+            <div class="qr-wrapper">
+              <img src="${dataUrl}" alt="QR Code" />
+            </div>
+            <div class="scan-text">Menüyü görmek için QR kodu okutun</div>
+            <div class="sub-text">Telefonunuzun kamerasıyla tarayın</div>
+            <div class="powered">MenuCraft AI</div>
           </div>
-          <div class="scan-text">Menüyü görmek için QR kodu okutun</div>
-          <div class="powered">MenuCraft AI</div>
-        </div>
-        <script>setTimeout(() => { window.print(); window.close(); }, 500);</script>
-      </body>
-      </html>
-    `);
-    printWindow.document.close();
+          <script>
+            document.querySelector('img').onload = function() {
+              setTimeout(() => { window.print(); window.close(); }, 300);
+            };
+          </script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    } catch {
+      toast.error("Yazdırma hazırlanamadı");
+    }
   };
 
   const handleCreateQR = () => {
     createQRMutation.mutate({
       tableId: selectedTable || undefined,
+      style: QR_STYLES[selectedStyleIndex].id,
       foregroundColor,
       backgroundColor,
     });
@@ -318,6 +620,7 @@ export default function QRCodesPage() {
   const resetForm = () => {
     setSelectedTable("");
     setSelectedPreset(0);
+    setSelectedStyleIndex(1);
     setForegroundColor("#000000");
     setBackgroundColor("#FFFFFF");
   };
@@ -330,7 +633,10 @@ export default function QRCodesPage() {
   };
 
   const getMenuUrl = (qr: QRCodeData) => {
-    return qr.menuUrl || `${window.location.origin}/menu/${restaurant?.slug}?qr=${qr.code}`;
+    return (
+      qr.menuUrl ||
+      `${window.location.origin}/menu/${restaurant?.slug}?qr=${qr.code}`
+    );
   };
 
   if (qrLoading) {
@@ -353,12 +659,18 @@ export default function QRCodesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">QR Kod Yönetimi</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+            QR Kod Yönetimi
+          </h1>
           <p className="text-muted-foreground mt-1">
             {qrCodes?.length || 0} QR kod oluşturuldu
           </p>
         </div>
-        <Button onClick={() => setIsCreateDialogOpen(true)} size="lg" className="gap-2">
+        <Button
+          onClick={() => setIsCreateDialogOpen(true)}
+          size="lg"
+          className="gap-2"
+        >
           <Plus className="w-5 h-5" />
           Yeni QR Oluştur
         </Button>
@@ -381,9 +693,14 @@ export default function QRCodesPage() {
               Henüz QR kodunuz yok
             </h3>
             <p className="text-muted-foreground mb-6 text-center max-w-sm">
-              QR kod oluşturun, masalarınıza yerleştirin. Müşterileriniz telefonla tarayarak menünüze ulaşsın.
+              QR kod oluşturun, masalarınıza yerleştirin. Müşterileriniz
+              telefonla tarayarak menünüze ulaşsın.
             </p>
-            <Button onClick={() => setIsCreateDialogOpen(true)} size="lg" className="gap-2">
+            <Button
+              onClick={() => setIsCreateDialogOpen(true)}
+              size="lg"
+              className="gap-2"
+            >
               <Plus className="w-5 h-5" />
               İlk QR Kodunuzu Oluşturun
             </Button>
@@ -396,162 +713,19 @@ export default function QRCodesPage() {
             className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
           >
             {qrCodes.map((qr, index) => (
-              <motion.div
+              <QRCardItem
                 key={qr.id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-xl hover:border-primary/20 transition-all duration-300"
-              >
-                {/* QR Code Display */}
-                <div
-                  className="relative p-6 pb-4 flex flex-col items-center"
-                  style={{ backgroundColor: qr.backgroundColor || "#FFFFFF" }}
-                >
-                  {/* Actions dropdown */}
-                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="secondary" size="icon" className="h-8 w-8 shadow-md">
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleDownloadPNG(qr)}>
-                          <Download className="w-4 h-4 mr-2" />
-                          PNG İndir
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleDownloadSVG(qr)}>
-                          <Download className="w-4 h-4 mr-2" />
-                          SVG İndir
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handlePrint(qr)}>
-                          <Printer className="w-4 h-4 mr-2" />
-                          Yazdır
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => {
-                            navigator.clipboard.writeText(getMenuUrl(qr));
-                            toast.success("Link kopyalandı");
-                          }}
-                        >
-                          <Copy className="w-4 h-4 mr-2" />
-                          Link Kopyala
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => window.open(getMenuUrl(qr), "_blank")}
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Menüyü Aç
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => setDeleteQRId(qr.id)}
-                          className="text-red-600 focus:text-red-600"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Sil
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-
-                  {/* Real QR Code Image */}
-                  {qr.qrDataUrl ? (
-                    <div className="rounded-xl overflow-hidden shadow-sm border border-black/5">
-                      <img
-                        src={qr.qrDataUrl}
-                        alt={`QR Kod - ${getQRLabel(qr)}`}
-                        className="w-48 h-48 sm:w-52 sm:h-52"
-                        draggable={false}
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-48 h-48 bg-muted rounded-xl flex items-center justify-center">
-                      <QrCode className="w-16 h-16 text-muted-foreground/30" />
-                    </div>
-                  )}
-
-                  {/* Scan instruction */}
-                  <p
-                    className="text-xs mt-3 font-medium opacity-60"
-                    style={{ color: qr.foregroundColor || "#000" }}
-                  >
-                    Menü için QR kodu okutun
-                  </p>
-                </div>
-
-                {/* Info Section */}
-                <div className="p-4 border-t space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-foreground text-sm">
-                        {getQRLabel(qr)}
-                      </h3>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        {new Date(qr.createdAt).toLocaleDateString("tr-TR")}
-                      </p>
-                    </div>
-                    <Badge variant={qr.isActive ? "default" : "secondary"} className="text-xs">
-                      {qr.isActive ? "Aktif" : "Pasif"}
-                    </Badge>
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <QrCode className="w-3.5 h-3.5" />
-                        <span>{qr.scans} tarama</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div
-                          className="w-3 h-3 rounded-full border border-border"
-                          style={{ backgroundColor: qr.foregroundColor }}
-                        />
-                        <div
-                          className="w-3 h-3 rounded-full border border-border"
-                          style={{ backgroundColor: qr.backgroundColor }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Quick Actions */}
-                  <div className="flex gap-2 pt-1">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 text-xs h-8"
-                      onClick={() => handleDownloadPNG(qr)}
-                    >
-                      <Download className="w-3.5 h-3.5 mr-1" />
-                      İndir
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 text-xs h-8"
-                      onClick={() => handlePrint(qr)}
-                    >
-                      <Printer className="w-3.5 h-3.5 mr-1" />
-                      Yazdır
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-xs h-8"
-                      onClick={() => {
-                        navigator.clipboard.writeText(getMenuUrl(qr));
-                        toast.success("Link kopyalandı");
-                      }}
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                    </Button>
-                  </div>
-                </div>
-              </motion.div>
+                qr={qr}
+                index={index}
+                restaurantSlug={restaurant?.slug}
+                restaurantName={restaurant?.name}
+                getQRLabel={getQRLabel}
+                getMenuUrl={getMenuUrl}
+                onDownloadPNG={handleDownloadPNG}
+                onDownloadSVG={handleDownloadSVG}
+                onPrint={handlePrint}
+                onDelete={(id) => setDeleteQRId(id)}
+              />
             ))}
           </motion.div>
         )}
@@ -559,18 +733,21 @@ export default function QRCodesPage() {
 
       {/* Create Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-lg">
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Yeni QR Kod Oluştur</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              Yeni QR Kod Oluştur
+            </DialogTitle>
             <DialogDescription>
-              Menünüz için taranabilir QR kod oluşturun.
+              Menünüz için stil ve renk seçerek taranabilir QR kod oluşturun.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-5">
             {/* Table Selection */}
             <div className="space-y-2">
-              <Label>Masa Bağlantısı (Opsiyonel)</Label>
+              <Label className="font-semibold">Masa Bağlantısı (Opsiyonel)</Label>
               <Select value={selectedTable} onValueChange={setSelectedTable}>
                 <SelectTrigger>
                   <SelectValue placeholder="Masa seçin veya boş bırakın" />
@@ -586,9 +763,32 @@ export default function QRCodesPage() {
               </Select>
             </div>
 
+            {/* QR Style Selection */}
+            <div className="space-y-3">
+              <Label className="flex items-center gap-2 font-semibold">
+                <QrCode className="w-4 h-4" />
+                QR Kod Stili
+              </Label>
+              <div className="grid grid-cols-5 gap-2">
+                {QR_STYLES.map((style, index) => (
+                  <div key={style.id} onClick={() => setSelectedStyleIndex(index)}>
+                    <MiniQRPreview
+                      style={style}
+                      fg={foregroundColor}
+                      bg={backgroundColor}
+                      isSelected={selectedStyleIndex === index}
+                    />
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {QR_STYLES[selectedStyleIndex].description}
+              </p>
+            </div>
+
             {/* Color Presets */}
             <div className="space-y-3">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 font-semibold">
                 <Palette className="w-4 h-4" />
                 Renk Teması
               </Label>
@@ -598,9 +798,9 @@ export default function QRCodesPage() {
                     key={preset.name}
                     onClick={() => selectPreset(index)}
                     className={cn(
-                      "relative flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all hover:scale-105",
+                      "relative flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 transition-all hover:scale-105",
                       selectedPreset === index
-                        ? "border-primary shadow-md"
+                        ? "border-primary shadow-md bg-primary/5"
                         : "border-border hover:border-primary/30"
                     )}
                   >
@@ -670,28 +870,35 @@ export default function QRCodesPage() {
               </div>
             </div>
 
-            {/* Preview */}
+            {/* Live QR Preview */}
             <div
               className="rounded-2xl p-6 flex flex-col items-center gap-3 border"
               style={{ backgroundColor }}
             >
+              <QRPreview
+                fg={foregroundColor}
+                bg={backgroundColor}
+                style={QR_STYLES[selectedStyleIndex]}
+                containerRef={previewContainerRef}
+              />
               <div
-                className="w-40 h-40 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor }}
+                ref={previewContainerRef}
+                className="rounded-xl overflow-hidden"
+              />
+              <p
+                className="text-xs font-medium"
+                style={{ color: foregroundColor, opacity: 0.5 }}
               >
-                <QrCode
-                  className="w-32 h-32"
-                  style={{ color: foregroundColor }}
-                />
-              </div>
-              <p className="text-xs font-medium" style={{ color: foregroundColor, opacity: 0.5 }}>
                 Menü için QR kodu okutun
               </p>
             </div>
           </div>
 
           <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsCreateDialogOpen(false)}
+            >
               İptal
             </Button>
             <Button
@@ -716,9 +923,12 @@ export default function QRCodesPage() {
       <AlertDialog open={!!deleteQRId} onOpenChange={() => setDeleteQRId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>QR kodu silmek istediğinize emin misiniz?</AlertDialogTitle>
+            <AlertDialogTitle>
+              QR kodu silmek istediğinize emin misiniz?
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Bu işlem geri alınamaz. QR kod kalıcı olarak silinecektir ve artık taratılamayacaktır.
+              Bu işlem geri alınamaz. QR kod kalıcı olarak silinecektir ve artık
+              taratılamayacaktır.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -733,5 +943,240 @@ export default function QRCodesPage() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+/**
+ * QR Card item - renders each QR code in the grid with styled QR image
+ */
+function QRCardItem({
+  qr,
+  index,
+  restaurantSlug,
+  restaurantName,
+  getQRLabel,
+  getMenuUrl,
+  onDownloadPNG,
+  onDownloadSVG,
+  onPrint,
+  onDelete,
+}: {
+  qr: QRCodeData;
+  index: number;
+  restaurantSlug?: string;
+  restaurantName?: string;
+  getQRLabel: (qr: QRCodeData) => string;
+  getMenuUrl: (qr: QRCodeData) => string;
+  onDownloadPNG: (qr: QRCodeData) => void;
+  onDownloadSVG: (qr: QRCodeData) => void;
+  onPrint: (qr: QRCodeData) => void;
+  onDelete: (id: string) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [styledDataUrl, setStyledDataUrl] = useState<string | null>(null);
+
+  // Generate styled QR code on mount
+  useEffect(() => {
+    let cancelled = false;
+
+    async function render() {
+      try {
+        const menuUrl =
+          qr.menuUrl ||
+          `${window.location.origin}/menu/${restaurantSlug}?qr=${qr.code}`;
+        const styleObj =
+          QR_STYLES.find((s) => s.id === qr.style) || QR_STYLES[1];
+        const dataUrl = await generateStyledQR(menuUrl, {
+          fg: qr.foregroundColor || "#000000",
+          bg: qr.backgroundColor || "#FFFFFF",
+          style: styleObj,
+          width: 400,
+        });
+        if (!cancelled) {
+          setStyledDataUrl(dataUrl);
+        }
+      } catch (err) {
+        console.error("Failed to render styled QR:", err);
+      }
+    }
+
+    render();
+    return () => {
+      cancelled = true;
+    };
+  }, [qr, restaurantSlug]);
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-xl hover:border-primary/20 transition-all duration-300"
+    >
+      {/* QR Code Display */}
+      <div
+        className="relative p-6 pb-4 flex flex-col items-center"
+        style={{ backgroundColor: qr.backgroundColor || "#FFFFFF" }}
+      >
+        {/* Actions dropdown */}
+        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-8 w-8 shadow-md"
+              >
+                <MoreVertical className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onDownloadPNG(qr)}>
+                <Download className="w-4 h-4 mr-2" />
+                PNG İndir (Yüksek Kalite)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onDownloadSVG(qr)}>
+                <Download className="w-4 h-4 mr-2" />
+                SVG İndir (Vektör)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onPrint(qr)}>
+                <Printer className="w-4 h-4 mr-2" />
+                Yazdır
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  navigator.clipboard.writeText(getMenuUrl(qr));
+                  toast.success("Link kopyalandı");
+                }}
+              >
+                <Copy className="w-4 h-4 mr-2" />
+                Link Kopyala
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => window.open(getMenuUrl(qr), "_blank")}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Menüyü Aç
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => onDelete(qr.id)}
+                className="text-red-600 focus:text-red-600"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Sil
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {/* Styled QR Code Image */}
+        {styledDataUrl ? (
+          <div className="rounded-xl overflow-hidden shadow-sm border border-black/5">
+            <img
+              src={styledDataUrl}
+              alt={`QR Kod - ${getQRLabel(qr)}`}
+              className="w-48 h-48 sm:w-52 sm:h-52"
+              draggable={false}
+            />
+          </div>
+        ) : (
+          <div className="w-48 h-48 sm:w-52 sm:h-52 rounded-xl flex items-center justify-center animate-pulse">
+            <div className="w-40 h-40 bg-muted/50 rounded-lg flex items-center justify-center">
+              <QrCode className="w-12 h-12 text-muted-foreground/30 animate-spin" />
+            </div>
+          </div>
+        )}
+
+        {/* Style badge */}
+        <div className="absolute top-3 left-3">
+          <Badge variant="secondary" className="text-[10px] px-2 py-0.5 bg-background/80 backdrop-blur-sm">
+            {QR_STYLES.find((s) => s.id === qr.style)?.name || "Klasik"}
+          </Badge>
+        </div>
+
+        {/* Scan instruction */}
+        <p
+          className="text-xs mt-3 font-medium opacity-60"
+          style={{ color: qr.foregroundColor || "#000" }}
+        >
+          Menü için QR kodu okutun
+        </p>
+      </div>
+
+      {/* Info Section */}
+      <div className="p-4 border-t space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-foreground text-sm">
+              {getQRLabel(qr)}
+            </h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {new Date(qr.createdAt).toLocaleDateString("tr-TR")}
+            </p>
+          </div>
+          <Badge
+            variant={qr.isActive ? "default" : "secondary"}
+            className="text-xs"
+          >
+            {qr.isActive ? "Aktif" : "Pasif"}
+          </Badge>
+        </div>
+
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <QrCode className="w-3.5 h-3.5" />
+              <span>{qr.scans} tarama</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div
+                className="w-3 h-3 rounded-full border border-border"
+                style={{ backgroundColor: qr.foregroundColor }}
+              />
+              <div
+                className="w-3 h-3 rounded-full border border-border"
+                style={{ backgroundColor: qr.backgroundColor }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="flex gap-2 pt-1">
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 text-xs h-8"
+            onClick={() => onDownloadPNG(qr)}
+          >
+            <Download className="w-3.5 h-3.5 mr-1" />
+            İndir
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 text-xs h-8"
+            onClick={() => onPrint(qr)}
+          >
+            <Printer className="w-3.5 h-3.5 mr-1" />
+            Yazdır
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-xs h-8"
+            onClick={() => {
+              navigator.clipboard.writeText(getMenuUrl(qr));
+              toast.success("Link kopyalandı");
+            }}
+          >
+            <Copy className="w-3.5 h-3.5" />
+          </Button>
+        </div>
+      </div>
+    </motion.div>
   );
 }
