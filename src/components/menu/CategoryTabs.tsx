@@ -100,7 +100,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
           <div
             ref={scrollContainerRef}
             onScroll={checkScroll}
-            className="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth px-8"
+            className="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth px-4 sm:px-8"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",

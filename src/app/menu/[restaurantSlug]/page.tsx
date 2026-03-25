@@ -318,7 +318,7 @@ export default function MenuPage({
   return (
     <div className="min-h-screen bg-accent dark:bg-gray-950">
       {/* Top Controls */}
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
+      <div className="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 flex gap-1.5 sm:gap-2">
         <ThemeToggle />
         <LanguageSwitcher />
       </div>
@@ -328,7 +328,7 @@ export default function MenuPage({
 
       {/* Search Bar & Allergen Filter */}
       <div className="sticky top-0 z-30 bg-card dark:bg-gray-900 border-b border-border dark:border-gray-800">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center gap-2 max-w-2xl mx-auto">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/70" />
@@ -417,17 +417,17 @@ export default function MenuPage({
       />
 
       {/* Menu Items */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {searchQuery ? (
           // Search Results
           <div>
-            <h2 className="text-2xl font-bold mb-4 text-foreground dark:text-white">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 text-foreground dark:text-white">
               Arama Sonuçları ({allItems.length})
             </h2>
             <div
               className={
                 menuLayout === "GRID"
-                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
                   : "space-y-4"
               }
             >
@@ -453,7 +453,7 @@ export default function MenuPage({
           </div>
         ) : (
           // Categories
-          <div className="space-y-12">
+          <div className="space-y-8 sm:space-y-12">
             {filteredCategories.map((category) => (
               <motion.section
                 key={category.id}
@@ -468,7 +468,7 @@ export default function MenuPage({
                   {category.icon && (
                     <span className="text-3xl">{category.icon}</span>
                   )}
-                  <h2 className="text-3xl font-bold text-foreground dark:text-white">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white">
                     {category.name}
                   </h2>
                   <div className="flex-1 h-px bg-gradient-to-r from-gray-300 dark:from-gray-700 to-transparent" />
@@ -476,7 +476,7 @@ export default function MenuPage({
                 <div
                   className={
                     menuLayout === "GRID"
-                      ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
                       : "space-y-4"
                   }
                 >
@@ -505,9 +505,9 @@ export default function MenuPage({
       </div>
 
       {/* Restaurant Info Section */}
-      <div className="bg-card dark:bg-gray-900 border-t border-border dark:border-gray-800 py-12 mt-12">
+      <div className="bg-card dark:bg-gray-900 border-t border-border dark:border-gray-800 py-8 sm:py-12 mt-8 sm:mt-12">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-8">
             {/* Contact Info */}
             <div>
               <h3 className="text-2xl font-bold mb-4 text-foreground dark:text-white">

@@ -174,8 +174,8 @@ export default function MenuItemsPage() {
 
   if (itemsLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
-        <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
+      <div className="container mx-auto p-4 sm:p-6 space-y-6">
+        <div className="h-10 bg-muted rounded w-2/3 sm:w-1/3 animate-pulse" />
         <div className="h-96 bg-muted rounded-lg animate-pulse" />
       </div>
     );
@@ -184,16 +184,16 @@ export default function MenuItemsPage() {
   const isEmpty = !items || items.length === 0;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Tüm Yemekler</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Tüm Yemekler</h1>
           <p className="text-muted-foreground mt-1">
             {filteredItems?.length || 0} ürün bulundu
           </p>
         </div>
-        <Button onClick={() => setIsAddDialogOpen(true)}>
+        <Button onClick={() => setIsAddDialogOpen(true)} className="w-full sm:w-auto">
           <Plus className="w-4 h-4 mr-2" />
           Yeni Yemek Ekle
         </Button>
@@ -290,118 +290,210 @@ export default function MenuItemsPage() {
             animate={{ opacity: 1 }}
             className="bg-card rounded-lg border border-border overflow-hidden"
           >
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-20">Görsel</TableHead>
-                  <TableHead>İsim</TableHead>
-                  <TableHead>Kategori</TableHead>
-                  <TableHead>Fiyat</TableHead>
-                  <TableHead>Özellikler</TableHead>
-                  <TableHead>Durum</TableHead>
-                  <TableHead className="w-20">İşlemler</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedItems?.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>
-                      <div className="w-12 h-12 bg-muted/50 rounded-lg overflow-hidden">
-                        {item.image ? (
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-muted-foreground/70">
-                            <svg
-                              className="w-6 h-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell>
-                      <Badge variant="secondary">{item.category}</Badge>
-                    </TableCell>
-                    <TableCell className="font-semibold">₺{item.price.toFixed(2)}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        {item.isVegan && (
-                          <Badge variant="outline" className="text-green-600 border-green-600">
-                            V
-                          </Badge>
-                        )}
-                        {item.isVegetarian && (
-                          <Badge variant="outline" className="text-green-500 border-green-500">
-                            Veg
-                          </Badge>
-                        )}
-                        {item.isGlutenFree && (
-                          <Badge variant="outline" className="text-blue-600 border-blue-600">
-                            GF
-                          </Badge>
-                        )}
-                        {item.isSpicy && (
-                          <Badge variant="outline" className="text-red-600 border-red-600">
-                            S
-                          </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={item.isActive}
-                          onCheckedChange={() => handleToggleItem(item.id, item.isActive)}
-                        />
-                        <Badge variant={item.isActive ? "default" : "secondary"}>
-                          {item.isActive ? "Aktif" : "Pasif"}
-                        </Badge>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreVertical className="w-4 h-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => setEditingItem(item)}>
-                            <Edit className="w-4 h-4 mr-2" />
-                            Düzenle
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => setDeleteItemId(item.id)}
-                            className="text-red-600"
-                          >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Sil
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-20">Görsel</TableHead>
+                    <TableHead>İsim</TableHead>
+                    <TableHead>Kategori</TableHead>
+                    <TableHead>Fiyat</TableHead>
+                    <TableHead>Özellikler</TableHead>
+                    <TableHead>Durum</TableHead>
+                    <TableHead className="w-20">İşlemler</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {paginatedItems?.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <div className="w-12 h-12 bg-muted/50 rounded-lg overflow-hidden">
+                          {item.image ? (
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-muted-foreground/70">
+                              <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">{item.name}</TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{item.category}</Badge>
+                      </TableCell>
+                      <TableCell className="font-semibold">₺{item.price.toFixed(2)}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          {item.isVegan && (
+                            <Badge variant="outline" className="text-green-600 border-green-600">
+                              V
+                            </Badge>
+                          )}
+                          {item.isVegetarian && (
+                            <Badge variant="outline" className="text-green-500 border-green-500">
+                              Veg
+                            </Badge>
+                          )}
+                          {item.isGlutenFree && (
+                            <Badge variant="outline" className="text-blue-600 border-blue-600">
+                              GF
+                            </Badge>
+                          )}
+                          {item.isSpicy && (
+                            <Badge variant="outline" className="text-red-600 border-red-600">
+                              S
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={item.isActive}
+                            onCheckedChange={() => handleToggleItem(item.id, item.isActive)}
+                          />
+                          <Badge variant={item.isActive ? "default" : "secondary"}>
+                            {item.isActive ? "Aktif" : "Pasif"}
+                          </Badge>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreVertical className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => setEditingItem(item)}>
+                              <Edit className="w-4 h-4 mr-2" />
+                              Düzenle
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => setDeleteItemId(item.id)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Sil
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile Card Layout */}
+            <div className="md:hidden divide-y divide-border">
+              {paginatedItems?.map((item) => (
+                <div key={item.id} className="p-4 space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-14 h-14 flex-shrink-0 bg-muted/50 rounded-lg overflow-hidden">
+                      {item.image ? (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground/70">
+                          <svg
+                            className="w-6 h-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <h3 className="font-medium text-foreground truncate">{item.name}</h3>
+                          <p className="text-sm font-semibold text-foreground mt-0.5">₺{item.price.toFixed(2)}</p>
+                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="flex-shrink-0 -mt-1 -mr-2">
+                              <MoreVertical className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => setEditingItem(item)}>
+                              <Edit className="w-4 h-4 mr-2" />
+                              Düzenle
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => setDeleteItemId(item.id)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Sil
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge variant="secondary">{item.category}</Badge>
+                      {item.isVegan && (
+                        <Badge variant="outline" className="text-green-600 border-green-600">V</Badge>
+                      )}
+                      {item.isVegetarian && (
+                        <Badge variant="outline" className="text-green-500 border-green-500">Veg</Badge>
+                      )}
+                      {item.isGlutenFree && (
+                        <Badge variant="outline" className="text-blue-600 border-blue-600">GF</Badge>
+                      )}
+                      {item.isSpicy && (
+                        <Badge variant="outline" className="text-red-600 border-red-600">S</Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <Switch
+                        checked={item.isActive}
+                        onCheckedChange={() => handleToggleItem(item.id, item.isActive)}
+                      />
+                      <Badge variant={item.isActive ? "default" : "secondary"}>
+                        {item.isActive ? "Aktif" : "Pasif"}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-border">
+              <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-t border-border">
                 <p className="text-sm text-muted-foreground">
                   Sayfa {currentPage} / {totalPages}
                 </p>
@@ -431,7 +523,7 @@ export default function MenuItemsPage() {
 
       {/* Add Item Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Yeni Yemek Ekle</DialogTitle>
           </DialogHeader>
@@ -445,7 +537,7 @@ export default function MenuItemsPage() {
 
       {/* Edit Item Dialog */}
       <Dialog open={!!editingItem} onOpenChange={() => setEditingItem(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-[95vw] sm:max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Yemeği Düzenle</DialogTitle>
           </DialogHeader>

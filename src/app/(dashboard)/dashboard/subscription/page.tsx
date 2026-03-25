@@ -89,14 +89,14 @@ export default function SubscriptionPage() {
 
   return (
     <motion.div
-      className="space-y-8"
+      className="space-y-6 sm:space-y-8"
       variants={container}
       initial="hidden"
       animate="show"
     >
       <motion.div variants={item}>
-        <h1 className="text-3xl font-bold tracking-tight">Abonelik</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Abonelik</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           Planınızı yönetin ve fatura geçmişinizi görüntüleyin
         </p>
       </motion.div>
@@ -105,31 +105,31 @@ export default function SubscriptionPage() {
       <motion.div variants={item}>
         <Card className="border-2 border-primary/50 bg-gradient-to-br from-primary/5 to-primary/5">
           <CardHeader>
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
               <div>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                   {(() => {
                     const Icon = planIcons[currentPlan] || Sparkles;
-                    return <Icon className="h-5 w-5 text-primary" />;
+                    return <Icon className="h-5 w-5 text-primary flex-shrink-0" />;
                   })()}
                   Mevcut Planınız: {currentPlanData?.name || currentPlan}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-xs sm:text-sm">
                   {subscription?.currentPeriodEnd
                     ? `Sonraki ödeme: ${new Date(subscription.currentPeriodEnd).toLocaleDateString('tr-TR')}`
                     : 'Ücretsiz plan'}
                 </CardDescription>
               </div>
-              <Badge className="bg-gradient-to-r from-primary to-primary/80">
+              <Badge className="bg-gradient-to-r from-primary to-primary/80 w-fit">
                 {statusLabels[subscription?.status || 'ACTIVE']}
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Aylık Ücret</p>
-                <p className="text-2xl font-bold">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              <div className="space-y-1 sm:space-y-2">
+                <p className="text-xs sm:text-sm text-muted-foreground">Aylık Ücret</p>
+                <p className="text-lg sm:text-2xl font-bold">
                   {currentPlanData?.price === 0
                     ? 'Ücretsiz'
                     : currentPlanData?.price === -1
@@ -137,9 +137,9 @@ export default function SubscriptionPage() {
                     : `${currentPlanData?.price} TL`}
                 </p>
               </div>
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Plan Başlangıç</p>
-                <p className="text-2xl font-bold">
+              <div className="space-y-1 sm:space-y-2">
+                <p className="text-xs sm:text-sm text-muted-foreground">Plan Başlangıç</p>
+                <p className="text-lg sm:text-2xl font-bold">
                   {subscription?.createdAt
                     ? new Date(subscription.createdAt).toLocaleDateString('tr-TR', {
                         day: '2-digit',
@@ -148,9 +148,9 @@ export default function SubscriptionPage() {
                     : '-'}
                 </p>
               </div>
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Durum</p>
-                <p className="text-2xl font-bold text-green-600">
+              <div className="col-span-2 sm:col-span-1 space-y-1 sm:space-y-2">
+                <p className="text-xs sm:text-sm text-muted-foreground">Durum</p>
+                <p className="text-lg sm:text-2xl font-bold text-green-600">
                   {statusLabels[subscription?.status || 'ACTIVE']}
                 </p>
               </div>
@@ -158,12 +158,12 @@ export default function SubscriptionPage() {
 
             {/* AI Credits Usage */}
             <div className="space-y-3 pt-4 border-t">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-primary" />
-                  <span className="font-medium">AI Kredi Kullanımı</span>
+                  <span className="text-sm sm:text-base font-medium">AI Kredi Kullanımı</span>
                 </div>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-xs sm:text-sm text-muted-foreground">
                   {aiCreditsUsed} / {aiCreditsTotal} kredi
                 </span>
               </div>
@@ -178,8 +178,8 @@ export default function SubscriptionPage() {
 
       {/* Plans */}
       <motion.div variants={item}>
-        <h2 className="text-2xl font-bold mb-6">Planlar</h2>
-        <div className="grid gap-6 lg:grid-cols-3">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Planlar</h2>
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
           {PLANS.filter((p) => p.slug !== 'ENTERPRISE').map((plan) => {
             const Icon = planIcons[plan.slug] || Sparkles;
             const isCurrent = plan.slug === currentPlan;
@@ -223,29 +223,29 @@ export default function SubscriptionPage() {
                     </div>
                     <CardTitle>{plan.name}</CardTitle>
                     <CardDescription>{plan.description}</CardDescription>
-                    <div className="pt-4">
+                    <div className="pt-3 sm:pt-4">
                       {plan.price === 0 ? (
-                        <span className="text-4xl font-bold">Ücretsiz</span>
+                        <span className="text-2xl sm:text-4xl font-bold">Ücretsiz</span>
                       ) : (
                         <>
-                          <span className="text-4xl font-bold">{plan.price} TL</span>
-                          <span className="text-muted-foreground">/ay</span>
+                          <span className="text-2xl sm:text-4xl font-bold">{plan.price} TL</span>
+                          <span className="text-sm sm:text-base text-muted-foreground">/ay</span>
                         </>
                       )}
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3 sm:space-y-4 px-4 sm:px-6">
                     <div className="space-y-2">
                       {plan.features.map((feature, index) => (
                         <div key={index} className="flex items-start gap-2">
-                          <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                          <span className="text-sm">{feature}</span>
+                          <Check className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span className="text-xs sm:text-sm">{feature}</span>
                         </div>
                       ))}
                       {plan.limitations?.map((limitation, index) => (
                         <div key={`lim-${index}`} className="flex items-start gap-2">
-                          <X className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                          <span className="text-sm text-muted-foreground">{limitation}</span>
+                          <X className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                          <span className="text-xs sm:text-sm text-muted-foreground">{limitation}</span>
                         </div>
                       ))}
                     </div>
@@ -294,17 +294,17 @@ export default function SubscriptionPage() {
               </p>
             ) : (
               <>
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 border rounded-lg">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="min-w-[3rem] h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded flex items-center justify-center text-white text-xs font-bold px-2">
                       KART
                     </div>
                     <div>
-                      <p className="font-medium">Kayıtlı kart</p>
-                      <p className="text-sm text-muted-foreground">PayTR ile ödeme</p>
+                      <p className="font-medium text-sm sm:text-base">Kayıtlı kart</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">PayTR ile ödeme</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto">
                     Güncelle
                   </Button>
                 </div>
@@ -320,11 +320,11 @@ export default function SubscriptionPage() {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Aboneliği İptal Et</AlertTitle>
-            <AlertDescription className="flex items-center justify-between">
-              <span>
+            <AlertDescription className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <span className="text-xs sm:text-sm">
                 Aboneliğinizi iptal etmek istiyorsanız, tüm verileriniz korunacak ancak premium özelliklere erişiniz sonlanacaktır.
               </span>
-              <Button variant="destructive" size="sm">
+              <Button variant="destructive" size="sm" className="w-full sm:w-auto flex-shrink-0">
                 İptal Et
               </Button>
             </AlertDescription>
