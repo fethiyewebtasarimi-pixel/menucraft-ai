@@ -186,9 +186,9 @@ export default function TablesPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto px-4 py-4 sm:p-6 space-y-4 sm:space-y-6">
         <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
-        <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="h-48 bg-muted rounded-lg animate-pulse" />
           ))}
@@ -200,14 +200,14 @@ export default function TablesPage() {
   const isEmpty = !tables || tables.length === 0;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto px-4 py-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Masa Yönetimi</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Masa Yönetimi</h1>
           <p className="text-muted-foreground mt-1">{tables?.length || 0} masa tanımlandı</p>
         </div>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
+        <Button onClick={() => setIsCreateDialogOpen(true)} className="w-full sm:w-auto">
           <Plus className="w-4 h-4 mr-2" />
           Yeni Masa Ekle
         </Button>
@@ -251,7 +251,7 @@ export default function TablesPage() {
             key="grid"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="grid gap-6 md:grid-cols-3 lg:grid-cols-4"
+            className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
           >
             {tables.map((table) => (
               <motion.div
@@ -259,7 +259,7 @@ export default function TablesPage() {
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-card rounded-lg border border-border p-6 hover:shadow-lg transition-shadow"
+                className="bg-card rounded-lg border border-border p-4 sm:p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">

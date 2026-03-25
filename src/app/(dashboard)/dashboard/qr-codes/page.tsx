@@ -190,9 +190,9 @@ export default function QRCodesPage() {
 
   if (qrLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
-        <div className="h-10 bg-muted rounded w-1/3 animate-pulse" />
-        <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
+      <div className="container mx-auto p-4 sm:p-6 space-y-6">
+        <div className="h-10 bg-muted rounded w-2/3 sm:w-1/3 animate-pulse" />
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="h-64 bg-muted rounded-lg animate-pulse" />
           ))}
@@ -204,16 +204,16 @@ export default function QRCodesPage() {
   const isEmpty = !qrCodes || qrCodes.length === 0;
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-4 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">QR Kod Yönetimi</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">QR Kod Yönetimi</h1>
           <p className="text-muted-foreground mt-1">
             {qrCodes?.length || 0} QR kod oluşturuldu
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Button
             variant="outline"
             onClick={() => {
@@ -281,7 +281,7 @@ export default function QRCodesPage() {
             key="grid"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="grid gap-6 md:grid-cols-3 lg:grid-cols-4"
+            className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
           >
             {qrCodes.map((qr) => (
               <motion.div
@@ -289,7 +289,7 @@ export default function QRCodesPage() {
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-card rounded-lg border border-border p-6 hover:shadow-lg transition-shadow"
+                className="bg-card rounded-lg border border-border p-4 sm:p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -336,7 +336,7 @@ export default function QRCodesPage() {
                 </div>
 
                 {/* QR Code Preview */}
-                <div className="bg-muted/50 rounded-lg p-6 mb-4 flex items-center justify-center">
+                <div className="bg-muted/50 rounded-lg p-4 sm:p-6 mb-4 flex items-center justify-center">
                   <div className="w-32 h-32 bg-card rounded p-2">
                     {/* Placeholder QR pattern */}
                     <svg viewBox="0 0 100 100" className="w-full h-full">
@@ -382,7 +382,7 @@ export default function QRCodesPage() {
 
       {/* Create Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>Yeni QR Kod Oluştur</DialogTitle>
           </DialogHeader>
@@ -410,7 +410,7 @@ export default function QRCodesPage() {
             <div className="space-y-3">
               <Label>QR Kod Stili</Label>
               <RadioGroup value={qrStyle} onValueChange={setQrStyle}>
-                <div className="grid grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                   {qrStyles.map((style) => (
                     <div key={style.id}>
                       <RadioGroupItem
@@ -420,7 +420,7 @@ export default function QRCodesPage() {
                       />
                       <Label
                         htmlFor={style.id}
-                        className="flex flex-col items-center justify-between rounded-lg border-2 border-border p-4 hover:bg-accent peer-data-[state=checked]:border-primary cursor-pointer"
+                        className="flex flex-col items-center justify-between rounded-lg border-2 border-border p-3 sm:p-4 hover:bg-accent peer-data-[state=checked]:border-primary cursor-pointer"
                       >
                         <div className="w-16 h-16 bg-muted/50 rounded mb-2" />
                         <span className="text-xs font-medium">{style.name}</span>
@@ -432,7 +432,7 @@ export default function QRCodesPage() {
             </div>
 
             {/* Colors */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Ön Plan Rengi</Label>
                 <div className="flex gap-2">
@@ -470,10 +470,10 @@ export default function QRCodesPage() {
             </div>
 
             {/* Preview */}
-            <div className="border rounded-lg p-6 bg-accent">
+            <div className="border rounded-lg p-4 sm:p-6 bg-accent">
               <Label className="mb-3 block">Önizleme</Label>
-              <div className="bg-card rounded-lg p-8 flex items-center justify-center">
-                <div className="w-48 h-48">
+              <div className="bg-card rounded-lg p-4 sm:p-8 flex items-center justify-center">
+                <div className="w-36 h-36 sm:w-48 sm:h-48">
                   <svg viewBox="0 0 100 100" className="w-full h-full">
                     <rect width="100" height="100" fill={backgroundColor} />
                     <g fill={foregroundColor}>
@@ -488,7 +488,7 @@ export default function QRCodesPage() {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
             <Button
               variant="outline"
               onClick={() => setIsCreateDialogOpen(false)}

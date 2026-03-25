@@ -149,13 +149,13 @@ export default function BrandingPage() {
       animate={{ opacity: 1, y: 0 }}
     >
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Marka & Tasarım</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Marka & Tasarım</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           Menünüzün görünümünü ve markalaşmasını özelleştirin
         </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_minmax(0,400px)]">
         {/* Settings Panel */}
         <div className="space-y-6">
           {/* Colors */}
@@ -170,7 +170,7 @@ export default function BrandingPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-3">
+              <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 md:grid-cols-3">
                 <div className="space-y-2">
                   <Label htmlFor="primaryColor">Ana Renk</Label>
                   <div className="flex gap-2">
@@ -178,7 +178,7 @@ export default function BrandingPage() {
                       id="primaryColor"
                       type="color"
                       {...form.register('primaryColor')}
-                      className="h-10 w-20 cursor-pointer"
+                      className="h-10 w-14 sm:w-20 shrink-0 cursor-pointer"
                     />
                     <Input
                       type="text"
@@ -186,7 +186,7 @@ export default function BrandingPage() {
                       onChange={(e) =>
                         form.setValue('primaryColor', e.target.value)
                       }
-                      className="flex-1 font-mono text-sm"
+                      className="flex-1 min-w-0 font-mono text-sm"
                     />
                   </div>
                 </div>
@@ -198,7 +198,7 @@ export default function BrandingPage() {
                       id="secondaryColor"
                       type="color"
                       {...form.register('secondaryColor')}
-                      className="h-10 w-20 cursor-pointer"
+                      className="h-10 w-14 sm:w-20 shrink-0 cursor-pointer"
                     />
                     <Input
                       type="text"
@@ -206,19 +206,19 @@ export default function BrandingPage() {
                       onChange={(e) =>
                         form.setValue('secondaryColor', e.target.value)
                       }
-                      className="flex-1 font-mono text-sm"
+                      className="flex-1 min-w-0 font-mono text-sm"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 sm:col-span-2 md:col-span-1">
                   <Label htmlFor="accentColor">Vurgu Rengi</Label>
                   <div className="flex gap-2">
                     <Input
                       id="accentColor"
                       type="color"
                       {...form.register('accentColor')}
-                      className="h-10 w-20 cursor-pointer"
+                      className="h-10 w-14 sm:w-20 shrink-0 cursor-pointer"
                     />
                     <Input
                       type="text"
@@ -226,7 +226,7 @@ export default function BrandingPage() {
                       onChange={(e) =>
                         form.setValue('accentColor', e.target.value)
                       }
-                      className="flex-1 font-mono text-sm"
+                      className="flex-1 min-w-0 font-mono text-sm"
                     />
                   </div>
                 </div>
@@ -386,8 +386,8 @@ export default function BrandingPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between pb-4 border-b">
-                <div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-4 border-b">
+                <div className="flex-1 min-w-0">
                   <Label htmlFor="showLogo" className="font-medium">
                     Logo Göster
                   </Label>
@@ -404,8 +404,8 @@ export default function BrandingPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex-1 min-w-0">
                   <Label htmlFor="showCoverImage" className="font-medium">
                     Kapak Görseli Göster
                   </Label>
@@ -450,7 +450,7 @@ export default function BrandingPage() {
             </CardHeader>
             <CardContent className="p-0">
               <div
-                className="min-h-[600px] overflow-y-auto"
+                className="min-h-[400px] sm:min-h-[600px] overflow-y-auto"
                 style={{
                   fontFamily:
                     watchedValues.fontFamily === 'inter'
@@ -467,14 +467,14 @@ export default function BrandingPage() {
                 {/* Preview Header */}
                 {watchedValues.showCoverImage && (
                   <div
-                    className="h-48 w-full"
+                    className="h-32 sm:h-48 w-full"
                     style={{
                       background: `linear-gradient(135deg, ${watchedValues.primaryColor}, ${watchedValues.secondaryColor})`,
                     }}
                   />
                 )}
 
-                <div className="p-6 space-y-6">
+                <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                   {/* Logo */}
                   {watchedValues.showLogo && (
                     <div className="flex justify-center">
@@ -510,7 +510,7 @@ export default function BrandingPage() {
                     <div
                       className={cn(
                         watchedValues.menuLayout === 'GRID' &&
-                          'grid grid-cols-2 gap-3',
+                          'grid grid-cols-1 sm:grid-cols-2 gap-3',
                         watchedValues.menuLayout === 'LIST' && 'space-y-4',
                         watchedValues.menuLayout === 'COMPACT' && 'space-y-2',
                         watchedValues.menuLayout === 'MAGAZINE' &&

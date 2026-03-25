@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
           create: {
             primaryColor: "#000000",
             secondaryColor: "#FFFFFF",
-            accentColor: "#f59e0b",
+            accentColor: "#8b5cf6",
             fontFamily: "Inter",
             menuLayout: "GRID",
             headerStyle: "MODERN",
