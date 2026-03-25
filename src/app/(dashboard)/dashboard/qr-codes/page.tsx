@@ -47,6 +47,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useRestaurants } from "@/hooks/useRestaurant";
 
 interface QRCode {
   id: string;
@@ -75,39 +76,50 @@ export default function QRCodesPage() {
   const [foregroundColor, setForegroundColor] = useState("#000000");
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
 
-  const restaurantId = "current-restaurant-id";
+  const { data: restaurants } = useRestaurants();
+  const restaurant = restaurants?.[0];
+  const restaurantId = restaurant?.id;
 
   const { data: qrCodes, isLoading: qrLoading } = useQuery<QRCode[]>({
     queryKey: ["qr-codes", restaurantId],
     queryFn: async () => {
       const response = await fetch(`/api/restaurants/${restaurantId}/qr-codes`);
-      if (!response.ok) throw new Error("Failed to fetch QR codes");
+      if (!response.ok) throw new Error("QR kodlar yüklenemedi");
       return response.json();
     },
+    enabled: !!restaurantId,
   });
 
   const { data: tables } = useQuery<Table[]>({
     queryKey: ["tables", restaurantId],
     queryFn: async () => {
       const response = await fetch(`/api/restaurants/${restaurantId}/tables`);
-      if (!response.ok) throw new Error("Failed to fetch tables");
+      if (!response.ok) throw new Error("Masalar yüklenemedi");
       return response.json();
     },
+    enabled: !!restaurantId,
   });
 
   const createQRMutation = useMutation({
     mutationFn: async (data: {
-      tableId: string;
+      tableId?: string;
       style: string;
       foregroundColor: string;
       backgroundColor: string;
+      name: string;
     }) => {
       const response = await fetch(`/api/restaurants/${restaurantId}/qr-codes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name: data.name,
+          tableId: data.tableId || undefined,
+          styleType: data.style === "modern" ? "ROUNDED" : data.style === "dots" || data.style === "rounded" ? "DOTS" : "CLASSIC",
+          colorPrimary: data.foregroundColor,
+          colorBackground: data.backgroundColor,
+        }),
       });
-      if (!response.ok) throw new Error("Failed to create QR code");
+      if (!response.ok) throw new Error("QR kod oluşturulamadı");
       return response.json();
     },
     onSuccess: () => {
@@ -159,14 +171,17 @@ export default function QRCodesPage() {
     }
   };
 
+  const [qrName, setQrName] = useState("");
+
   const handleCreateQR = () => {
-    if (!selectedTable) {
-      toast.error("Lütfen bir masa seçin");
+    if (!qrName.trim()) {
+      toast.error("Lütfen QR kod için bir isim girin");
       return;
     }
 
     createQRMutation.mutate({
-      tableId: selectedTable,
+      name: qrName.trim(),
+      tableId: selectedTable || undefined,
       style: qrStyle,
       foregroundColor,
       backgroundColor,
@@ -174,6 +189,7 @@ export default function QRCodesPage() {
   };
 
   const resetForm = () => {
+    setQrName("");
     setSelectedTable("");
     setQrStyle("classic");
     setForegroundColor("#000000");
@@ -388,12 +404,25 @@ export default function QRCodesPage() {
           </DialogHeader>
 
           <div className="space-y-6">
-            {/* Table Selection */}
+            {/* QR Code Name */}
             <div className="space-y-2">
-              <Label>Masa Seçimi *</Label>
+              <Label>QR Kod Adı *</Label>
+              <Input
+                value={qrName}
+                onChange={(e) => setQrName(e.target.value)}
+                placeholder="Örn: Ana Menü, Bahçe Masaları, Teras"
+              />
+              <p className="text-xs text-muted-foreground">
+                QR kodu tanımlamak için bir isim verin
+              </p>
+            </div>
+
+            {/* Table Selection (Optional) */}
+            <div className="space-y-2">
+              <Label>Masa Bağlantısı (Opsiyonel)</Label>
               <Select value={selectedTable} onValueChange={setSelectedTable}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Masa seçin" />
+                  <SelectValue placeholder="Masa seçin veya boş bırakın" />
                 </SelectTrigger>
                 <SelectContent>
                   {tables?.map((table) => (
@@ -404,6 +433,9 @@ export default function QRCodesPage() {
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                Bir masaya bağlamak isterseniz seçin, tüm menü için boş bırakın
+              </p>
             </div>
 
             {/* Style Selection */}
@@ -497,7 +529,7 @@ export default function QRCodesPage() {
             </Button>
             <Button
               onClick={handleCreateQR}
-              disabled={createQRMutation.isPending || !selectedTable}
+              disabled={createQRMutation.isPending || !qrName.trim()}
             >
               {createQRMutation.isPending ? "Oluşturuluyor..." : "Oluştur"}
             </Button>

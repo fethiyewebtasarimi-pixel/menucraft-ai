@@ -133,16 +133,19 @@ export default function TablesPage() {
 
   const createQRMutation = useMutation({
     mutationFn: async (tableId: string) => {
-      const response = await fetch(`/api/tables/${tableId}/qr-code`, {
+      const table = tables?.find((t) => t.id === tableId);
+      const response = await fetch(`/api/restaurants/${restaurantId}/qr-codes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          style: "classic",
-          foregroundColor: "#000000",
-          backgroundColor: "#ffffff",
+          name: `Masa ${table?.number || ""}${table?.name ? ` - ${table.name}` : ""}`.trim(),
+          tableId,
+          styleType: "CLASSIC",
+          colorPrimary: "#000000",
+          colorBackground: "#FFFFFF",
         }),
       });
-      if (!response.ok) throw new Error("Failed to create QR code");
+      if (!response.ok) throw new Error("QR kod oluşturulamadı");
       return response.json();
     },
     onSuccess: () => {

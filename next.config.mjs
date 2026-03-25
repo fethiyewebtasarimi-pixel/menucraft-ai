@@ -44,6 +44,7 @@ const nextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "frame-src https://www.paytr.com",
               "connect-src 'self' https://api.openai.com",
+              "worker-src 'self' blob:",
             ].join("; "),
           },
         ],
