@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Check, Sparkles } from "lucide-react"
+import { Check, X, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
@@ -13,49 +13,58 @@ const PLANS = [
     price: { monthly: 0, yearly: 0 },
     description: "Küçük işletmeler ve denemek isteyenler için",
     features: [
+      "1 restoran",
       "1 dijital menü",
-      "1 QR kod",
-      "Temel menü düzenleme",
-      "Türkçe ve İngilizce dil desteği",
-      "MenuCraft AI branding",
-      "Email destek",
+      "20 yemek limiti",
+      "3 AI kredi",
+      "Temel QR kod",
+      "Tek dil desteği",
+    ],
+    limitations: [
+      "MenuCraft filigranı",
+      "Sipariş özelliği yok",
+      "Garson çağırma yok",
     ],
     cta: "Ücretsiz Başla",
     popular: false,
   },
   {
-    name: "Başlangıç",
+    name: "Starter",
     price: { monthly: 299, yearly: 2870 },
     description: "Büyüyen restoran ve kafeler için",
     features: [
+      "1 restoran",
       "3 dijital menü",
-      "10 QR kod",
-      "AI menü oluşturma",
-      "6 dil desteği (otomatik çeviri)",
-      "Temel analitik",
-      "Marka özelleştirme",
-      "QR kod tasarımı",
-      "Öncelikli destek",
+      "100 yemek limiti",
+      "50 AI kredi/ay",
+      "Özel QR kod tasarımı",
+      "Filigran yok",
+      "Garson çağırma",
+      "Masada sipariş (Dine-in)",
+      "2 dil desteği",
+      "E-posta desteği",
     ],
+    limitations: [],
     cta: "Hemen Başla",
     popular: false,
   },
   {
-    name: "Profesyonel",
+    name: "Professional",
     price: { monthly: 599, yearly: 5750 },
-    description: "Ciddi restoranlar ve zincirler için",
+    description: "Profesyonel işletmeler için en popüler plan",
     features: [
-      "Sınırsız dijital menü",
-      "Sınırsız QR kod",
-      "AI menü oluşturma ve güncelleme",
-      "6 dil + özel dil ekleme",
-      "Gelişmiş analitik ve raporlama",
-      "Tam marka özelleştirme",
-      "Online sipariş sistemi",
-      "Stok yönetimi",
-      "API erişimi",
-      "7/24 premium destek",
+      "5 restoran",
+      "Sınırsız menü",
+      "Sınırsız yemek",
+      "200 AI kredi/ay",
+      "Premium QR kod (logolu)",
+      "Sınırsız dil desteği",
+      "Garson çağırma",
+      "Tüm sipariş tipleri (Dine-in, Paket, Gel Al)",
+      "Gelişmiş analitik",
+      "Öncelikli destek",
     ],
+    limitations: [],
     cta: "Hemen Başla",
     popular: true,
   },
@@ -64,15 +73,15 @@ const PLANS = [
     price: { monthly: null, yearly: null },
     description: "Büyük zincirler ve özel ihtiyaçlar için",
     features: [
-      "Profesyonel plan özellikleri",
-      "Özel sunucu seçeneği",
-      "Sınırsız kullanıcı ve lokasyon",
-      "Özel entegrasyon desteği",
-      "Adanmış hesap yöneticisi",
-      "Özel eğitim ve onboarding",
+      "Sınırsız restoran",
+      "Sınırsız her şey",
+      "Özel entegrasyonlar",
+      "API erişimi",
+      "Özel hesap yöneticisi",
       "SLA garantisi",
-      "Beyaz etiket seçeneği",
+      "Beyaz etiket opsiyonu",
     ],
+    limitations: [],
     cta: "İletişim",
     popular: false,
   },
@@ -253,6 +262,24 @@ export default function Pricing() {
                     </span>
                   </li>
                 ))}
+                {plan.limitations?.map((limitation) => (
+                  <li key={limitation} className="flex items-start gap-3">
+                    <X
+                      className={cn(
+                        "w-5 h-5 flex-shrink-0 mt-0.5",
+                        plan.popular ? "text-white/50" : "text-slate-400 dark:text-slate-600"
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "text-sm",
+                        plan.popular ? "text-white/60" : "text-slate-400 dark:text-slate-600"
+                      )}
+                    >
+                      {limitation}
+                    </span>
+                  </li>
+                ))}
               </ul>
             </motion.div>
           ))}
@@ -267,7 +294,7 @@ export default function Pricing() {
           className="text-center mt-12"
         >
           <p className="text-slate-600 dark:text-slate-400">
-            Tüm planlar 14 gün para iade garantisi ile gelir. Kredi kartı gerekmez.
+            Hemen kaydolun, 7 gün boyunca Professional planın tüm özelliklerini ücretsiz deneyin. Kredi kartı gerekmez.
           </p>
         </motion.div>
       </div>
