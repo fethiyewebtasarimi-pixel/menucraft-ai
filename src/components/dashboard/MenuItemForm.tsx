@@ -229,7 +229,27 @@ export function MenuItemForm({
   });
 
   const onSubmit = (data: MenuItemFormData) => {
-    mutation.mutate(data);
+    // Clean up: convert 0 values to undefined for optional number fields
+    // and ensure tags is an array
+    const cleanData = {
+      ...data,
+      discountPrice: data.discountPrice || undefined,
+      calories: data.calories || undefined,
+      protein: data.protein || undefined,
+      carbs: data.carbs || undefined,
+      fat: data.fat || undefined,
+      fiber: data.fiber || undefined,
+      sugar: data.sugar || undefined,
+      sodium: data.sodium || undefined,
+      prepTime: data.prepTime || undefined,
+      image: data.image || undefined,
+      description: data.description || undefined,
+      servingSize: data.servingSize || undefined,
+      tags: typeof data.tags === "string"
+        ? (data.tags as string).split(",").map(s => s.trim()).filter(Boolean)
+        : (data.tags || []),
+    };
+    mutation.mutate(cleanData as unknown as MenuItemFormData);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -149,7 +149,9 @@ export async function POST(
     }
 
     const body = await req.json();
+    console.log("[MENU_ITEMS_POST] Received body:", JSON.stringify(body, null, 2));
     const validatedData = menuItemSchema.parse(body);
+    console.log("[MENU_ITEMS_POST] Validated data:", JSON.stringify(validatedData, null, 2));
 
     const menuItem = await prisma.menuItem.create({
       data: {
