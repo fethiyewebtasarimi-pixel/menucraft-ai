@@ -137,7 +137,7 @@ export function Header() {
               )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
+          <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-80">
             <DropdownMenuLabel>Bildirimler</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <div className="p-4 text-sm text-center text-muted-foreground">

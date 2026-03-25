@@ -115,7 +115,14 @@ export function Sidebar() {
   return (
     <TooltipProvider>
       <motion.aside
-        className="fixed left-0 top-0 z-40 h-screen border-r bg-card flex flex-col"
+        className={cn(
+          'fixed left-0 top-0 z-40 h-screen border-r bg-card flex flex-col',
+          'transition-transform duration-200 ease-in-out',
+          // Mobile: slide off-screen when closed
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          // Desktop: always visible
+          'md:translate-x-0'
+        )}
         initial={false}
         animate={{ width: sidebarOpen ? 240 : 64 }}
         transition={{ duration: 0.2, ease: 'easeInOut' }}
