@@ -114,6 +114,8 @@ export function MenuItemForm({
   const [imagePreview, setImagePreview] = useState<string | null>(
     initialData?.image || null
   );
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [ingredientInput, setIngredientInput] = useState("");
   const [newCategoryName, setNewCategoryName] = useState("");
   const [showCategoryInput, setShowCategoryInput] = useState(false);
@@ -212,7 +214,10 @@ export function MenuItemForm({
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.error || "Menü öğesi kaydedilemedi");
+        const msg = errData.details
+          ? `${errData.error}: ${errData.details}`
+          : (errData.error || "Menü öğesi kaydedilemedi");
+        throw new Error(msg);
       }
 
       return response.json();
@@ -252,17 +257,73 @@ export function MenuItemForm({
     mutation.mutate(cleanData as unknown as MenuItemFormData);
   };
 
+  const uploadToCloudinary = async (file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Dosya boyutu 5MB'dan küçük olmalıdır");
+      return;
+    }
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      toast.error("Geçersiz dosya türü. PNG, JPG veya WEBP yükleyin");
+      return;
+    }
+
+    // Show local preview immediately
+    const localPreview = URL.createObjectURL(file);
+    setImagePreview(localPreview);
+    setIsUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "menu-items");
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || "Görsel yüklenemedi");
+      }
+
+      const data = await response.json();
+      setImagePreview(data.url);
+      form.setValue("image", data.url);
+      toast.success("Görsel yüklendi");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Görsel yüklenemedi");
+      setImagePreview(null);
+      form.setValue("image", "");
+    } finally {
+      setIsUploading(false);
+      URL.revokeObjectURL(localPreview);
+    }
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setImagePreview(result);
-        form.setValue("image", result);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (file) uploadToCloudinary(file);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) uploadToCloudinary(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
   };
 
   const toggleAllergen = (allergen: string) => {
@@ -336,6 +397,18 @@ export function MenuItemForm({
     }
   };
 
+  const imageToBase64 = async (imageUrl: string): Promise<string> => {
+    if (imageUrl.startsWith("data:")) return imageUrl;
+    const res = await fetch(imageUrl);
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
   const handleVisionAnalysis = async () => {
     const currentImage = form.getValues("image");
     if (!currentImage) {
@@ -345,11 +418,12 @@ export function MenuItemForm({
 
     setVisionLoading(true);
     try {
+      const base64Image = await imageToBase64(currentImage);
       const response = await fetch("/api/ai/vision-analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          image: currentImage,
+          image: base64Image,
           mimeType: "image/jpeg",
         }),
       });
@@ -408,11 +482,12 @@ export function MenuItemForm({
 
     setEnhanceLoading(true);
     try {
+      const base64Image = await imageToBase64(currentImage);
       const response = await fetch("/api/ai/enhance-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          image: currentImage,
+          image: base64Image,
           mimeType: "image/jpeg",
           dishName: currentName,
           description: form.getValues("description"),
@@ -585,8 +660,22 @@ export function MenuItemForm({
                 <FormLabel>Ürün Görseli</FormLabel>
                 <FormControl>
                   <div className="space-y-4">
-                    <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-border transition-colors">
-                      {imagePreview ? (
+                    <div
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                        isDragging
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      {isUploading ? (
+                        <div className="flex flex-col items-center gap-3 py-8">
+                          <Loader2 className="w-12 h-12 text-primary animate-spin" />
+                          <p className="text-sm text-muted-foreground">Görsel yükleniyor...</p>
+                        </div>
+                      ) : imagePreview ? (
                         <div className="space-y-4">
                           <img
                             src={imagePreview}

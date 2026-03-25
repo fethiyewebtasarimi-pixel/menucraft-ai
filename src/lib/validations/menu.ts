@@ -4,7 +4,7 @@ export const categorySchema = z.object({
   name: z.string().min(1, "Kategori adı gereklidir").max(200, "Kategori adı en fazla 200 karakter olabilir"),
   nameTranslations: z.record(z.string(), z.string()).optional(),
   description: z.string().max(500, "Açıklama en fazla 500 karakter olabilir").optional(),
-  image: z.string().max(500).optional(),
+  image: z.string().optional(),
   sortOrder: z.number().int().default(0),
   isActive: z.boolean().default(true),
 });
@@ -27,7 +27,7 @@ export const menuItemSchema = z.object({
   descriptionTranslations: z.record(z.string(), z.string()).optional(),
   price: z.coerce.number().nonnegative("Fiyat 0'dan küçük olamaz"),
   discountPrice: optionalPositiveNumber,
-  image: z.string().max(500).optional(),
+  image: z.string().optional(),
   calories: optionalPositiveNumber,
   protein: optionalPositiveNumber,
   carbs: optionalPositiveNumber,
