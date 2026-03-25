@@ -12,6 +12,9 @@ import {
   Filter,
   ChevronLeft,
   ChevronRight,
+  FolderPlus,
+  X,
+  GripVertical,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -86,6 +89,8 @@ export default function MenuItemsPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
   const itemsPerPage = 10;
 
   const { data: restaurants } = useRestaurants();
@@ -141,6 +146,55 @@ export default function MenuItemsPage() {
       setDeleteItemId(null);
     },
   });
+
+  const addCategoryMutation = useMutation({
+    mutationFn: async (name: string) => {
+      const response = await fetch(`/api/restaurants/${restaurantId}/categories`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || "Kategori eklenemedi");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories", restaurantId] });
+      toast.success("Kategori eklendi");
+      setNewCategoryName("");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const deleteCategoryMutation = useMutation({
+    mutationFn: async (categoryId: string) => {
+      const response = await fetch(`/api/categories/${categoryId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error || "Kategori silinemedi");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories", restaurantId] });
+      toast.success("Kategori silindi");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleAddCategory = () => {
+    const name = newCategoryName.trim();
+    if (!name) return;
+    addCategoryMutation.mutate(name);
+  };
 
   // Filter items
   const filteredItems = items?.filter((item) => {
@@ -214,19 +268,29 @@ export default function MenuItemsPage() {
             className="pl-10"
           />
         </div>
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-full sm:w-[200px]">
-            <SelectValue placeholder="Kategori seç" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tüm Kategoriler</SelectItem>
-            {categories?.map((category) => (
-              <SelectItem key={category.id} value={category.name}>
-                {category.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full sm:w-[200px]">
+              <SelectValue placeholder="Kategori seç" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tüm Kategoriler</SelectItem>
+              {categories?.map((category) => (
+                <SelectItem key={category.id} value={category.name}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setIsCategoryDialogOpen(true)}
+            title="Kategori Yönet"
+          >
+            <FolderPlus className="w-4 h-4" />
+          </Button>
+        </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Durum filtrele" />
@@ -553,6 +617,75 @@ export default function MenuItemsPage() {
             categories={categories || []}
             onSuccess={handleFormSuccess}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Category Management Dialog */}
+      <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Kategori Yönetimi</DialogTitle>
+            <DialogDescription>
+              Kategorileri ekleyin veya silin. Yemek ekleme sırasında bu kategoriler görünecektir.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Add Category */}
+            <div className="flex gap-2">
+              <Input
+                placeholder="Yeni kategori adı..."
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleAddCategory()}
+              />
+              <Button
+                onClick={handleAddCategory}
+                disabled={!newCategoryName.trim() || addCategoryMutation.isPending}
+                size="sm"
+                className="shrink-0"
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Ekle
+              </Button>
+            </div>
+
+            {/* Category List */}
+            <div className="border rounded-lg divide-y max-h-64 overflow-y-auto">
+              {!categories || categories.length === 0 ? (
+                <div className="p-6 text-center text-sm text-muted-foreground">
+                  Henüz kategori eklenmemiş
+                </div>
+              ) : (
+                categories.map((cat) => (
+                  <div
+                    key={cat.id}
+                    className="flex items-center justify-between px-3 py-2.5 hover:bg-accent/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <GripVertical className="w-4 h-4 text-muted-foreground/40" />
+                      <span className="text-sm font-medium">{cat.name}</span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 text-muted-foreground hover:text-red-600"
+                      onClick={() => deleteCategoryMutation.mutate(cat.id)}
+                      disabled={deleteCategoryMutation.isPending}
+                      title="Kategoriyi sil"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {categories && categories.length > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Not: İçinde yemek bulunan kategoriler silinemez.
+              </p>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
 

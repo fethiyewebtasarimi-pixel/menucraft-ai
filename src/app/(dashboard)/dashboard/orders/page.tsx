@@ -84,7 +84,9 @@ export default function OrdersPage() {
     queryFn: async () => {
       const response = await fetch(`/api/restaurants/${restaurantId}/orders`);
       if (!response.ok) throw new Error("Failed to fetch orders");
-      return response.json();
+      const data = await response.json();
+      // API returns { orders, pagination } - extract the orders array
+      return Array.isArray(data) ? data : (data.orders || []);
     },
     refetchInterval: 5000, // Poll every 5 seconds for new orders
     enabled: !!restaurantId,
